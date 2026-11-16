@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & discussions
+    url: https://github.com/ITGuyVV/codecockpit-remote/discussions
+    about: Ask questions and share ideas — no issue needed
+  - name: CodeCockpit (desktop) issues
+    url: https://github.com/ITGuyVV/CodeCockpit/issues
+    about: Problems with the desktop app itself, its remote server, or the session engines
