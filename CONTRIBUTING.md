@@ -12,17 +12,29 @@ Requirements:
 
 ```bash
 git clone <your fork>
-cd codecockpit-remote
+cd codecockpit-remote/android
 ./gradlew assembleDebug    # build the debug APK
 ./gradlew installDebug     # install on the connected device/emulator
 ```
 
-Open the project in Android Studio and press *Run* for the normal edit–build–test loop.
+Open the `android/` directory in Android Studio and press *Run* for the normal edit–build–test loop.
 
-## Project layout
+## Repository layout
+
+This repository hosts **all CodeCockpit Remote clients**, one directory per platform:
 
 ```
-app/src/main/java/io/github/itguyvv/codecockpitremote/
+android/   Android app (Kotlin + Jetpack Compose) — the first client
+ios/       future iOS client
+harmony/   future HarmonyOS client
+```
+
+The wire protocol all clients speak is documented in the desktop repository: [docs/REMOTE_PROTOCOL.md](https://github.com/ITGuyVV/CodeCockpit/blob/main/docs/REMOTE_PROTOCOL.md).
+
+## Android project layout
+
+```
+android/app/src/main/java/io/github/itguyvv/codecockpitremote/
   protocol/   Wire contract with the desktop (message types, parsers, builders)
   net/        OkHttp WebSocket client, TOFU TLS fingerprint capture, auth state machine
   data/       DataStore persistence for desktop profiles (secret, token, pinned fingerprint)
@@ -34,8 +46,8 @@ The protocol this app speaks is documented in the desktop repository: [docs/REMO
 
 ## Conventions
 
-- **English-only source.** All identifiers, comments, commit messages, and docs are English. No natural-language strings outside `app/src/main/res/` resource files.
-- **No hardcoded UI strings.** Every user-facing string lives in `app/src/main/res/values/strings.xml`; screens reference it via `stringResource(...)`.
+- **English-only source.** All identifiers, comments, commit messages, and docs are English. No natural-language strings outside the resource files under `android/app/src/main/res/`.
+- **No hardcoded UI strings.** Every user-facing string lives in `android/app/src/main/res/values/strings.xml`; screens reference it via `stringResource(...)`.
 - **Kotlin.** Coroutines + StateFlow for async state; no new heavyweight dependencies without discussion.
 - Keep PRs focused: one bug fix or one feature per PR.
 

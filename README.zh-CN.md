@@ -7,7 +7,9 @@
 
 **[English](README.md)**
 
-[CodeCockpit](https://github.com/ITGuyVV/CodeCockpit) 的官方安卓伴侣应用——在手机上监控并驱动你的 AI 编码 CLI 会话（Claude Code / Codex / OpenCode）。设备直连：局域网或 Tailscale。**永不依赖云服务器，永不建公共中继。**
+[CodeCockpit](https://github.com/ITGuyVV/CodeCockpit) 的官方移动端伴侣应用——在手机上监控并驱动你的 AI 编码 CLI 会话（Claude Code / Codex / OpenCode）。设备直连：局域网或 Tailscale。**永不依赖云服务器，永不建公共中继。**
+
+本仓库收纳全部移动端客户端，按平台分目录：**`android/`**（Kotlin + Jetpack Compose，现已可用），`ios/` 与 `harmony/` 为后续客户端预留。
 
 ## 功能
 
@@ -46,15 +48,15 @@
 
 在桌面和手机都装上 [Tailscale](https://tailscale.com)，然后用桌面的 tailnet IP 添加（桌面设置页已帮你标出 Tailscale 地址）。连接方式完全相同——同样的 TLS 指纹锁定、同样的密钥，不向互联网暴露任何端口。
 
-## 从源码构建
+## 从源码构建（Android）
 
 ```bash
 git clone https://github.com/ITGuyVV/codecockpit-remote
-cd codecockpit-remote
+cd codecockpit-remote/android
 ./gradlew assembleDebug     # app/build/outputs/apk/debug/
 ```
 
-或用 Android Studio（Ladybug+）打开项目直接运行。要求：JDK 17、Android SDK 35、Android 8.0+ 设备（minSdk 26）。项目结构与约定见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+或用 Android Studio（Ladybug+）打开 `android/` 目录直接运行。要求：JDK 17、Android SDK 35、Android 8.0+ 设备（minSdk 26）。仓库结构与约定见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 路线图
 

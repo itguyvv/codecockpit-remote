@@ -7,7 +7,9 @@
 
 **[简体中文](README.zh-CN.md)**
 
-The companion Android app for [CodeCockpit](https://github.com/ITGuyVV/CodeCockpit) — monitor and drive your AI coding CLI sessions (Claude Code / Codex / OpenCode) from your phone. Direct device-to-device connection over your LAN or Tailscale. **No cloud server, no relay, ever.**
+The companion mobile app for [CodeCockpit](https://github.com/ITGuyVV/CodeCockpit) — monitor and drive your AI coding CLI sessions (Claude Code / Codex / OpenCode) from your phone. Direct device-to-device connection over your LAN or Tailscale. **No cloud server, no relay, ever.**
+
+This repository hosts the mobile clients, one directory per platform: **`android/`** (Kotlin + Jetpack Compose, available now), with `ios/` and `harmony/` reserved for future clients.
 
 ## What it does
 
@@ -46,15 +48,15 @@ The remote channel is designed for a developer's own devices on a trusted networ
 
 Enable [Tailscale](https://tailscale.com) on both the desktop and the phone, then add the desktop with its tailnet IP (the settings tab marks Tailscale addresses for you). The connection works identically — same TLS pin, same secret, zero extra ports exposed to the internet.
 
-## Building from source
+## Building from source (Android)
 
 ```bash
 git clone https://github.com/ITGuyVV/codecockpit-remote
-cd codecockpit-remote
+cd codecockpit-remote/android
 ./gradlew assembleDebug     # app/build/outputs/apk/debug/
 ```
 
-or open the project in Android Studio (Ladybug+) and press Run. Requirements: JDK 17, Android SDK 35, Android 8.0+ device (minSdk 26). See [CONTRIBUTING.md](CONTRIBUTING.md) for the project layout and conventions.
+or open the `android/` directory in Android Studio (Ladybug+) and press Run. Requirements: JDK 17, Android SDK 35, Android 8.0+ device (minSdk 26). See [CONTRIBUTING.md](CONTRIBUTING.md) for the repository layout and conventions.
 
 ## Roadmap
 
