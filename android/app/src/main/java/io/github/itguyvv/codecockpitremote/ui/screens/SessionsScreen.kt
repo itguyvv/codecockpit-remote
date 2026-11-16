@@ -1,5 +1,7 @@
 package io.github.itguyvv.codecockpitremote.ui.screens
 
+import androidx.activity.compose.BackHandler
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +55,7 @@ import io.github.itguyvv.codecockpitremote.vm.AppViewModel
 fun SessionsScreen(vm: AppViewModel) {
     val sessions by vm.sessions.collectAsStateWithLifecycle()
     val connState by vm.connState.collectAsStateWithLifecycle()
+    BackHandler { vm.goServers() }
 
     Scaffold(
         topBar = {

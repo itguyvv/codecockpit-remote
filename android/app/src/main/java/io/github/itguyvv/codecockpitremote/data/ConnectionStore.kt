@@ -1,6 +1,7 @@
 package io.github.itguyvv.codecockpitremote.data
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -20,7 +21,26 @@ private val Context.dataStore by preferencesDataStore(name = "connections")
 class ConnectionStore(private val context: Context) {
 
     private val key = stringPreferencesKey("servers")
+    private val onboardingKey = booleanPreferencesKey("onboarding_done")
+    private val appLockKey = booleanPreferencesKey("app_lock_enabled")
     private val json = Json { ignoreUnknownKeys = true }
+
+    /** Null until the first read completes, so the UI can avoid flashing the wrong gate */
+    val onboardingDone: Flow<Boolean?> = context.dataStore.data.map { prefs ->
+        prefs[onboardingKey] ?: false
+    }
+
+    suspend fun setOnboardingDone() {
+        context.dataStore.edit { it[onboardingKey] = true }
+    }
+
+    val appLockEnabled: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[appLockKey] ?: false
+    }
+
+    suspend fun setAppLockEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[appLockKey] = enabled }
+    }
 
     val servers: Flow<List<ServerProfile>> = context.dataStore.data.map { prefs ->
         val raw = prefs[key] ?: return@map emptyList()

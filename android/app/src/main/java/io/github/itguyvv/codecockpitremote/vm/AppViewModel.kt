@@ -37,10 +37,26 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList()
     )
 
+    /** Null until first load — gates onboarding/lock so the UI never flashes the wrong state */
+    val onboardingDone: StateFlow<Boolean?> = store.onboardingDone
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val appLockEnabled: StateFlow<Boolean> = store.appLockEnabled
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    fun setOnboardingDone() {
+        viewModelScope.launch { store.setOnboardingDone() }
+    }
+
+    fun setAppLockEnabled(enabled: Boolean) {
+        viewModelScope.launch { store.setAppLockEnabled(enabled) }
+    }
+
     // ── Navigation ──
     sealed interface Screen {
         data object Servers : Screen
         data object Sessions : Screen
+        data object Settings : Screen
         data class Chat(val sessionId: String) : Screen
     }
 
@@ -271,6 +287,15 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun goServers() {
         disconnect()
+    }
+
+    fun goSettings() {
+        _screen.value = Screen.Settings
+    }
+
+    /** From Settings there is no disconnect — just go back home */
+    fun closeSettings() {
+        _screen.value = Screen.Servers
     }
 
     override fun onCleared() {

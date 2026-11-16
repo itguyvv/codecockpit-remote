@@ -17,10 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.LinkOff
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -43,6 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.itguyvv.codecockpitremote.R
@@ -70,10 +78,20 @@ fun ServersScreen(vm: AppViewModel) {
     val activeServerId by vm.activeServerId.collectAsStateWithLifecycle()
 
     var showAdd by remember { mutableStateOf(false) }
+    var showGuide by remember { mutableStateOf(false) }
     var confirmRemove by remember { mutableStateOf<ServerProfile?>(null) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.servers_title)) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.servers_title)) },
+                actions = {
+                    IconButton(onClick = { vm.goSettings() }) {
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.cd_settings))
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAdd = true }) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.servers_add))
@@ -99,6 +117,10 @@ fun ServersScreen(vm: AppViewModel) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextMid
                 )
+                Spacer(Modifier.height(16.dp))
+                TextButton(onClick = { showGuide = true }) {
+                    Text(stringResource(R.string.guide_show))
+                }
             }
         } else {
             LazyColumn(
@@ -167,6 +189,16 @@ fun ServersScreen(vm: AppViewModel) {
             onTrust = { vm.answerFingerprint(true) },
             onReject = { vm.answerFingerprint(false) }
         )
+    }
+
+    if (showGuide) {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            OnboardingScreen(onFinished = { showGuide = false })
+        }
     }
 }
 
@@ -238,13 +270,32 @@ private fun StatusChip(server: ServerProfile, connState: ConnState?) {
     }
 }
 
+/** Accepts `host`, or a pasted `host:port` which fills both fields */
+private fun onAddressInput(value: String, setHost: (String) -> Unit, setPort: (String) -> Unit) {
+    val idx = value.lastIndexOf(':')
+    if (idx > 0) {
+        val tail = value.substring(idx + 1)
+        val port = tail.toIntOrNull()
+        if (tail.isNotEmpty() && tail.all { c -> c.isDigit() }) {
+            setHost(value.substring(0, idx))
+            if (port != null && port in 1024..65535) setPort(tail)
+            return
+        }
+    }
+    setHost(value)
+}
+
 @Composable
 private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: String, port: Int, secret: String) -> Unit) {
     var name by remember { mutableStateOf("") }
     var host by remember { mutableStateOf("") }
     var port by remember { mutableStateOf("47315") }
     var secret by remember { mutableStateOf("") }
-    var invalid by remember { mutableStateOf(false) }
+    var showSecret by remember { mutableStateOf(false) }
+    var showHelp by remember { mutableStateOf(false) }
+    var hostErr by remember { mutableStateOf(false) }
+    var portErr by remember { mutableStateOf(false) }
+    var secretErr by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -264,45 +315,93 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                 )
                 OutlinedTextField(
                     value = host,
-                    onValueChange = { host = it },
+                    onValueChange = { onAddressInput(it, { host = it }, { port = it }) },
                     label = { Text(stringResource(R.string.pair_host)) },
                     placeholder = { Text(stringResource(R.string.pair_host_hint)) },
+                    isError = hostErr,
+                    supportingText = if (hostErr) {
+                        { Text(stringResource(R.string.pair_invalid_host)) }
+                    } else {
+                        null
+                    },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = port,
-                    onValueChange = { port = it.filter { c -> c.isDigit() } },
+                    onValueChange = { port = it.filter { c -> c.isDigit() }.take(5) },
                     label = { Text(stringResource(R.string.pair_port)) },
+                    isError = portErr,
+                    supportingText = if (portErr) {
+                        { Text(stringResource(R.string.pair_invalid_port)) }
+                    } else {
+                        null
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = secret,
-                    onValueChange = { secret = it },
+                    onValueChange = {
+                        secret = it
+                        secretErr = false
+                    },
                     label = { Text(stringResource(R.string.pair_secret)) },
                     placeholder = { Text(stringResource(R.string.pair_secret_hint)) },
+                    isError = secretErr,
+                    supportingText = if (secretErr) {
+                        { Text(stringResource(R.string.pair_invalid_secret)) }
+                    } else {
+                        null
+                    },
+                    visualTransformation = if (showSecret) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { showSecret = !showSecret }) {
+                            Icon(
+                                if (showSecret) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = stringResource(R.string.pair_show_secret)
+                            )
+                        }
+                    },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
-                if (invalid) {
-                    Text(stringResource(R.string.pair_invalid), color = Danger, style = MaterialTheme.typography.bodySmall)
+                TextButton(onClick = { showHelp = !showHelp }) {
+                    Text(stringResource(R.string.add_help_title))
+                }
+                if (showHelp) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        HelpLine(R.string.add_help_address)
+                        HelpLine(R.string.add_help_port)
+                        HelpLine(R.string.add_help_secret)
+                    }
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = {
                 val p = port.toIntOrNull() ?: 0
-                if (host.isBlank() || secret.isBlank() || p !in 1024..65535) {
-                    invalid = true
-                    return@TextButton
-                }
-                onSave(name.ifBlank { host }, host.trim(), p, secret.trim())
+                hostErr = host.isBlank()
+                portErr = p !in 1024..65535
+                secretErr = secret.isBlank()
+                if (hostErr || portErr || secretErr) return@TextButton
+                onSave(name.ifBlank { host.trim() }, host.trim(), p, secret.trim())
             }) { Text(stringResource(R.string.pair_save)) }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) }
         }
+    )
+}
+
+@Composable
+private fun HelpLine(textRes: Int) {
+    Text(
+        stringResource(textRes),
+        style = MaterialTheme.typography.bodySmall,
+        color = TextMid,
+        modifier = Modifier.padding(start = 4.dp)
     )
 }
 
