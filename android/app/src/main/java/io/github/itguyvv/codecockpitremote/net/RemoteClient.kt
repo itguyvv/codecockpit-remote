@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
+import io.github.itguyvv.codecockpitremote.protocol.ServerEvent
+import io.github.itguyvv.codecockpitremote.protocol.authRequest
+import io.github.itguyvv.codecockpitremote.protocol.parseServerEvent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -81,7 +84,7 @@ class RemoteClient(
     fun connect(secret: String): RemoteClient {
         val tls = FingerprintTls()
         val client = OkHttpClient.Builder()
-            .sslSocketFactory(tls.sslContext(), tls.trustManager)
+            .sslSocketFactory(tls.sslContext().socketFactory, tls.trustManager)
             // Identity is the pinned fingerprint, not a CA-signed hostname
             .hostnameVerifier { _, _ -> true }
             .connectTimeout(8, TimeUnit.SECONDS)
