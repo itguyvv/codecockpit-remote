@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">Desktops</string>
+    <string name="servers_empty_title">No desktops yet</string>
+    <string name="servers_empty_hint">Add the desktop running CodeCockpit, then pair with the secret from its Settings → Remote access tab.</string>
+    <string name="servers_add">Add desktop</string>
+    <string name="servers_connected">Connected</string>
+    <string name="servers_connecting">Connecting…</string>
+    <string name="servers_offline">Offline</string>
+    <string name="servers_paired">Paired</string>
+    <string name="servers_needs_pairing">Needs pairing</string>
+    <string name="servers_remove">Remove</string>
+    <string name="servers_remove_confirm">Remove "%s"? The stored token for this desktop is deleted too.</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">Add desktop</string>
+    <string name="pair_name">Name</string>
+    <string name="pair_name_hint">Work PC</string>
+    <string name="pair_host">Address</string>
+    <string name="pair_host_hint">192.168.1.20 or tailnet IP</string>
+    <string name="pair_port">Port</string>
+    <string name="pair_secret">Pairing secret</string>
+    <string name="pair_secret_hint">From Settings → Remote access</string>
+    <string name="pair_save">Save &amp; connect</string>
+    <string name="pair_invalid">Fill in an address and the pairing secret.</string>
+    <string name="pair_duplicate">This desktop is already in the list.</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">Verify certificate</string>
+    <string name="fp_body">First connection to %1$s. Compare this fingerprint with the one shown in CodeCockpit → Settings → Remote access, then trust it.</string>
+    <string name="fp_trust">Trust &amp; continue</string>
+    <string name="fp_reject">Cancel</string>
+    <string name="fp_mismatch">Certificate fingerprint changed for %1$s. This can mean a reinstall — or someone intercepting the connection. Connection refused.</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">Cannot reach %1$s. Check that both devices are on the same network (or on Tailscale), that remote access is enabled in CodeCockpit, and that the firewall allows the port.</string>
+    <string name="err_auth_secret">Pairing failed: wrong secret.</string>
+    <string name="err_auth_token">Pairing was revoked on the desktop. Enter the secret again to pair.</string>
+    <string name="err_banned">Too many failed attempts — wait a minute and try again.</string>
+    <string name="err_too_many_clients">The desktop already serves the maximum number of remote clients.</string>
+    <string name="err_tls">TLS handshake failed.</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">Sessions</string>
+    <string name="sessions_empty_title">No sessions</string>
+    <string name="sessions_empty_hint">Start a session in CodeCockpit on the desktop — it appears here live.</string>
+    <string name="sessions_refresh">Refresh</string>
+    <string name="sessions_disconnected">Disconnected — reconnecting…</string>
+    <string name="sessions_exited">Exited</string>
+    <string name="sessions_running">Running</string>
+    <string name="sessions_busy">Working</string>
+    <string name="sessions_bg">%d background</string>
+    <string name="sessions_disconnect">Disconnect</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">Send a prompt to the agent…</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_tool">Tool</string>
+    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_cost">Cost ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d turns</string>
+    <string name="chat_exited">This session has exited on the desktop.</string>
+    <string name="chat_mode_label">Mode</string>
+    <string name="chat_detached">Detached</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">Ask</string>
+    <string name="mode_acceptEdits">Accept edits</string>
+    <string name="mode_plan">Plan</string>
+    <string name="mode_bypassPermissions">Bypass permissions</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_ok">OK</string>
+    <string name="common_back">Back</string>
+</resources>
