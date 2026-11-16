@@ -71,6 +71,49 @@
     <string name="mode_plan">Plan</string>
     <string name="mode_bypassPermissions">Bypass permissions</string>
 
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_add_desktop">Add your first desktop</string>
+    <string name="onboarding_done">Done</string>
+    <string name="onb1_title">Meet CodeCockpit Remote</string>
+    <string name="onb1_body">The companion app for CodeCockpit. Watch your AI coding sessions — Claude Code, Codex, OpenCode — and drive them from your phone.</string>
+    <string name="onb2_title">Enable Remote access on the desktop</string>
+    <string name="onb2_step1">Open CodeCockpit → Settings → Remote access</string>
+    <string name="onb2_step2">Turn it on and copy the pairing secret</string>
+    <string name="onb2_step3">Windows asks for firewall access the first time — accept it</string>
+    <string name="onb3_title">Connect from anywhere</string>
+    <string name="onb3_step1">Add the desktop with its address, port, and the secret</string>
+    <string name="onb3_step2">Same Wi-Fi for daily use — Tailscale address when you are out</string>
+    <string name="onb3_step3">On first connect, compare the certificate fingerprint with the one shown on the desktop</string>
+    <string name="guide_show">Show setup guide</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">Where do I find these?</string>
+    <string name="add_help_address">Address: the desktop IP listed in CodeCockpit → Settings → Remote access. Away from home? Use the desktop’s Tailscale address instead.</string>
+    <string name="add_help_port">Port: shown in the same place. The default is 47315.</string>
+    <string name="add_help_secret">Pairing secret: copy it from that tab. It never leaves your devices.</string>
+    <string name="pair_invalid_host">Enter the desktop’s address.</string>
+    <string name="pair_invalid_port">Port must be between 1024 and 65535.</string>
+    <string name="pair_invalid_secret">Paste the pairing secret from the desktop.</string>
+    <string name="pair_show_secret">Show or hide the pairing secret</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_lock_title">App protection</string>
+    <string name="settings_lock_hint">Require the phone’s screen lock — fingerprint, face, or PIN — before opening this app.</string>
+    <string name="settings_lock_setup_failed">No screen lock is set up on this device. Add one in Android settings first.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_repo">Project homepage</string>
+    <string name="settings_desktop">CodeCockpit for desktop</string>
+    <string name="cd_settings">Settings</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote is locked</string>
+    <string name="lock_subtitle">Unlock to view your sessions.</string>
+    <string name="lock_unlock">Unlock</string>
+
     <!-- Common -->
     <string name="common_cancel">Cancel</string>
     <string name="common_ok">OK</string>
