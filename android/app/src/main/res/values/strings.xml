@@ -84,7 +84,7 @@
     <string name="onb2_step3">Windows asks for firewall access the first time — accept it</string>
     <string name="onb3_title">Connect from anywhere</string>
     <string name="onb3_step1">Add the desktop with its address, port, and the secret</string>
-    <string name="onb3_step2">Same Wi-Fi for daily use — Tailscale address when you are out</string>
+    <string name="onb3_step2">Same network: use the Tailscale address. Any network: use the public address.</string>
     <string name="onb3_step3">On first connect, compare the certificate fingerprint with the one shown on the desktop</string>
     <string name="guide_show">Show setup guide</string>
 
@@ -100,7 +100,7 @@
     <string name="pair_where_title">Where is your computer?</string>
     <string name="pair_where_same">Same network</string>
     <string name="pair_where_any">Any network</string>
-    <string name="pair_hint_same">Phone and desktop on the same Wi-Fi, or both on Tailscale — enter a LAN or 100.x address.</string>
+    <string name="pair_hint_same">Phone and desktop connect directly — for example, both signed in to Tailscale. Enter one of the addresses shown on the desktop.</string>
     <string name="pair_hint_any">On the desktop, turn on “Any network” under Settings → Remote access, then enter the public address shown there.</string>
 
     <!-- Settings -->
