@@ -35,6 +35,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -296,6 +299,8 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
     var hostErr by remember { mutableStateOf(false) }
     var portErr by remember { mutableStateOf(false) }
     var secretErr by remember { mutableStateOf(false) }
+    // 0 = same network (LAN / Tailscale), 1 = any network (public address)
+    var scenario by remember { mutableStateOf(0) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -305,6 +310,33 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                 Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+                Text(
+                    stringResource(R.string.pair_where_title),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = TextMid
+                )
+                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                    SegmentedButton(
+                        selected = scenario == 0,
+                        onClick = { scenario = 0 },
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                    ) {
+                        Text(stringResource(R.string.pair_where_same))
+                    }
+                    SegmentedButton(
+                        selected = scenario == 1,
+                        onClick = { scenario = 1 },
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                    ) {
+                        Text(stringResource(R.string.pair_where_any))
+                    }
+                }
+                Text(
+                    stringResource(if (scenario == 0) R.string.pair_hint_same else R.string.pair_hint_any),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextMid,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },

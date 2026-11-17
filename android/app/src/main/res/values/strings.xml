@@ -97,6 +97,11 @@
     <string name="pair_invalid_port">Port must be between 1024 and 65535.</string>
     <string name="pair_invalid_secret">Paste the pairing secret from the desktop.</string>
     <string name="pair_show_secret">Show or hide the pairing secret</string>
+    <string name="pair_where_title">Where is your computer?</string>
+    <string name="pair_where_same">Same network</string>
+    <string name="pair_where_any">Any network</string>
+    <string name="pair_hint_same">Phone and desktop on the same Wi-Fi, or both on Tailscale — enter a LAN or 100.x address.</string>
+    <string name="pair_hint_any">On the desktop, turn on “Any network” under Settings → Remote access, then enter the public address shown there.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
