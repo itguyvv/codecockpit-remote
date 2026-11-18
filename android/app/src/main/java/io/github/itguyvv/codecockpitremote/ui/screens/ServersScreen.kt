@@ -221,8 +221,9 @@ fun ServersScreen(vm: AppViewModel) {
     }
 }
 
+/** Display name for error messages: the direct address, or the profile name for link mode */
 private fun activeHost(servers: List<ServerProfile>, activeId: String?): String =
-    servers.find { it.id == activeId }?.host ?: ""
+    servers.find { it.id == activeId }?.let { it.host.ifBlank { it.name } } ?: ""
 
 /** Shown on the home screen while a newer GitHub release exists; tapping downloads the APK */
 @Composable
