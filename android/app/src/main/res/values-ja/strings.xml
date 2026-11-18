@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">デスクトップ</string>
+    <string name="servers_empty_title">デスクトップがありません</string>
+    <string name="servers_empty_hint">CodeCockpit を実行しているデスクトップを追加し、その「設定 → リモートアクセス」のペアリングシークレットでペアリングしてください。</string>
+    <string name="servers_add">デスクトップを追加</string>
+    <string name="servers_connected">接続済み</string>
+    <string name="servers_connecting">接続中…</string>
+    <string name="servers_offline">オフライン</string>
+    <string name="servers_paired">ペアリング済み</string>
+    <string name="servers_needs_pairing">ペアリングが必要</string>
+    <string name="servers_remove">削除</string>
+    <string name="servers_remove_confirm">「%s」を削除しますか？このデスクトップの保存済みトークンも削除されます。</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">デスクトップを追加</string>
+    <string name="pair_name">名前</string>
+    <string name="pair_name_hint">作業用 PC</string>
+    <string name="pair_host">アドレス</string>
+    <string name="pair_host_hint_same">デスクトップに表示されたアドレス（例 192.168.1.20）</string>
+    <string name="pair_host_hint_any">デスクトップに表示された公開アドレスを貼り付け（例 203.0.113.7:47315）</string>
+    <string name="pair_port">ポート</string>
+    <string name="pair_secret">ペアリングシークレット</string>
+    <string name="pair_secret_hint">「設定 → リモートアクセス」から</string>
+    <string name="pair_save">保存して接続</string>
+    <string name="pair_invalid">アドレスとペアリングシークレットを入力してください。</string>
+    <string name="pair_duplicate">このデスクトップは既にリストにあります。</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">証明書の確認</string>
+    <string name="fp_body">%1$s への初回接続です。このフィンガープリントを CodeCockpit → 設定 → リモートアクセスに表示されているものと比較して、信頼してください。</string>
+    <string name="fp_trust">信頼して続行</string>
+    <string name="fp_reject">キャンセル</string>
+    <string name="fp_mismatch">%1$s の証明書フィンガープリントが変わりました。再インストールの可能性もありますが、接続が傍受されている可能性もあります。接続を拒否しました。</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">%1$s に接続できません。スマホからデスクトップに到達できるか（同じネットワーク、または両方で Tailscale などのトンネルアプリ）、CodeCockpit でリモートアクセスが有効か、ファイアウォールがポートを許可しているかを確認してください。</string>
+    <string name="err_auth_secret">ペアリング失敗：シークレットが違います。</string>
+    <string name="err_auth_token">ペアリングがデスクトップ側で取り消されました。もう一度シークレットを入力してペアリングしてください。</string>
+    <string name="err_banned">失敗が多すぎます — 1 分待ってから再試行してください。</string>
+    <string name="err_too_many_clients">デスクトップは既に最大数のリモートクライアントに接続されています。</string>
+    <string name="err_tls">TLS ハンドシェイクに失敗しました。</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">セッション</string>
+    <string name="sessions_empty_title">セッションなし</string>
+    <string name="sessions_empty_hint">デスクトップの CodeCockpit でセッションを開始すると、ここにリアルタイムで表示されます。</string>
+    <string name="sessions_refresh">更新</string>
+    <string name="sessions_disconnected">切断されました — 再接続中…</string>
+    <string name="sessions_exited">終了</string>
+    <string name="sessions_running">実行中</string>
+    <string name="sessions_busy">作業中</string>
+    <string name="sessions_bg">バックグラウンド %d</string>
+    <string name="sessions_disconnect">切断</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">エージェントに指示を送る…</string>
+    <string name="chat_send">送信</string>
+    <string name="chat_tool">ツール</string>
+    <string name="chat_stats_tokens">トークン %1$s / %2$s</string>
+    <string name="chat_stats_cost">コスト ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d ターン</string>
+    <string name="chat_exited">このセッションはデスクトップ側で終了しました。</string>
+    <string name="chat_mode_label">モード</string>
+    <string name="chat_detached">未接続</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">確認</string>
+    <string name="mode_acceptEdits">編集を自動承認</string>
+    <string name="mode_plan">計画</string>
+    <string name="mode_bypassPermissions">権限をバイパス</string>
+
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">スキップ</string>
+    <string name="onboarding_next">次へ</string>
+    <string name="onboarding_add_desktop">最初のデスクトップを追加</string>
+    <string name="onboarding_done">完了</string>
+    <string name="onb1_title">CodeCockpit Remote へようこそ</string>
+    <string name="onb1_body">CodeCockpit のコンパニオンアプリ。AI コーディングセッション（Claude Code、Codex、OpenCode）をスマホで見て、その場で操作できます。</string>
+    <string name="onb2_title">デスクトップでリモートアクセスを有効にする</string>
+    <string name="onb2_step1">CodeCockpit → 設定 → リモートアクセスを開く</string>
+    <string name="onb2_step2">スイッチをオンにしてペアリングシークレットをコピー</string>
+    <string name="onb2_step3">初回は Windows がファイアウォール許可を求めてきます — 許可してください</string>
+    <string name="onb3_title">どこからでも接続</string>
+    <string name="onb3_step1">デスクトップのアドレス・ポート・シークレットを入力して追加</string>
+    <string name="onb3_step2">同じネットワーク：デスクトップに表示された任意のアドレスで OK。任意のネットワーク：公開アドレスを貼り付け。</string>
+    <string name="onb3_step3">初回接続時に、証明書フィンガープリントをデスクトップに表示されているものと比較してください</string>
+    <string name="guide_show">セットアップガイドを表示</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">この情報はどこで見つかる？</string>
+    <string name="add_help_address_same">アドレス：CodeCockpit → 設定 → リモートアクセスに一覧表示された任意のもの — ローカルネットワークのものでも、Tailscale などのトンネルアプリのものでも可。</string>
+    <string name="add_help_address_any">アドレス：ポートマッピング後、同じタブの「任意のネットワーク」の下に表示されます。ポート込みで丸ごと貼り付けてください。</string>
+    <string name="add_help_port">ポート：同じ場所に表示されます。既定は 47315。</string>
+    <string name="add_help_secret">ペアリングシークレット：そのタブからコピー。デバイスの外に出ることはありません。</string>
+    <string name="pair_invalid_host">デスクトップのアドレスを入力してください。</string>
+    <string name="pair_invalid_port">ポートは 1024〜65535 の範囲で指定してください。</string>
+    <string name="pair_invalid_secret">デスクトップのペアリングシークレットを貼り付けてください。</string>
+    <string name="pair_show_secret">ペアリングシークレットの表示/非表示</string>
+    <string name="pair_where_title">あなたのコンピューターはどこ？</string>
+    <string name="pair_where_same">同じネットワーク</string>
+    <string name="pair_where_any">任意のネットワーク</string>
+    <string name="pair_hint_same">スマホはデスクトップに直接接続します。「設定 → リモートアクセス」に一覧表示された任意のアドレスで接続できます — ローカルのものでも、Tailscale などのトンネルアプリのものでも。</string>
+    <string name="pair_hint_any">デスクトップの「設定 → リモートアクセス」で「任意のネットワーク」をオンにします。公開アドレスが表示されたら、ここに貼り付けてください — ポートは自動で入ります。</string>
+
+    <!-- Settings -->
+    <string name="settings_title">設定</string>
+    <string name="settings_lock_title">アプリ保護</string>
+    <string name="settings_lock_hint">このアプリを開く前に、スマホのロック解除（指紋・顔・PIN）を要求します。</string>
+    <string name="settings_lock_setup_failed">この端末にはロックが設定されていません。先に Android の設定で追加してください。</string>
+    <string name="settings_language">言語</string>
+    <string name="settings_language_system">システムに従う</string>
+    <string name="settings_about">このアプリについて</string>
+    <string name="settings_version">バージョン</string>
+    <string name="settings_check_updates">更新を確認</string>
+    <string name="settings_update_latest">最新バージョンです。</string>
+    <string name="settings_update_failed">GitHub に接続できませんでした。接続を確認してください。</string>
+    <string name="settings_repo">プロジェクトホームページ</string>
+    <string name="settings_desktop">CodeCockpit デスクトップ版</string>
+    <string name="cd_settings">設定</string>
+
+    <!-- Update -->
+    <string name="update_title">更新があります</string>
+    <string name="update_body">GitHub でバージョン %1$s が公開されました。現在のバージョンは %2$s です。</string>
+    <string name="update_download">更新をダウンロード</string>
+    <string name="update_downloading">更新をダウンロード中…</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote はロックされています</string>
+    <string name="lock_subtitle">ロックを解除するとセッションが表示されます。</string>
+    <string name="lock_unlock">ロック解除</string>
+
+    <!-- Common -->
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_ok">OK</string>
+    <string name="common_back">戻る</string>
+</resources>

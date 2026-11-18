@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">Desktops</string>
+    <string name="servers_empty_title">Noch keine Desktops</string>
+    <string name="servers_empty_hint">Fügen Sie den Desktop mit CodeCockpit hinzu und koppeln Sie ihn mit dem Geheimnis aus dessen Registerkarte „Einstellungen → Fernzugriff“.</string>
+    <string name="servers_add">Desktop hinzufügen</string>
+    <string name="servers_connected">Verbunden</string>
+    <string name="servers_connecting">Verbinde…</string>
+    <string name="servers_offline">Offline</string>
+    <string name="servers_paired">Gekoppelt</string>
+    <string name="servers_needs_pairing">Kopplung nötig</string>
+    <string name="servers_remove">Entfernen</string>
+    <string name="servers_remove_confirm">„%s“ entfernen? Das gespeicherte Token für diesen Desktop wird ebenfalls gelöscht.</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">Desktop hinzufügen</string>
+    <string name="pair_name">Name</string>
+    <string name="pair_name_hint">Arbeits-PC</string>
+    <string name="pair_host">Adresse</string>
+    <string name="pair_host_hint_same">Eine auf dem Desktop angezeigte Adresse, z. B. 192.168.1.20</string>
+    <string name="pair_host_hint_any">Die auf dem Desktop angezeigte öffentliche Adresse einfügen, z. B. 203.0.113.7:47315</string>
+    <string name="pair_port">Port</string>
+    <string name="pair_secret">Kopplungsgeheimnis</string>
+    <string name="pair_secret_hint">Aus „Einstellungen → Fernzugriff“</string>
+    <string name="pair_save">Speichern &amp; verbinden</string>
+    <string name="pair_invalid">Adresse und Kopplungsgeheimnis eingeben.</string>
+    <string name="pair_duplicate">Dieser Desktop ist bereits in der Liste.</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">Zertifikat prüfen</string>
+    <string name="fp_body">Erste Verbindung zu %1$s. Vergleichen Sie diesen Fingerabdruck mit dem unter CodeCockpit → Einstellungen → Fernzugriff angezeigten und vertrauen Sie ihm dann.</string>
+    <string name="fp_trust">Vertrauen &amp; fortfahren</string>
+    <string name="fp_reject">Abbrechen</string>
+    <string name="fp_mismatch">Der Zertifikat-Fingerabdruck für %1$s hat sich geändert. Das kann eine Neuinstallation sein — oder jemand, der die Verbindung abfängt. Verbindung verweigert.</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">%1$s ist nicht erreichbar. Prüfen Sie, ob das Handy den Desktop erreicht (gleiches Netzwerk, oder auf beiden ein Tunnel wie Tailscale), ob der Fernzugriff in CodeCockpit aktiviert ist und ob die Firewall den Port zulässt.</string>
+    <string name="err_auth_secret">Kopplung fehlgeschlagen: falsches Geheimnis.</string>
+    <string name="err_auth_token">Die Kopplung wurde auf dem Desktop widerrufen. Geben Sie das Geheimnis erneut ein, um neu zu koppeln.</string>
+    <string name="err_banned">Zu viele Fehlversuche — warten Sie eine Minute und versuchen Sie es erneut.</string>
+    <string name="err_too_many_clients">Der Desktop bedient bereits die maximale Anzahl an Remote-Clients.</string>
+    <string name="err_tls">TLS-Handshake fehlgeschlagen.</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">Sitzungen</string>
+    <string name="sessions_empty_title">Keine Sitzungen</string>
+    <string name="sessions_empty_hint">Starten Sie auf dem Desktop eine Sitzung in CodeCockpit — sie erscheint hier live.</string>
+    <string name="sessions_refresh">Aktualisieren</string>
+    <string name="sessions_disconnected">Getrennt — verbinde erneut…</string>
+    <string name="sessions_exited">Beendet</string>
+    <string name="sessions_running">Läuft</string>
+    <string name="sessions_busy">Arbeitet</string>
+    <string name="sessions_bg">%d im Hintergrund</string>
+    <string name="sessions_disconnect">Trennen</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">An den Agenten senden…</string>
+    <string name="chat_send">Senden</string>
+    <string name="chat_tool">Werkzeug</string>
+    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_cost">Kosten ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d Runden</string>
+    <string name="chat_exited">Diese Sitzung wurde auf dem Desktop beendet.</string>
+    <string name="chat_mode_label">Modus</string>
+    <string name="chat_detached">Abgekoppelt</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">Nachfragen</string>
+    <string name="mode_acceptEdits">Änderungen akzeptieren</string>
+    <string name="mode_plan">Planen</string>
+    <string name="mode_bypassPermissions">Berechtigungen umgehen</string>
+
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">Überspringen</string>
+    <string name="onboarding_next">Weiter</string>
+    <string name="onboarding_add_desktop">Ersten Desktop hinzufügen</string>
+    <string name="onboarding_done">Fertig</string>
+    <string name="onb1_title">CodeCockpit Remote kennenlernen</string>
+    <string name="onb1_body">Die Begleit-App für CodeCockpit. Beobachten Sie Ihre AI-Coding-Sitzungen — Claude Code, Codex, OpenCode — und steuern Sie sie vom Handy aus.</string>
+    <string name="onb2_title">Fernzugriff auf dem Desktop aktivieren</string>
+    <string name="onb2_step1">CodeCockpit → Einstellungen → Fernzugriff öffnen</string>
+    <string name="onb2_step2">Einschalten und das Kopplungsgeheimnis kopieren</string>
+    <string name="onb2_step3">Windows fragt beim ersten Mal nach Firewall-Zugriff — zustimmen</string>
+    <string name="onb3_title">Von überall verbinden</string>
+    <string name="onb3_step1">Desktop mit Adresse, Port und Geheimnis hinzufügen</string>
+    <string name="onb3_step2">Gleiches Netzwerk: eine beliebige auf dem Desktop angezeigte Adresse. Beliebiges Netzwerk: die öffentliche Adresse einfügen.</string>
+    <string name="onb3_step3">Beim ersten Verbinden den Zertifikat-Fingerabdruck mit dem auf dem Desktop angezeigten vergleichen</string>
+    <string name="guide_show">Einrichtungsleitfaden anzeigen</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">Wo finde ich diese Angaben?</string>
+    <string name="add_help_address_same">Adresse: eine beliebige unter CodeCockpit → Einstellungen → Fernzugriff gelistete — die aus dem lokalen Netzwerk oder die eines Tunnels wie Tailscale.</string>
+    <string name="add_help_address_any">Adresse: erscheint nach der Port-Freigabe unter „Beliebiges Netzwerk“ im selben Tab. Alles einfügen — der Port ist enthalten.</string>
+    <string name="add_help_port">Port: wird an derselben Stelle angezeigt. Standard ist 47315.</string>
+    <string name="add_help_secret">Kopplungsgeheimnis: aus diesem Tab kopieren. Es verlässt Ihre Geräte nie.</string>
+    <string name="pair_invalid_host">Adresse des Desktops eingeben.</string>
+    <string name="pair_invalid_port">Der Port muss zwischen 1024 und 65535 liegen.</string>
+    <string name="pair_invalid_secret">Kopplungsgeheimnis vom Desktop einfügen.</string>
+    <string name="pair_show_secret">Kopplungsgeheimnis ein-/ausblenden</string>
+    <string name="pair_where_title">Wo steht Ihr Rechner?</string>
+    <string name="pair_where_same">Gleiches Netzwerk</string>
+    <string name="pair_where_any">Beliebiges Netzwerk</string>
+    <string name="pair_hint_same">Das Handy verbindet sich direkt mit dem Desktop. Eine beliebige unter „Einstellungen → Fernzugriff“ gelistete Adresse funktioniert — die lokale oder eine von einem Tunnel wie Tailscale.</string>
+    <string name="pair_hint_any">Aktivieren Sie auf dem Desktop „Beliebiges Netzwerk“ unter „Einstellungen → Fernzugriff“. Sobald dort eine öffentliche Adresse erscheint, fügen Sie sie hier ein — der Port wird automatisch übernommen.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_lock_title">App-Schutz</string>
+    <string name="settings_lock_hint">Verlangt vor dem Öffnen dieser App die Displaysperre des Handys — Fingerabdruck, Gesicht oder PIN.</string>
+    <string name="settings_lock_setup_failed">Auf diesem Gerät ist keine Displaysperre eingerichtet. Legen Sie zuerst eine in den Android-Einstellungen an.</string>
+    <string name="settings_language">Sprache</string>
+    <string name="settings_language_system">Systemstandard</string>
+    <string name="settings_about">Über</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_check_updates">Nach Updates suchen</string>
+    <string name="settings_update_latest">Sie verwenden die neueste Version.</string>
+    <string name="settings_update_failed">GitHub nicht erreichbar. Verbindung prüfen.</string>
+    <string name="settings_repo">Projekt-Homepage</string>
+    <string name="settings_desktop">CodeCockpit für Desktop</string>
+    <string name="cd_settings">Einstellungen</string>
+
+    <!-- Update -->
+    <string name="update_title">Update verfügbar</string>
+    <string name="update_body">Version %1$s wurde auf GitHub veröffentlicht. Sie verwenden %2$s.</string>
+    <string name="update_download">Update laden</string>
+    <string name="update_downloading">Update wird geladen…</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote ist gesperrt</string>
+    <string name="lock_subtitle">Entsperren, um Ihre Sitzungen zu sehen.</string>
+    <string name="lock_unlock">Entsperren</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Abbrechen</string>
+    <string name="common_ok">OK</string>
+    <string name="common_back">Zurück</string>
+</resources>

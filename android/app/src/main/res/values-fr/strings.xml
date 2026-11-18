@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">Ordinateurs</string>
+    <string name="servers_empty_title">Aucun ordinateur pour l’instant</string>
+    <string name="servers_empty_hint">Ajoutez l’ordinateur qui exécute CodeCockpit, puis appariez-le avec le secret de son onglet « Paramètres → Accès distant ».</string>
+    <string name="servers_add">Ajouter un ordinateur</string>
+    <string name="servers_connected">Connecté</string>
+    <string name="servers_connecting">Connexion…</string>
+    <string name="servers_offline">Hors ligne</string>
+    <string name="servers_paired">Apparié</string>
+    <string name="servers_needs_pairing">Appariement requis</string>
+    <string name="servers_remove">Retirer</string>
+    <string name="servers_remove_confirm">Retirer « %s » ? Le jeton stocké pour cet ordinateur sera également supprimé.</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">Ajouter un ordinateur</string>
+    <string name="pair_name">Nom</string>
+    <string name="pair_name_hint">PC du bureau</string>
+    <string name="pair_host">Adresse</string>
+    <string name="pair_host_hint_same">Une adresse affichée sur l’ordinateur, ex. 192.168.1.20</string>
+    <string name="pair_host_hint_any">Collez l’adresse publique affichée sur l’ordinateur, ex. 203.0.113.7:47315</string>
+    <string name="pair_port">Port</string>
+    <string name="pair_secret">Secret d’appariement</string>
+    <string name="pair_secret_hint">Depuis « Paramètres → Accès distant »</string>
+    <string name="pair_save">Enregistrer &amp; connecter</string>
+    <string name="pair_invalid">Renseignez une adresse et le secret d’appariement.</string>
+    <string name="pair_duplicate">Cet ordinateur est déjà dans la liste.</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">Vérifier le certificat</string>
+    <string name="fp_body">Première connexion à %1$s. Comparez cette empreinte avec celle affichée dans CodeCockpit → Paramètres → Accès distant, puis faites-lui confiance.</string>
+    <string name="fp_trust">Faire confiance &amp; continuer</string>
+    <string name="fp_reject">Annuler</string>
+    <string name="fp_mismatch">L’empreinte du certificat pour %1$s a changé. Cela peut signifier une réinstallation — ou quelqu’un qui intercepte la connexion. Connexion refusée.</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">Impossible de joindre %1$s. Vérifiez que le téléphone peut atteindre l’ordinateur (même réseau, ou un tunnel comme Tailscale des deux côtés), que l’accès distant est activé dans CodeCockpit, et que le pare-feu autorise le port.</string>
+    <string name="err_auth_secret">Appariement échoué : secret incorrect.</string>
+    <string name="err_auth_token">L’appariement a été révoqué sur l’ordinateur. Saisissez à nouveau le secret pour réappairer.</string>
+    <string name="err_banned">Trop d’échecs — attendez une minute puis réessayez.</string>
+    <string name="err_too_many_clients">L’ordinateur sert déjà le nombre maximum de clients distants.</string>
+    <string name="err_tls">Échec de la poignée de main TLS.</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">Sessions</string>
+    <string name="sessions_empty_title">Aucune session</string>
+    <string name="sessions_empty_hint">Lancez une session dans CodeCockpit sur l’ordinateur — elle apparaît ici en direct.</string>
+    <string name="sessions_refresh">Actualiser</string>
+    <string name="sessions_disconnected">Déconnecté — reconnexion…</string>
+    <string name="sessions_exited">Terminée</string>
+    <string name="sessions_running">En cours</string>
+    <string name="sessions_busy">Travaille</string>
+    <string name="sessions_bg">%d en arrière-plan</string>
+    <string name="sessions_disconnect">Déconnecter</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">Envoyer une consigne à l’agent…</string>
+    <string name="chat_send">Envoyer</string>
+    <string name="chat_tool">Outil</string>
+    <string name="chat_stats_tokens">Jetons %1$s / %2$s</string>
+    <string name="chat_stats_cost">Coût ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d tours</string>
+    <string name="chat_exited">Cette session s’est terminée sur l’ordinateur.</string>
+    <string name="chat_mode_label">Mode</string>
+    <string name="chat_detached">Détachée</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">Demander</string>
+    <string name="mode_acceptEdits">Accepter les modifications</string>
+    <string name="mode_plan">Planifier</string>
+    <string name="mode_bypassPermissions">Contourner les permissions</string>
+
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">Passer</string>
+    <string name="onboarding_next">Suivant</string>
+    <string name="onboarding_add_desktop">Ajouter votre premier ordinateur</string>
+    <string name="onboarding_done">Terminé</string>
+    <string name="onb1_title">Découvrez CodeCockpit Remote</string>
+    <string name="onb1_body">L’application compagne de CodeCockpit. Suivez vos sessions de codage IA — Claude Code, Codex, OpenCode — et pilotez-les depuis votre téléphone.</string>
+    <string name="onb2_title">Activez l’accès distant sur l’ordinateur</string>
+    <string name="onb2_step1">Ouvrez CodeCockpit → Paramètres → Accès distant</string>
+    <string name="onb2_step2">Activez-le et copiez le secret d’appariement</string>
+    <string name="onb2_step3">Windows demande l’accès au pare-feu la première fois — acceptez</string>
+    <string name="onb3_title">Connectez-vous de n’importe où</string>
+    <string name="onb3_step1">Ajoutez l’ordinateur avec son adresse, son port et le secret</string>
+    <string name="onb3_step2">Même réseau : n’importe quelle adresse affichée sur l’ordinateur fonctionne. Tout réseau : collez son adresse publique.</string>
+    <string name="onb3_step3">À la première connexion, comparez l’empreinte du certificat avec celle affichée sur l’ordinateur</string>
+    <string name="guide_show">Afficher le guide d’installation</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">Où trouver ces informations ?</string>
+    <string name="add_help_address_same">Adresse : n’importe laquelle listée dans CodeCockpit → Paramètres → Accès distant — celle du réseau local, ou celle d’un tunnel comme Tailscale.</string>
+    <string name="add_help_address_any">Adresse : affichée sous « Tout réseau » dans ce même onglet une fois le port mappé. Collez l’ensemble — le port est inclus.</string>
+    <string name="add_help_port">Port : affiché au même endroit. La valeur par défaut est 47315.</string>
+    <string name="add_help_secret">Secret d’appariement : copiez-le depuis cet onglet. Il ne quitte jamais vos appareils.</string>
+    <string name="pair_invalid_host">Saisissez l’adresse de l’ordinateur.</string>
+    <string name="pair_invalid_port">Le port doit être compris entre 1024 et 65535.</string>
+    <string name="pair_invalid_secret">Collez le secret d’appariement depuis l’ordinateur.</string>
+    <string name="pair_show_secret">Afficher ou masquer le secret d’appariement</string>
+    <string name="pair_where_title">Où se trouve votre ordinateur ?</string>
+    <string name="pair_where_same">Même réseau</string>
+    <string name="pair_where_any">Tout réseau</string>
+    <string name="pair_hint_same">Le téléphone se connecte directement à l’ordinateur. N’importe quelle adresse listée sous « Paramètres → Accès distant » fonctionne — celle locale, ou celle d’un tunnel comme Tailscale.</string>
+    <string name="pair_hint_any">Sur l’ordinateur, activez « Tout réseau » sous « Paramètres → Accès distant ». Lorsqu’une adresse publique apparaît, collez-la ici — le port se remplit automatiquement.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_lock_title">Protection de l’app</string>
+    <string name="settings_lock_hint">Exige le verrouillage de l’écran du téléphone — empreinte, visage ou code — avant d’ouvrir cette app.</string>
+    <string name="settings_lock_setup_failed">Aucun verrouillage d’écran n’est configuré sur cet appareil. Ajoutez-en un d’abord dans les réglages Android.</string>
+    <string name="settings_language">Langue</string>
+    <string name="settings_language_system">Valeur du système</string>
+    <string name="settings_about">À propos</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_check_updates">Rechercher des mises à jour</string>
+    <string name="settings_update_latest">Vous utilisez la dernière version.</string>
+    <string name="settings_update_failed">Impossible de joindre GitHub. Vérifiez votre connexion.</string>
+    <string name="settings_repo">Page du projet</string>
+    <string name="settings_desktop">CodeCockpit pour ordinateur</string>
+    <string name="cd_settings">Paramètres</string>
+
+    <!-- Update -->
+    <string name="update_title">Mise à jour disponible</string>
+    <string name="update_body">La version %1$s a été publiée sur GitHub. Vous utilisez %2$s.</string>
+    <string name="update_download">Télécharger la mise à jour</string>
+    <string name="update_downloading">Téléchargement de la mise à jour…</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote est verrouillé</string>
+    <string name="lock_subtitle">Déverrouillez pour voir vos sessions.</string>
+    <string name="lock_unlock">Déverrouiller</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Annuler</string>
+    <string name="common_ok">OK</string>
+    <string name="common_back">Retour</string>
+</resources>

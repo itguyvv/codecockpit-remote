@@ -61,6 +61,7 @@ import io.github.itguyvv.codecockpitremote.net.ConnError
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.net.FingerprintTls
 import io.github.itguyvv.codecockpitremote.net.ServerProfile
+import io.github.itguyvv.codecockpitremote.net.UpdateInfo
 import io.github.itguyvv.codecockpitremote.ui.theme.Accent
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
@@ -79,6 +80,9 @@ fun ServersScreen(vm: AppViewModel) {
     val connError by vm.connError.collectAsStateWithLifecycle()
     val fingerprint by vm.fingerprintPrompt.collectAsStateWithLifecycle()
     val activeServerId by vm.activeServerId.collectAsStateWithLifecycle()
+    val updateState by vm.updateState.collectAsStateWithLifecycle()
+    val updateDownloading by vm.updateDownloading.collectAsStateWithLifecycle()
+    val appVersion by vm.appVersion.collectAsStateWithLifecycle()
 
     var showAdd by remember { mutableStateOf(false) }
     var showGuide by remember { mutableStateOf(false) }
@@ -101,38 +105,49 @@ fun ServersScreen(vm: AppViewModel) {
             }
         }
     ) { padding ->
-        if (servers.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(32.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    stringResource(R.string.servers_empty_title),
-                    style = MaterialTheme.typography.titleMedium
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            val update = updateState
+            if (update is AppViewModel.UpdateState.Available) {
+                UpdateBanner(
+                    info = update.info,
+                    currentVersion = appVersion,
+                    downloading = updateDownloading,
+                    onDownload = { vm.downloadUpdate(update.info) }
                 )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    stringResource(R.string.servers_empty_hint),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextMid
-                )
-                Spacer(Modifier.height(16.dp))
-                TextButton(onClick = { showGuide = true }) {
-                    Text(stringResource(R.string.guide_show))
-                }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+            if (servers.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        stringResource(R.string.servers_empty_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        stringResource(R.string.servers_empty_hint),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextMid
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    TextButton(onClick = { showGuide = true }) {
+                        Text(stringResource(R.string.guide_show))
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                 items(servers, key = { it.id }) { server ->
                     ServerCard(
                         server = server,
@@ -151,6 +166,7 @@ fun ServersScreen(vm: AppViewModel) {
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
+                }
                 }
             }
         }
@@ -207,6 +223,44 @@ fun ServersScreen(vm: AppViewModel) {
 
 private fun activeHost(servers: List<ServerProfile>, activeId: String?): String =
     servers.find { it.id == activeId }?.host ?: ""
+
+/** Shown on the home screen while a newer GitHub release exists; tapping downloads the APK */
+@Composable
+private fun UpdateBanner(
+    info: UpdateInfo,
+    currentVersion: String,
+    downloading: Boolean,
+    onDownload: () -> Unit
+) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Text(
+                stringResource(R.string.update_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = Accent
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                stringResource(R.string.update_body, info.tag, currentVersion),
+                style = MaterialTheme.typography.bodySmall,
+                color = TextMid
+            )
+            Spacer(Modifier.height(6.dp))
+            TextButton(onClick = onDownload, enabled = !downloading) {
+                Text(
+                    stringResource(
+                        if (downloading) R.string.update_downloading else R.string.update_download
+                    )
+                )
+            }
+        }
+    }
+}
 
 @Composable
 private fun ServerCard(
@@ -299,7 +353,7 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
     var hostErr by remember { mutableStateOf(false) }
     var portErr by remember { mutableStateOf(false) }
     var secretErr by remember { mutableStateOf(false) }
-    // 0 = same network (LAN / Tailscale), 1 = any network (public address)
+    // 0 = same network (any direct address), 1 = any network (public address)
     var scenario by remember { mutableStateOf(0) }
 
     AlertDialog(
@@ -349,7 +403,13 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                     value = host,
                     onValueChange = { onAddressInput(it, { host = it }, { port = it }) },
                     label = { Text(stringResource(R.string.pair_host)) },
-                    placeholder = { Text(stringResource(R.string.pair_host_hint)) },
+                    placeholder = {
+                        Text(
+                            stringResource(
+                                if (scenario == 0) R.string.pair_host_hint_same else R.string.pair_host_hint_any
+                            )
+                        )
+                    },
                     isError = hostErr,
                     supportingText = if (hostErr) {
                         { Text(stringResource(R.string.pair_invalid_host)) }
@@ -404,7 +464,7 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                 }
                 if (showHelp) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        HelpLine(R.string.add_help_address)
+                        HelpLine(if (scenario == 0) R.string.add_help_address_same else R.string.add_help_address_any)
                         HelpLine(R.string.add_help_port)
                         HelpLine(R.string.add_help_secret)
                     }

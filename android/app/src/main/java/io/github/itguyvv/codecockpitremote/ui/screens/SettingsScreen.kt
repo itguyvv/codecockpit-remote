@@ -27,6 +27,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -48,6 +50,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.itguyvv.codecockpitremote.R
+import io.github.itguyvv.codecockpitremote.data.LanguagePrefs
+import io.github.itguyvv.codecockpitremote.ui.theme.Accent
 import io.github.itguyvv.codecockpitremote.ui.theme.Border
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
@@ -138,8 +142,67 @@ fun SettingsScreen(vm: AppViewModel) {
 
             HorizontalDivider(color = Border, modifier = Modifier.padding(vertical = 16.dp))
 
+            SectionLabel(stringResource(R.string.settings_language))
+            var showLangPicker by remember { mutableStateOf(false) }
+            val currentLang = remember { LanguagePrefs.get(context) }
+            val langName = LanguagePrefs.choices
+                .firstOrNull { it.first == currentLang }?.second
+                .orEmpty()
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { showLangPicker = true }
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(stringResource(R.string.settings_language), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                Text(
+                    langName.ifEmpty { stringResource(R.string.settings_language_system) },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TextMid
+                )
+            }
+            if (showLangPicker) {
+                LanguagePickerDialog(
+                    current = currentLang,
+                    onSelect = { tag ->
+                        showLangPicker = false
+                        if (tag != currentLang) {
+                            LanguagePrefs.set(context, tag)
+                            (context as? FragmentActivity)?.recreate()
+                        }
+                    },
+                    onDismiss = { showLangPicker = false }
+                )
+            }
+
+            HorizontalDivider(color = Border, modifier = Modifier.padding(vertical = 16.dp))
+
             SectionLabel(stringResource(R.string.settings_about))
             AboutRow(stringResource(R.string.settings_version), version)
+            val updateState by vm.updateState.collectAsStateWithLifecycle()
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { vm.checkForUpdate(quiet = false) }
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(stringResource(R.string.settings_check_updates), style = MaterialTheme.typography.bodyLarge)
+            }
+            when (val u = updateState) {
+                is AppViewModel.UpdateState.Latest ->
+                    Text(stringResource(R.string.settings_update_latest), style = MaterialTheme.typography.bodySmall, color = TextMid)
+                is AppViewModel.UpdateState.Failed ->
+                    Text(stringResource(R.string.settings_update_failed), style = MaterialTheme.typography.bodySmall, color = Danger)
+                is AppViewModel.UpdateState.Available ->
+                    Text(
+                        stringResource(R.string.update_body, u.info.tag, version),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Accent
+                    )
+                else -> {}
+            }
             AboutLink(stringResource(R.string.settings_repo), "https://github.com/itguyvv/codecockpit-remote")
             AboutLink(stringResource(R.string.settings_desktop), "https://github.com/ITGuyVV/CodeCockpit")
             Spacer(Modifier.height(24.dp))
@@ -154,6 +217,35 @@ private fun SectionLabel(text: String) {
         style = MaterialTheme.typography.labelMedium,
         color = TextMid,
         modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+    )
+}
+
+/** Language chooser: system default plus the app's full locale set (names in their own language) */
+@Composable
+private fun LanguagePickerDialog(current: String, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
+    val systemLabel = stringResource(R.string.settings_language_system)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.settings_language)) },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                LanguagePrefs.choices.forEach { (tag, native) ->
+                    val label = if (tag.isEmpty()) systemLabel else native
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(tag) }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = tag == current, onClick = { onSelect(tag) })
+                        Text(label, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {}
     )
 }
 

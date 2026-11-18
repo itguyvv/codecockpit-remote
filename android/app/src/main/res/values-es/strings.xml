@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">Escritorios</string>
+    <string name="servers_empty_title">Aún no hay escritorios</string>
+    <string name="servers_empty_hint">Añade el escritorio con CodeCockpit y emparéjalo con el secreto de su pestaña «Ajustes → Acceso remoto».</string>
+    <string name="servers_add">Añadir escritorio</string>
+    <string name="servers_connected">Conectado</string>
+    <string name="servers_connecting">Conectando…</string>
+    <string name="servers_offline">Sin conexión</string>
+    <string name="servers_paired">Emparejado</string>
+    <string name="servers_needs_pairing">Necesita emparejar</string>
+    <string name="servers_remove">Quitar</string>
+    <string name="servers_remove_confirm">¿Quitar «%s»? El token guardado de este escritorio también se borrará.</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">Añadir escritorio</string>
+    <string name="pair_name">Nombre</string>
+    <string name="pair_name_hint">PC del trabajo</string>
+    <string name="pair_host">Dirección</string>
+    <string name="pair_host_hint_same">Una dirección mostrada en el escritorio, p. ej. 192.168.1.20</string>
+    <string name="pair_host_hint_any">Pega la dirección pública mostrada en el escritorio, p. ej. 203.0.113.7:47315</string>
+    <string name="pair_port">Puerto</string>
+    <string name="pair_secret">Secreto de emparejamiento</string>
+    <string name="pair_secret_hint">De «Ajustes → Acceso remoto»</string>
+    <string name="pair_save">Guardar &amp; conectar</string>
+    <string name="pair_invalid">Rellena una dirección y el secreto de emparejamiento.</string>
+    <string name="pair_duplicate">Este escritorio ya está en la lista.</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">Verificar certificado</string>
+    <string name="fp_body">Primera conexión a %1$s. Compara esta huella con la mostrada en CodeCockpit → Ajustes → Acceso remoto y después confía en ella.</string>
+    <string name="fp_trust">Confiar &amp; continuar</string>
+    <string name="fp_reject">Cancelar</string>
+    <string name="fp_mismatch">La huella del certificado de %1$s cambió. Puede ser una reinstalación — o alguien interceptando la conexión. Conexión rechazada.</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">No se puede alcanzar %1$s. Comprueba que el móvil llega al escritorio (misma red, o un túnel como Tailscale en ambos), que el acceso remoto está activado en CodeCockpit y que el cortafuegos permite el puerto.</string>
+    <string name="err_auth_secret">Emparejamiento fallido: secreto incorrecto.</string>
+    <string name="err_auth_token">El emparejamiento fue revocado en el escritorio. Introduce el secreto de nuevo para emparejar.</string>
+    <string name="err_banned">Demasiados intentos fallidos — espera un minuto y prueba otra vez.</string>
+    <string name="err_too_many_clients">El escritorio ya atiende el número máximo de clientes remotos.</string>
+    <string name="err_tls">Falló el protocolo de enlace TLS.</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">Sesiones</string>
+    <string name="sessions_empty_title">Sin sesiones</string>
+    <string name="sessions_empty_hint">Inicia una sesión en CodeCockpit en el escritorio — aparecerá aquí en vivo.</string>
+    <string name="sessions_refresh">Actualizar</string>
+    <string name="sessions_disconnected">Desconectado — reconectando…</string>
+    <string name="sessions_exited">Finalizada</string>
+    <string name="sessions_running">En curso</string>
+    <string name="sessions_busy">Trabajando</string>
+    <string name="sessions_bg">%d en segundo plano</string>
+    <string name="sessions_disconnect">Desconectar</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">Envía una instrucción al agente…</string>
+    <string name="chat_send">Enviar</string>
+    <string name="chat_tool">Herramienta</string>
+    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_cost">Coste ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d turnos</string>
+    <string name="chat_exited">Esta sesión terminó en el escritorio.</string>
+    <string name="chat_mode_label">Modo</string>
+    <string name="chat_detached">Desvinculada</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">Preguntar</string>
+    <string name="mode_acceptEdits">Aceptar ediciones</string>
+    <string name="mode_plan">Planificar</string>
+    <string name="mode_bypassPermissions">Omitir permisos</string>
+
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">Omitir</string>
+    <string name="onboarding_next">Siguiente</string>
+    <string name="onboarding_add_desktop">Añade tu primer escritorio</string>
+    <string name="onboarding_done">Hecho</string>
+    <string name="onb1_title">Conoce CodeCockpit Remote</string>
+    <string name="onb1_body">La app compañera de CodeCockpit. Vigila tus sesiones de código con IA — Claude Code, Codex, OpenCode — y contrólalas desde el móvil.</string>
+    <string name="onb2_title">Activa el acceso remoto en el escritorio</string>
+    <string name="onb2_step1">Abre CodeCockpit → Ajustes → Acceso remoto</string>
+    <string name="onb2_step2">Actívalo y copia el secreto de emparejamiento</string>
+    <string name="onb2_step3">Windows pedirá acceso al cortafuegos la primera vez — acéptalo</string>
+    <string name="onb3_title">Conecta desde cualquier lugar</string>
+    <string name="onb3_step1">Añade el escritorio con su dirección, puerto y el secreto</string>
+    <string name="onb3_step2">Misma red: sirve cualquier dirección mostrada en el escritorio. Cualquier red: pega su dirección pública.</string>
+    <string name="onb3_step3">En la primera conexión, compara la huella del certificado con la mostrada en el escritorio</string>
+    <string name="guide_show">Mostrar guía de configuración</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">¿Dónde encuentro esto?</string>
+    <string name="add_help_address_same">Dirección: cualquiera de las que figuran en CodeCockpit → Ajustes → Acceso remoto — la de la red local, o la de un túnel como Tailscale.</string>
+    <string name="add_help_address_any">Dirección: se muestra bajo «Cualquier red» en esa misma pestaña una vez mapeado el puerto. Pega todo — el puerto está incluido.</string>
+    <string name="add_help_port">Puerto: se muestra en el mismo sitio. El predeterminado es 47315.</string>
+    <string name="add_help_secret">Secreto de emparejamiento: cópialo de esa pestaña. Nunca sale de tus dispositivos.</string>
+    <string name="pair_invalid_host">Introduce la dirección del escritorio.</string>
+    <string name="pair_invalid_port">El puerto debe estar entre 1024 y 65535.</string>
+    <string name="pair_invalid_secret">Pega el secreto de emparejamiento del escritorio.</string>
+    <string name="pair_show_secret">Mostrar u ocultar el secreto de emparejamiento</string>
+    <string name="pair_where_title">¿Dónde está tu ordenador?</string>
+    <string name="pair_where_same">Misma red</string>
+    <string name="pair_where_any">Cualquier red</string>
+    <string name="pair_hint_same">El móvil se conecta directamente al escritorio. Sirve cualquier dirección listada en «Ajustes → Acceso remoto» — la local, o la de un túnel como Tailscale.</string>
+    <string name="pair_hint_any">En el escritorio, activa «Cualquier red» en «Ajustes → Acceso remoto». Cuando muestre una dirección pública, pégala aquí — el puerto se rellena solo.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_lock_title">Protección de la app</string>
+    <string name="settings_lock_hint">Exige el bloqueo de pantalla del móvil — huella, rostro o PIN — antes de abrir esta app.</string>
+    <string name="settings_lock_setup_failed">Este dispositivo no tiene bloqueo de pantalla. Añade uno primero en los ajustes de Android.</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_system">Predeterminado del sistema</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_version">Versión</string>
+    <string name="settings_check_updates">Buscar actualizaciones</string>
+    <string name="settings_update_latest">Estás en la última versión.</string>
+    <string name="settings_update_failed">No se pudo conectar con GitHub. Revisa tu conexión.</string>
+    <string name="settings_repo">Página del proyecto</string>
+    <string name="settings_desktop">CodeCockpit para escritorio</string>
+    <string name="cd_settings">Ajustes</string>
+
+    <!-- Update -->
+    <string name="update_title">Actualización disponible</string>
+    <string name="update_body">La versión %1$s se publicó en GitHub. Estás en %2$s.</string>
+    <string name="update_download">Descargar actualización</string>
+    <string name="update_downloading">Descargando actualización…</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote está bloqueado</string>
+    <string name="lock_subtitle">Desbloquea para ver tus sesiones.</string>
+    <string name="lock_unlock">Desbloquear</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_ok">OK</string>
+    <string name="common_back">Atrás</string>
+</resources>

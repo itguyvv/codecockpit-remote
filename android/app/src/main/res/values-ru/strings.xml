@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">CodeCockpit Remote</string>
+
+    <!-- Servers screen -->
+    <string name="servers_title">Компьютеры</string>
+    <string name="servers_empty_title">Пока нет компьютеров</string>
+    <string name="servers_empty_hint">Добавьте компьютер с CodeCockpit, затем выполните сопряжение с секретом из его вкладки «Настройки → Удалённый доступ».</string>
+    <string name="servers_add">Добавить компьютер</string>
+    <string name="servers_connected">Подключено</string>
+    <string name="servers_connecting">Подключение…</string>
+    <string name="servers_offline">Не в сети</string>
+    <string name="servers_paired">Сопряжено</string>
+    <string name="servers_needs_pairing">Нужно сопряжение</string>
+    <string name="servers_remove">Удалить</string>
+    <string name="servers_remove_confirm">Удалить «%s»? Сохранённый токен для этого компьютера тоже будет удалён.</string>
+
+    <!-- Add / pair dialog -->
+    <string name="pair_title">Добавить компьютер</string>
+    <string name="pair_name">Имя</string>
+    <string name="pair_name_hint">Рабочий ПК</string>
+    <string name="pair_host">Адрес</string>
+    <string name="pair_host_hint_same">Любой адрес, показанный на компьютере, напр. 192.168.1.20</string>
+    <string name="pair_host_hint_any">Вставьте публичный адрес, показанный на компьютере, напр. 203.0.113.7:47315</string>
+    <string name="pair_port">Порт</string>
+    <string name="pair_secret">Секрет сопряжения</string>
+    <string name="pair_secret_hint">Из «Настройки → Удалённый доступ»</string>
+    <string name="pair_save">Сохранить и подключиться</string>
+    <string name="pair_invalid">Укажите адрес и секрет сопряжения.</string>
+    <string name="pair_duplicate">Этот компьютер уже в списке.</string>
+
+    <!-- Fingerprint dialog (TOFU) -->
+    <string name="fp_title">Проверка сертификата</string>
+    <string name="fp_body">Первое подключение к %1$s. Сравните этот отпечаток с показанным в CodeCockpit → Настройки → Удалённый доступ, затем подтвердите доверие.</string>
+    <string name="fp_trust">Доверять и продолжить</string>
+    <string name="fp_reject">Отмена</string>
+    <string name="fp_mismatch">Отпечаток сертификата для %1$s изменился. Это может быть переустановка — или кто-то перехватывает соединение. Подключение отклонено.</string>
+
+    <!-- Connection errors -->
+    <string name="err_network">Не удаётся достучаться до %1$s. Проверьте, что телефон видит компьютер (та же сеть, или туннель вроде Tailscale на обоих), что удалённый доступ включён в CodeCockpit и что брандмауэр пропускает порт.</string>
+    <string name="err_auth_secret">Сопряжение не удалось: неверный секрет.</string>
+    <string name="err_auth_token">Сопряжение отозвано на компьютере. Введите секрет заново, чтобы сопрячься.</string>
+    <string name="err_banned">Слишком много неудачных попыток — подождите минуту и попробуйте снова.</string>
+    <string name="err_too_many_clients">Компьютер уже обслуживает максимальное число удалённых клиентов.</string>
+    <string name="err_tls">Не удалось согласование TLS.</string>
+
+    <!-- Sessions screen -->
+    <string name="sessions_title">Сессии</string>
+    <string name="sessions_empty_title">Нет сессий</string>
+    <string name="sessions_empty_hint">Запустите сессию в CodeCockpit на компьютере — она появится здесь в реальном времени.</string>
+    <string name="sessions_refresh">Обновить</string>
+    <string name="sessions_disconnected">Отключено — переподключение…</string>
+    <string name="sessions_exited">Завершена</string>
+    <string name="sessions_running">Работает</string>
+    <string name="sessions_busy">Занята</string>
+    <string name="sessions_bg">%d в фоне</string>
+    <string name="sessions_disconnect">Отключить</string>
+
+    <!-- Chat screen -->
+    <string name="chat_input_hint">Отправьте задание агенту…</string>
+    <string name="chat_send">Отправить</string>
+    <string name="chat_tool">Инструмент</string>
+    <string name="chat_stats_tokens">Токены %1$s / %2$s</string>
+    <string name="chat_stats_cost">Расход ≈ $%1$.2f</string>
+    <string name="chat_stats_turns">%d ходов</string>
+    <string name="chat_exited">Эта сессия завершена на компьютере.</string>
+    <string name="chat_mode_label">Режим</string>
+    <string name="chat_detached">Отсоединена</string>
+
+    <!-- Permission modes -->
+    <string name="mode_default">Спрашивать</string>
+    <string name="mode_acceptEdits">Принимать правки</string>
+    <string name="mode_plan">Планировать</string>
+    <string name="mode_bypassPermissions">Обход разрешений</string>
+
+    <!-- Onboarding / setup guide -->
+    <string name="onboarding_skip">Пропустить</string>
+    <string name="onboarding_next">Далее</string>
+    <string name="onboarding_add_desktop">Добавьте первый компьютер</string>
+    <string name="onboarding_done">Готово</string>
+    <string name="onb1_title">Знакомьтесь: CodeCockpit Remote</string>
+    <string name="onb1_body">Компаньон-приложение для CodeCockpit. Наблюдайте за сессиями ИИ-кодинга — Claude Code, Codex, OpenCode — и управляйте ими с телефона.</string>
+    <string name="onb2_title">Включите удалённый доступ на компьютере</string>
+    <string name="onb2_step1">Откройте CodeCockpit → Настройки → Удалённый доступ</string>
+    <string name="onb2_step2">Включите и скопируйте секрет сопряжения</string>
+    <string name="onb2_step3">Windows при первом запуске спросит про брандмауэр — разрешите</string>
+    <string name="onb3_title">Подключайтесь откуда угодно</string>
+    <string name="onb3_step1">Добавьте компьютер: адрес, порт и секрет</string>
+    <string name="onb3_step2">Та же сеть: подойдёт любой адрес, показанный на компьютере. Любая сеть: вставьте его публичный адрес.</string>
+    <string name="onb3_step3">При первом подключении сверьте отпечаток сертификата с показанным на компьютере</string>
+    <string name="guide_show">Показать инструкцию по настройке</string>
+
+    <!-- Add-desktop help -->
+    <string name="add_help_title">Где это найти?</string>
+    <string name="add_help_address_same">Адрес: любой из перечисленных в CodeCockpit → Настройки → Удалённый доступ — локальной сети или туннеля вроде Tailscale.</string>
+    <string name="add_help_address_any">Адрес: появится в том же разделе под «Любая сеть» после проброса порта. Вставьте целиком — порт уже включён.</string>
+    <string name="add_help_port">Порт: показан там же. По умолчанию 47315.</string>
+    <string name="add_help_secret">Секрет сопряжения: скопируйте из этой вкладки. Он не покидает ваши устройства.</string>
+    <string name="pair_invalid_host">Введите адрес компьютера.</string>
+    <string name="pair_invalid_port">Порт должен быть от 1024 до 65535.</string>
+    <string name="pair_invalid_secret">Вставьте секрет сопряжения с компьютера.</string>
+    <string name="pair_show_secret">Показать или скрыть секрет сопряжения</string>
+    <string name="pair_where_title">Где находится ваш компьютер?</string>
+    <string name="pair_where_same">Та же сеть</string>
+    <string name="pair_where_any">Любая сеть</string>
+    <string name="pair_hint_same">Телефон подключается к компьютеру напрямую. Подойдёт любой адрес из «Настройки → Удалённый доступ» — локальный или от туннеля вроде Tailscale.</string>
+    <string name="pair_hint_any">На компьютере включите «Любая сеть» в «Настройки → Удалённый доступ». Когда появится публичный адрес, вставьте его сюда — порт подставится сам.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_lock_title">Защита приложения</string>
+    <string name="settings_lock_hint">Требовать блокировку экрана телефона — отпечаток, лицо или PIN — перед открытием этого приложения.</string>
+    <string name="settings_lock_setup_failed">На этом устройстве не настроена блокировка экрана. Сначала добавьте её в настройках Android.</string>
+    <string name="settings_language">Язык</string>
+    <string name="settings_language_system">Как в системе</string>
+    <string name="settings_about">О приложении</string>
+    <string name="settings_version">Версия</string>
+    <string name="settings_check_updates">Проверить обновления</string>
+    <string name="settings_update_latest">У вас последняя версия.</string>
+    <string name="settings_update_failed">Не удалось связаться с GitHub. Проверьте подключение.</string>
+    <string name="settings_repo">Страница проекта</string>
+    <string name="settings_desktop">CodeCockpit для компьютера</string>
+    <string name="cd_settings">Настройки</string>
+
+    <!-- Update -->
+    <string name="update_title">Доступно обновление</string>
+    <string name="update_body">На GitHub опубликована версия %1$s. У вас %2$s.</string>
+    <string name="update_download">Скачать обновление</string>
+    <string name="update_downloading">Скачивание обновления…</string>
+
+    <!-- App lock -->
+    <string name="lock_title">CodeCockpit Remote заблокирован</string>
+    <string name="lock_subtitle">Разблокируйте, чтобы увидеть ваши сессии.</string>
+    <string name="lock_unlock">Разблокировать</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Отмена</string>
+    <string name="common_ok">ОК</string>
+    <string name="common_back">Назад</string>
+</resources>

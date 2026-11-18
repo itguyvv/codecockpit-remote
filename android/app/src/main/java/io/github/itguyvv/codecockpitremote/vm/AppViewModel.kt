@@ -8,6 +8,11 @@ import io.github.itguyvv.codecockpitremote.net.ConnError
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.net.RemoteClient
 import io.github.itguyvv.codecockpitremote.net.ServerProfile
+import io.github.itguyvv.codecockpitremote.net.UpdateChecker
+import io.github.itguyvv.codecockpitremote.net.UpdateInfo
+import io.github.itguyvv.codecockpitremote.net.UpdateResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import io.github.itguyvv.codecockpitremote.protocol.RemoteMessage
 import io.github.itguyvv.codecockpitremote.protocol.ServerEvent
 import io.github.itguyvv.codecockpitremote.protocol.SessionStatus
@@ -50,6 +55,64 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setAppLockEnabled(enabled: Boolean) {
         viewModelScope.launch { store.setAppLockEnabled(enabled) }
+    }
+
+    // ── Self-update (GitHub releases) ──
+    sealed interface UpdateState {
+        data object None : UpdateState
+        data class Available(val info: UpdateInfo) : UpdateState
+        data object Latest : UpdateState
+        data object Failed : UpdateState
+    }
+
+    private val _updateState = MutableStateFlow<UpdateState>(UpdateState.None)
+    val updateState: StateFlow<UpdateState> = _updateState
+    private val _updateDownloading = MutableStateFlow(false)
+    val updateDownloading: StateFlow<Boolean> = _updateDownloading
+
+    /** The running version name, shown in the update banner text */
+    private val _appVersion = MutableStateFlow("")
+    val appVersion: StateFlow<String> = _appVersion
+
+    /** DownloadManager id of the in-flight APK; the activity matches completion broadcasts against it */
+    var lastDownloadId: Long = -1
+        private set
+    private var downloadedTag: String? = null
+
+    init {
+        checkForUpdate(quiet = true)
+    }
+
+    /** quiet = startup check: failures and no-update stay silent; explicit checks report both */
+    fun checkForUpdate(quiet: Boolean) {
+        viewModelScope.launch {
+            val ctx = getApplication<Application>()
+            val current = try {
+                ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: ""
+            } catch (e: Exception) {
+                ""
+            }
+            _appVersion.value = current
+            val res = withContext(Dispatchers.IO) { UpdateChecker.check(current) }
+            _updateState.value = when (res) {
+                is UpdateResult.Available -> UpdateState.Available(res.info)
+                UpdateResult.Latest -> UpdateState.Latest
+                UpdateResult.Failed -> if (quiet) UpdateState.None else UpdateState.Failed
+            }
+        }
+    }
+
+    fun downloadUpdate(info: UpdateInfo) {
+        lastDownloadId = UpdateChecker.download(getApplication(), info)
+        downloadedTag = info.tag
+        _updateDownloading.value = true
+    }
+
+    /** Called by the activity when DownloadManager broadcasts the download finished */
+    fun onDownloadComplete(id: Long) {
+        if (id != lastDownloadId) return
+        _updateDownloading.value = false
+        downloadedTag?.let { UpdateChecker.openApk(getApplication(), it) }
     }
 
     // ── Navigation ──
