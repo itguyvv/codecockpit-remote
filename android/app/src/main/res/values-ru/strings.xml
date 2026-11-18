@@ -20,7 +20,8 @@
     <string name="pair_name_hint">Рабочий ПК</string>
     <string name="pair_host">Адрес</string>
     <string name="pair_host_hint_same">Любой адрес, показанный на компьютере, напр. 192.168.1.20</string>
-    <string name="pair_host_hint_any">Вставьте публичный адрес, показанный на компьютере, напр. 203.0.113.7:47315</string>
+    <string name="pair_id">ID устройства</string>
+    <string name="pair_id_hint">8 цифр, отображается на компьютере</string>
     <string name="pair_port">Порт</string>
     <string name="pair_secret">Секрет сопряжения</string>
     <string name="pair_secret_hint">Из «Настройки → Удалённый доступ»</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">Слишком много неудачных попыток — подождите минуту и попробуйте снова.</string>
     <string name="err_too_many_clients">Компьютер уже обслуживает максимальное число удалённых клиентов.</string>
     <string name="err_tls">Не удалось согласование TLS.</string>
+    <string name="err_offline">Компьютер сейчас недоступен — проверьте, что CodeCockpit запущен с включённым удалённым доступом, и что ID устройства указан верно.</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">Сессии</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">Включите и скопируйте секрет сопряжения</string>
     <string name="onb2_step3">Windows при первом запуске спросит про брандмауэр — разрешите</string>
     <string name="onb3_title">Подключайтесь откуда угодно</string>
-    <string name="onb3_step1">Добавьте компьютер: адрес, порт и секрет</string>
-    <string name="onb3_step2">Та же сеть: подойдёт любой адрес, показанный на компьютере. Любая сеть: вставьте его публичный адрес.</string>
+    <string name="onb3_step1">Добавьте компьютер — по адресу и секрету или только по его ID устройства и секрету</string>
+    <string name="onb3_step2">Та же сеть: подойдёт любой адрес, пок��занный на компьютере. Любая сеть: тол��ко его 8-значный ID устройства и секрет.</string>
     <string name="onb3_step3">При первом подключении сверьте отпечаток сертификата с показанным на компьютере</string>
     <string name="guide_show">Показать инструкцию по настройке</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Где это найти?</string>
     <string name="add_help_address_same">Адрес: любой из перечисленных в CodeCockpit → Настройки → Удалённый доступ — локальной сети или туннеля вроде Tailscale.</string>
-    <string name="add_help_address_any">Адрес: появится в том же разделе под «Любая сеть» после проброса порта. Вставьте целиком — порт уже включён.</string>
+    <string name="add_help_address_any">ID устройства: 8-значное число под «Любая сеть» в том же разделе. Введите его вместе с секретом — без VPN и проброса портов.</string>
     <string name="add_help_port">Порт: показан там же. По умолчанию 47315.</string>
     <string name="add_help_secret">Секрет сопряжения: скопируйте из этой вкладки. Он не покидает ваши устройства.</string>
     <string name="pair_invalid_host">Введите адрес компьютера.</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">Та же сеть</string>
     <string name="pair_where_any">Любая сеть</string>
     <string name="pair_hint_same">Телефон подключается к компьютеру напрямую. Подойдёт любой адрес из «Настройки → Удалённый доступ» — локальный или от туннеля вроде Tailscale.</string>
-    <string name="pair_hint_any">На компьютере включите «Любая сеть» в «Настройки → Удалённый доступ». Когда появится публичный адрес, вставьте его сюда — порт подставится сам.</string>
+    <string name="pair_hint_any">На компьютере включите «Любая сеть» в «Настройки → Удалённый доступ» и скопируйте 8-значный ID устройства. Введите здесь ID и секрет — без VPN и проброса портов.</string>
+    <string name="pair_invalid_id">Введите 8-значный ID устройства, показанный на компьютере.</string>
 
     <!-- Settings -->
     <string name="settings_title">Настройки</string>

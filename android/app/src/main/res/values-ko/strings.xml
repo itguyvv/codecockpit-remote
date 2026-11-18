@@ -20,7 +20,8 @@
     <string name="pair_name_hint">회사 PC</string>
     <string name="pair_host">주소</string>
     <string name="pair_host_hint_same">데스크톱에 표시된 주소 (예: 192.168.1.20)</string>
-    <string name="pair_host_hint_any">데스크톱에 표시된 공개 주소를 붙여넣기 (예: 203.0.113.7:47315)</string>
+    <string name="pair_id">기기 ID</string>
+    <string name="pair_id_hint">데스크톱에 표시되는 8자리 숫자</string>
     <string name="pair_port">포트</string>
     <string name="pair_secret">페어링 시크릿</string>
     <string name="pair_secret_hint">설정 → 원격 액세스에서</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">실패가 너무 많습니다 — 1분 후에 다시 시도하세요.</string>
     <string name="err_too_many_clients">데스크톱이 이미 최대 원격 클라이언트 수에 도달했습니다.</string>
     <string name="err_tls">TLS 핸드셰이크 실패.</string>
+    <string name="err_offline">현재 데스크톱에 연결할 수 없습니다. CodeCockpit이 원격 액세스를 켠 상태로 실행 중인지, 기기 ID가 올바른지 확인하세요.</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">세션</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">스위치를 켜고 페어링 시크릿 복사</string>
     <string name="onb2_step3">처음에는 Windows가 방화벽 권한을 요청합니다 — 허용하세요</string>
     <string name="onb3_title">어디서든 연결</string>
-    <string name="onb3_step1">데스크톱의 주소, 포트, 시크릿을 입력해 추가</string>
-    <string name="onb3_step2">같은 네트워크: 데스크톱에 표시된 주소 아무거나 사용. 임의의 네트워크: 공개 주소를 붙여넣기.</string>
+    <string name="onb3_step1">데스크톱 추가 — 주소와 시크릿, 또는 기기 ID와 시크릿만으로도 가능</string>
+    <string name="onb3_step2">같은 네트워크: 데스크톱에 표시된 주소 아무거나 사용. 임의의 네트워크: 8자리 기기 ID와 시크릿만.</string>
     <string name="onb3_step3">첫 연결 시 인증서 지문을 데스크톱에 표시된 것과 비교하세요</string>
     <string name="guide_show">설정 가이드 보기</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">이 정보는 어디서 찾나요?</string>
     <string name="add_help_address_same">주소: CodeCockpit → 설정 → 원격 액세스에 나열된 것 중 아무거나 — 로컬 네트워크 주소나 Tailscale 같은 터널 앱의 주소 모두 가능.</string>
-    <string name="add_help_address_any">주소: 포트 매핑 후 같은 탭의 ‘임의의 네트워크’ 아래에 표시됩니다. 포트가 포함된 전체를 붙여넣으세요.</string>
+    <string name="add_help_address_any">기기 ID: 같은 탭의 ‘임의의 네트워크’ 아래에 표시되는 8자리 숫자. 시크릿과 함께 입력 — VPN이나 포트 포워딩이 필요 없습니다.</string>
     <string name="add_help_port">포트: 같은 곳에 표시됩니다. 기본값은 47315.</string>
     <string name="add_help_secret">페어링 시크릿: 그 탭에서 복사. 기기를 벗어나지 않습니다.</string>
     <string name="pair_invalid_host">데스크톱의 주소를 입력하세요.</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">같은 네트워크</string>
     <string name="pair_where_any">임의의 네트워크</string>
     <string name="pair_hint_same">휴대폰이 데스크톱에 직접 연결됩니다. 설정 → 원격 액세스에 나열된 주소 아무거나 사용할 수 있습니다 — 로컬 주소든 Tailscale 같은 터널 앱의 주소든.</string>
-    <string name="pair_hint_any">데스크톱의 설정 → 원격 액세스에서 ‘임의의 네트워크’를 켜세요. 공개 주소가 표시되면 여기에 붙여넣으세요 — 포트는 자동으로 채워집니다.</string>
+    <string name="pair_hint_any">데스크톱의 설정 → 원격 액세스에서 ‘임의의 네트워크’를 켜고 8자리 기기 ID를 복사하세요. 여기에 ID와 시크릿을 입력 — VPN이나 포트 포워딩이 필요 없습니다.</string>
+    <string name="pair_invalid_id">데스크톱에 표시된 8자리 기기 ID를 입력하세요.</string>
 
     <!-- Settings -->
     <string name="settings_title">설정</string>

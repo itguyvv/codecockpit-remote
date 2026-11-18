@@ -20,7 +20,8 @@
     <string name="pair_name_hint">PC du bureau</string>
     <string name="pair_host">Adresse</string>
     <string name="pair_host_hint_same">Une adresse affichée sur l’ordinateur, ex. 192.168.1.20</string>
-    <string name="pair_host_hint_any">Collez l’adresse publique affichée sur l’ordinateur, ex. 203.0.113.7:47315</string>
+    <string name="pair_id">ID de l’appareil</string>
+    <string name="pair_id_hint">8 chiffres, affiché sur l’ordinateur</string>
     <string name="pair_port">Port</string>
     <string name="pair_secret">Secret d’appariement</string>
     <string name="pair_secret_hint">Depuis « Paramètres → Accès distant »</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">Trop d’échecs — attendez une minute puis réessayez.</string>
     <string name="err_too_many_clients">L’ordinateur sert déjà le nombre maximum de clients distants.</string>
     <string name="err_tls">Échec de la poignée de main TLS.</string>
+    <string name="err_offline">L’ordinateur est injoignable pour le moment — vérifiez que CodeCockpit tourne avec l’accès distant activé et que l’ID de l’appareil est correct.</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">Sessions</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">Activez-le et copiez le secret d’appariement</string>
     <string name="onb2_step3">Windows demande l’accès au pare-feu la première fois — acceptez</string>
     <string name="onb3_title">Connectez-vous de n’importe où</string>
-    <string name="onb3_step1">Ajoutez l’ordinateur avec son adresse, son port et le secret</string>
-    <string name="onb3_step2">Même réseau : n’importe quelle adresse affichée sur l’ordinateur fonctionne. Tout réseau : collez son adresse publique.</string>
+    <string name="onb3_step1">Ajoutez l’ordinateur — avec une adresse et le secret, ou seulement son ID d’appareil et le secret</string>
+    <string name="onb3_step2">Même réseau : n’importe quelle adresse affichée sur l’ordinateur fonctionne. Tout réseau : seulement son ID d’appareil à 8 chiffres et le secret.</string>
     <string name="onb3_step3">À la première connexion, comparez l’empreinte du certificat avec celle affichée sur l’ordinateur</string>
     <string name="guide_show">Afficher le guide d’installation</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Où trouver ces informations ?</string>
     <string name="add_help_address_same">Adresse : n’importe laquelle listée dans CodeCockpit → Paramètres → Accès distant — celle du réseau local, ou celle d’un tunnel comme Tailscale.</string>
-    <string name="add_help_address_any">Adresse : affichée sous « Tout réseau » dans ce même onglet une fois le port mappé. Collez l’ensemble — le port est inclus.</string>
+    <string name="add_help_address_any">ID de l’appareil : le nombre à 8 chiffres affiché sous « Tout réseau » dans ce même onglet. Saisissez-le avec le secret — sans VPN ni transfert de port.</string>
     <string name="add_help_port">Port : affiché au même endroit. La valeur par défaut est 47315.</string>
     <string name="add_help_secret">Secret d’appariement : copiez-le depuis cet onglet. Il ne quitte jamais vos appareils.</string>
     <string name="pair_invalid_host">Saisissez l’adresse de l’ordinateur.</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">Même réseau</string>
     <string name="pair_where_any">Tout réseau</string>
     <string name="pair_hint_same">Le téléphone se connecte directement à l’ordinateur. N’importe quelle adresse listée sous « Paramètres → Accès distant » fonctionne — celle locale, ou celle d’un tunnel comme Tailscale.</string>
-    <string name="pair_hint_any">Sur l’ordinateur, activez « Tout réseau » sous « Paramètres → Accès distant ». Lorsqu’une adresse publique apparaît, collez-la ici — le port se remplit automatiquement.</string>
+    <string name="pair_hint_any">Sur l’ordinateur, activez « Tout réseau » sous « Paramètres → Accès distant » et copiez l’ID de l’appareil à 8 chiffres. Saisissez ici l’ID et le secret — sans VPN ni transfert de port.</string>
+    <string name="pair_invalid_id">Saisissez l’ID de l’appareil à 8 chiffres affiché sur l’ordinateur.</string>
 
     <!-- Settings -->
     <string name="settings_title">Paramètres</string>

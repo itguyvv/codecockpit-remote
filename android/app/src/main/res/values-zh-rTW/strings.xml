@@ -20,7 +20,8 @@
     <string name="pair_name_hint">辦公電腦</string>
     <string name="pair_host">位址</string>
     <string name="pair_host_hint_same">桌面端顯示的任一位址，如 192.168.1.20</string>
-    <string name="pair_host_hint_any">貼上桌面端顯示的公網位址，如 203.0.113.7:47315</string>
+    <string name="pair_id">裝置 ID</string>
+    <string name="pair_id_hint">8 位數字，桌面端會顯示</string>
     <string name="pair_port">連接埠</string>
     <string name="pair_secret">配對金鑰</string>
     <string name="pair_secret_hint">來自「設定 → 遠端存取」</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">失敗次數過多——請稍候一分鐘再試。</string>
     <string name="err_too_many_clients">桌面端已達遠端用戶端數量上限。</string>
     <string name="err_tls">TLS 交握失敗。</string>
+    <string name="err_offline">桌面端目前無法連線——請確認 CodeCockpit 正在執行且已啟用遠端存取，裝置 ID 也輸入正確。</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">工作階段</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">打開開關並複製配對金鑰</string>
     <string name="onb2_step3">Windows 第一次會要求防火牆權限——請允許</string>
     <string name="onb3_title">隨時隨地連線</string>
-    <string name="onb3_step1">填入桌面端的位址、連接埠和配對金鑰</string>
-    <string name="onb3_step2">同一網路：桌面端顯示的任一位址都可以。任意網路：填它的公網位址。</string>
+    <string name="onb3_step1">填入桌面端的位址和配對金鑰，或只填它的裝置 ID 和配對金鑰</string>
+    <string name="onb3_step2">同一網路：桌面端顯示的任一位址都可以。任意網路：只需它的 8 位裝置 ID 和配對金鑰。</string>
     <string name="onb3_step3">首次連線時，請將憑證指紋與桌面端顯示的進行比對</string>
     <string name="guide_show">查看設定指南</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">這些資訊在哪裡找？</string>
     <string name="add_help_address_same">位址：CodeCockpit → 設定 → 遠端存取中列出的任一位址——區域網路的，或 Tailscale 等通道軟體提供的都可以。</string>
-    <string name="add_help_address_any">位址：連接埠映射成功後，會顯示在同一頁的「任意網路」下。整段貼上即可——其中已含連接埠。</string>
+    <string name="add_help_address_any">裝置 ID：同一頁「任意網路」下顯示的 8 位數字。搭配配對金鑰輸入即可——無需 VPN 或連接埠映射。</string>
     <string name="add_help_port">連接埠：顯示在同一位置。預設是 47315。</string>
     <string name="add_help_secret">配對金鑰：從該頁複製。它絕不會離開你的裝置。</string>
     <string name="pair_invalid_host">請輸入桌面端的位址。</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">同一網路</string>
     <string name="pair_where_any">任意網路</string>
     <string name="pair_hint_same">手機與桌面端直接連線。「設定 → 遠端存取」中列出的任一位址都可以——區域網路的，或 Tailscale 等通道軟體提供的。</string>
-    <string name="pair_hint_any">在桌面端「設定 → 遠端存取」裡打開「任意網路」。等它顯示出公網位址後，貼上到這裡——連接埠會自動填好。</string>
+    <string name="pair_hint_any">在桌面端「設定 → 遠端存取」裡打開「任意網路」，複製 8 位裝置 ID。在這裡輸入 ID 和配對金鑰——無需 VPN、無需連接埠映射。</string>
+    <string name="pair_invalid_id">請輸入桌面端顯示的 8 位裝置 ID。</string>
 
     <!-- Settings -->
     <string name="settings_title">設定</string>

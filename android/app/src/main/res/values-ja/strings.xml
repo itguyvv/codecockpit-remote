@@ -20,7 +20,8 @@
     <string name="pair_name_hint">作業用 PC</string>
     <string name="pair_host">アドレス</string>
     <string name="pair_host_hint_same">デスクトップに表示されたアドレス（例 192.168.1.20）</string>
-    <string name="pair_host_hint_any">デスクトップに表示された公開アドレスを貼り付け（例 203.0.113.7:47315）</string>
+    <string name="pair_id">デバイス ID</string>
+    <string name="pair_id_hint">デスクトップに表示される 8 桁の数字</string>
     <string name="pair_port">ポート</string>
     <string name="pair_secret">ペアリングシークレット</string>
     <string name="pair_secret_hint">「設定 → リモートアクセス」から</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">失敗が多すぎます — 1 分待ってから再試行してください。</string>
     <string name="err_too_many_clients">デスクトップは既に最大数のリモートクライアントに接続されています。</string>
     <string name="err_tls">TLS ハンドシェイクに失敗しました。</string>
+    <string name="err_offline">現在デスクトップに接続できません。CodeCockpit がリモートアクセス有効の状態で起動しているか、デバイス ID が正しいか確認してください。</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">セッション</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">スイッチをオンにしてペアリングシークレットをコピー</string>
     <string name="onb2_step3">初回は Windows がファイアウォール許可を求めてきます — 許可してください</string>
     <string name="onb3_title">どこからでも接続</string>
-    <string name="onb3_step1">デスクトップのアドレス・ポート・シークレットを入力して追加</string>
-    <string name="onb3_step2">同じネットワーク：デスクトップに表示された任意のアドレスで OK。任意のネットワーク：公開アドレスを貼り付け。</string>
+    <string name="onb3_step1">デスクトップを追加 — アドレスとシークレット、またはデバイス ID とシークレットだけでも OK</string>
+    <string name="onb3_step2">同じネットワーク：デスクトップに表示された任意のアドレスで OK。任意のネットワーク：8 桁のデバイス ID とシークレットだけ。</string>
     <string name="onb3_step3">初回接続時に、証明書フィンガープリントをデスクトップに表示されているものと比較してください</string>
     <string name="guide_show">セットアップガイドを表示</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">この情報はどこで見つかる？</string>
     <string name="add_help_address_same">アドレス：CodeCockpit → 設定 → リモートアクセスに一覧表示された任意のもの — ローカルネットワークのものでも、Tailscale などのトンネルアプリのものでも可。</string>
-    <string name="add_help_address_any">アドレス：ポートマッピング後、同じタブの「任意のネットワーク」の下に表示されます。ポート込みで丸ごと貼り付けてください。</string>
+    <string name="add_help_address_any">デバイス ID：同じタブの「任意のネットワーク」の下に表示される 8 桁の数字。シークレットと一緒に入力 — VPN もポート転送も不要です。</string>
     <string name="add_help_port">ポート：同じ場所に表示されます。既定は 47315。</string>
     <string name="add_help_secret">ペアリングシークレット：そのタブからコピー。デバイスの外に出ることはありません。</string>
     <string name="pair_invalid_host">デスクトップのアドレスを入力してください。</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">同じネットワーク</string>
     <string name="pair_where_any">任意のネットワーク</string>
     <string name="pair_hint_same">スマホはデスクトップに直接接続します。「設定 → リモートアクセス」に一覧表示された任意のアドレスで接続できます — ローカルのものでも、Tailscale などのトンネルアプリのものでも。</string>
-    <string name="pair_hint_any">デスクトップの「設定 → リモートアクセス」で「任意のネットワーク」をオンにします。公開アドレスが表示されたら、ここに貼り付けてください — ポートは自動で入ります。</string>
+    <string name="pair_hint_any">デスクトップの「設定 → リモートアクセス」で「任意のネットワーク」をオンにし、8 桁のデバイス ID をコピーします。ここに ID とシークレットを入力 — VPN もポート転送も不要です。</string>
+    <string name="pair_invalid_id">デスクトップに表示された 8 桁のデバイス ID を入力してください。</string>
 
     <!-- Settings -->
     <string name="settings_title">設定</string>

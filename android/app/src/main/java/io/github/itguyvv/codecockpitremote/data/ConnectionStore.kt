@@ -51,12 +51,13 @@ class ConnectionStore(private val context: Context) {
         }
     }
 
-    suspend fun add(name: String, host: String, port: Int, secret: String): ServerProfile {
+    suspend fun add(name: String, host: String, port: Int, secret: String, linkId: String = ""): ServerProfile {
         val profile = ServerProfile(
             id = UUID.randomUUID().toString(),
-            name = name.ifBlank { host },
+            name = name.ifBlank { host.ifBlank { linkId } },
             host = host.trim(),
             port = port,
+            linkId = linkId,
             secret = secret
         )
         update { it + profile }

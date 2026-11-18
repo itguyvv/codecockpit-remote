@@ -20,7 +20,8 @@
     <string name="pair_name_hint">Work PC</string>
     <string name="pair_host">Address</string>
     <string name="pair_host_hint_same">An address shown on the desktop, e.g. 192.168.1.20</string>
-    <string name="pair_host_hint_any">Paste the public address shown on the desktop, e.g. 203.0.113.7:47315</string>
+    <string name="pair_id">Device ID</string>
+    <string name="pair_id_hint">8 digits, shown on the desktop</string>
     <string name="pair_port">Port</string>
     <string name="pair_secret">Pairing secret</string>
     <string name="pair_secret_hint">From Settings → Remote access</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">Too many failed attempts — wait a minute and try again.</string>
     <string name="err_too_many_clients">The desktop already serves the maximum number of remote clients.</string>
     <string name="err_tls">TLS handshake failed.</string>
+    <string name="err_offline">The desktop is not reachable right now — check that CodeCockpit is running with remote access enabled, and that the device ID is correct.</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">Sessions</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">Turn it on and copy the pairing secret</string>
     <string name="onb2_step3">Windows asks for firewall access the first time — accept it</string>
     <string name="onb3_title">Connect from anywhere</string>
-    <string name="onb3_step1">Add the desktop with its address, port, and the secret</string>
-    <string name="onb3_step2">Same network: any address shown on the desktop works. Any network: paste its public address.</string>
+    <string name="onb3_step1">Add the desktop — with an address and the secret, or just its device ID and the secret</string>
+    <string name="onb3_step2">Same network: any address shown on the desktop works. Any network: just its 8-digit device ID and the secret.</string>
     <string name="onb3_step3">On first connect, compare the certificate fingerprint with the one shown on the desktop</string>
     <string name="guide_show">Show setup guide</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Where do I find these?</string>
     <string name="add_help_address_same">Address: any one listed in CodeCockpit → Settings → Remote access — the local network one, or one from a tunnel app such as Tailscale.</string>
-    <string name="add_help_address_any">Address: shown under “Any network” in that same tab once the port is mapped. Paste the whole thing — the port is included.</string>
+    <string name="add_help_address_any">Device ID: the 8-digit number shown under “Any network” in that same tab. Enter it with the pairing secret — no VPN or port forwarding needed.</string>
     <string name="add_help_port">Port: shown in the same place. The default is 47315.</string>
     <string name="add_help_secret">Pairing secret: copy it from that tab. It never leaves your devices.</string>
     <string name="pair_invalid_host">Enter the desktop’s address.</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">Same network</string>
     <string name="pair_where_any">Any network</string>
     <string name="pair_hint_same">The phone connects to the desktop directly. Any address listed under Settings → Remote access works — the local one, or one from a tunnel app such as Tailscale.</string>
-    <string name="pair_hint_any">On the desktop, turn on “Any network” under Settings → Remote access. When it shows a public address, paste that here — the port fills itself.</string>
+    <string name="pair_hint_any">On the desktop, turn on “Any network” under Settings → Remote access and copy the 8-digit device ID. Enter the ID and the pairing secret here — no VPN, no port forwarding.</string>
+    <string name="pair_invalid_id">Enter the 8-digit device ID shown on the desktop.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

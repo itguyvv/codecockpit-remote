@@ -20,7 +20,8 @@
     <string name="pair_name_hint">PC do trabalho</string>
     <string name="pair_host">Endereço</string>
     <string name="pair_host_hint_same">Um endereço exibido no desktop, ex.: 192.168.1.20</string>
-    <string name="pair_host_hint_any">Cole o endereço público exibido no desktop, ex.: 203.0.113.7:47315</string>
+    <string name="pair_id">ID do dispositivo</string>
+    <string name="pair_id_hint">8 dígitos, exibido no desktop</string>
     <string name="pair_port">Porta</string>
     <string name="pair_secret">Segredo de pareamento</string>
     <string name="pair_secret_hint">De «Configurações → Acesso remoto»</string>
@@ -42,6 +43,7 @@
     <string name="err_banned">Muitas tentativas falhas — espere um minuto e tente de novo.</string>
     <string name="err_too_many_clients">O desktop já atende o número máximo de clientes remotos.</string>
     <string name="err_tls">Falha no handshake TLS.</string>
+    <string name="err_offline">O desktop não está acessível neste momento. Verifique se o CodeCockpit está em execução com o acesso remoto ativado e se o ID do dispositivo está correto.</string>
 
     <!-- Sessions screen -->
     <string name="sessions_title">Sessões</string>
@@ -84,15 +86,15 @@
     <string name="onb2_step2">Ligue o interruptor e copie o segredo de pareamento</string>
     <string name="onb2_step3">O Windows pedirá acesso ao firewall na primeira vez — aceite</string>
     <string name="onb3_title">Conecte de qualquer lugar</string>
-    <string name="onb3_step1">Adicione o desktop com o endereço, a porta e o segredo</string>
-    <string name="onb3_step2">Mesma rede: qualquer endereço exibido no desktop serve. Qualquer rede: cole o endereço público dele.</string>
+    <string name="onb3_step1">Adicione o desktop — com um endereço e o segredo, ou apenas o ID de dispositivo dele e o segredo</string>
+    <string name="onb3_step2">Mesma rede: qualquer endereço exibido no desktop serve. Qualquer rede: apenas o ID de dispositivo de 8 dígitos dele e o segredo.</string>
     <string name="onb3_step3">Na primeira conexão, compare a impressão digital do certificado com a exibida no desktop</string>
     <string name="guide_show">Mostrar guia de configuração</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Onde encontro isso?</string>
     <string name="add_help_address_same">Endereço: qualquer um listado em CodeCockpit → Configurações → Acesso remoto — o da rede local, ou o de um túnel como o Tailscale.</string>
-    <string name="add_help_address_any">Endereço: exibido em «Qualquer rede» nessa mesma aba depois que a porta for mapeada. Cole tudo — a porta está incluída.</string>
+    <string name="add_help_address_any">ID do dispositivo: o número de 8 dígitos exibido em «Qualquer rede» nessa mesma aba. Informe-o junto com o segredo — sem VPN nem redirecionamento de porta.</string>
     <string name="add_help_port">Porta: exibida no mesmo lugar. O padrão é 47315.</string>
     <string name="add_help_secret">Segredo de pareamento: copie dessa aba. Ele nunca sai dos seus dispositivos.</string>
     <string name="pair_invalid_host">Informe o endereço do desktop.</string>
@@ -103,7 +105,8 @@
     <string name="pair_where_same">Mesma rede</string>
     <string name="pair_where_any">Qualquer rede</string>
     <string name="pair_hint_same">O celular se conecta diretamente ao desktop. Qualquer endereço listado em «Configurações → Acesso remoto» funciona — o local, ou o de um túnel como o Tailscale.</string>
-    <string name="pair_hint_any">No desktop, ative «Qualquer rede» em «Configurações → Acesso remoto». Quando aparecer um endereço público, cole-o aqui — a porta se preenche sozinha.</string>
+    <string name="pair_hint_any">No desktop, ative «Qualquer rede» em «Configurações → Acesso remoto» e copie o ID de dispositivo de 8 dígitos. Informe aqui o ID e o segredo — sem VPN nem redirecionamento de porta.</string>
+    <string name="pair_invalid_id">Informe o ID de dispositivo de 8 dígitos exibido no desktop.</string>
 
     <!-- Settings -->
     <string name="settings_title">Configurações</string>

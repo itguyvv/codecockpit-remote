@@ -1,5 +1,7 @@
 package io.github.itguyvv.codecockpitremote.net
 
+import android.content.Context
+import io.github.itguyvv.codecockpitremote.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,19 +17,23 @@ import io.github.itguyvv.codecockpitremote.protocol.parseServerEvent
 data class ServerProfile(
     val id: String,
     val name: String,
-    val host: String,
-    val port: Int,
+    /** Direct address (Same network); empty for link-mode profiles */
+    val host: String = "",
+    val port: Int = 0,
+    /** 8-digit rendezvous ID; non-empty selects the link transport (Any network) */
+    val linkId: String = "",
     /** Pairing secret — reused automatically if the desktop revokes the token */
     val secret: String = "",
     /** Empty until the first pairing succeeds */
     val token: String = "",
-    /** Empty until the user confirms the certificate fingerprint (TOFU) */
+    /** Empty until the user confirms the certificate fingerprint (TOFU, WSS only) */
     val fingerprint: String = ""
 )
 
 enum class ConnError {
     NETWORK,
     TLS,
+    OFFLINE,
     BAD_SECRET,
     BAD_TOKEN,
     BANNED,
@@ -38,7 +44,7 @@ enum class ConnError {
 sealed interface ConnState {
     data object Idle : ConnState
     data object Connecting : ConnState
-    /** Handshake done, fingerprint captured — waiting for the user's TOFU decision */
+    /** Handshake done, fingerprint captured — waiting for the user's TOFU decision (WSS only) */
     data class Verifying(val fingerprint: String) : ConnState
     data object Authing : ConnState
     data object Ready : ConnState
@@ -46,14 +52,15 @@ sealed interface ConnState {
 }
 
 /**
- * One WebSocket connection to a CodeCockpit desktop. Lifecycle: [connect] →
- * (TOFU) → auth → Ready; [close] tears everything down. Server frames are
- * re-emitted on [events]; auth frames are intercepted here. The byte transport
- * ([Transport]) is interchangeable — this class only owns the auth machine.
+ * One connection to a CodeCockpit desktop, over WSS ([WssTransport]) or a WebRTC
+ * DataChannel ([LinkTransport]) depending on the profile. Lifecycle: [connect] →
+ * (TOFU on WSS) → auth → Ready; [close] tears everything down. Server frames are
+ * re-emitted on [events]; auth frames are intercepted here.
  */
 class RemoteClient(
     private val scope: CoroutineScope,
     private val server: ServerProfile,
+    private val appContext: Context,
     /** Called once the user accepted a first-seen fingerprint (persist it) */
     private val onFingerprintTrusted: (fp: String) -> Unit,
     /** Called with the freshly minted device token after secret pairing (persist it) */
@@ -78,7 +85,11 @@ class RemoteClient(
      * no stored token yet; ignored on token reconnects.
      */
     fun connect(secret: String): RemoteClient {
-        val t = WssTransport(scope, server, onFingerprintTrusted, decideFingerprint)
+        val t: Transport = if (server.linkId.isNotBlank()) {
+            LinkTransport(scope, BuildConfig.SIGNAL_SERVER, server.linkId, appContext)
+        } else {
+            WssTransport(scope, server, onFingerprintTrusted, decideFingerprint)
+        }
         transport = t
         observe(t, secret)
         t.start()
