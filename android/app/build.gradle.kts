@@ -25,8 +25,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Signaling relay base URL for link mode; empty until the worker is deployed
-            buildConfigField("String", "SIGNAL_SERVER", "\"\"")
+            // Signaling relay base URL for link mode (production Cloudflare Worker)
+            buildConfigField("String", "SIGNAL_SERVER", "\"https://signal.ieeh.com\"")
         }
         debug {
             // Emulator loopback: host machine's wrangler dev (http://localhost:8787)
