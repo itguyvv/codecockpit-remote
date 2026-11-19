@@ -20,8 +20,7 @@
     <string name="pair_name_hint">办公电脑</string>
     <string name="pair_host">地址</string>
     <string name="pair_host_hint_same">桌面端显示的任一地址，如 192.168.1.20</string>
-    <string name="pair_id">设备 ID</string>
-    <string name="pair_id_hint">8 位数字，桌面端会显示</string>
+    <string name="pair_host_hint_ipv6">桌面端显示的 IPv6 地址，如 [2408:8256::1]</string>
     <string name="pair_port">端口</string>
     <string name="pair_secret">配对密钥</string>
     <string name="pair_secret_hint">来自“设置 → 远程访问”</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">无法连接 %1$s。请检查手机能否访问桌面端（同一网络，或两边都开着 Tailscale 等隧道软件）、CodeCockpit 是否已启用远程访问，以及防火墙是否放行该端口。</string>
-    <string name="err_network_link">无法通过中继连接 %1$s。请确认桌面 CodeCockpit 正在运行、远程访问已开启且选择了「任意网络」（设置页信令圆点为绿色），手机能正常上网，然后重试。</string>
     <string name="err_auth_secret">配对失败：密钥不正确。</string>
     <string name="err_auth_token">配对已在桌面端被撤销。请重新输入密钥进行配对。</string>
     <string name="err_banned">失败次数过多——请稍等一分钟再试。</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows 第一次会请求防火墙权限——请允许</string>
     <string name="onb3_title">随时随地连接</string>
     <string name="onb3_step1">填入桌面端的地址和配对密钥，或只填它的设备 ID 和配对密钥</string>
-    <string name="onb3_step2">同一网络：桌面端显示的任一地址都可以。任意网络：只需它的 8 位设备 ID 和配对密钥。</string>
+    <string name="onb3_step2">同一网络：桌面端显示的任一地址都可以。IPv6 直连：用公网 IPv6 地址——两端都有 IPv6 时跨网络也能连。</string>
     <string name="onb3_step3">首次连接时，请将证书指纹与桌面端显示的进行比对</string>
     <string name="guide_show">查看设置指南</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">这些信息在哪里找？</string>
     <string name="add_help_address_same">地址：CodeCockpit → 设置 → 远程访问中列出的任一地址——局域网的，或 Tailscale 等隧道软件提供的都可以。</string>
-    <string name="add_help_address_any">设备 ID：同一页“任意网络”下显示的 8 位数字。配合配对密钥输入即可——无需 VPN 或端口映射。</string>
+    <string name="add_help_address_ipv6">IPv6 地址：「CodeCockpit → 设置 → 远程访问」中「IPv6 直连」下列出的地址，含方括号，如 [2408:8256::1]。</string>
     <string name="add_help_port">端口：显示在同一位置。默认是 47315。</string>
     <string name="add_help_secret">配对密钥：从该页复制。它绝不会离开你的设备。</string>
     <string name="pair_invalid_host">请输入桌面端的地址。</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">显示或隐藏配对密钥</string>
     <string name="pair_where_title">你的电脑在哪里？</string>
     <string name="pair_where_same">同一网络</string>
-    <string name="pair_where_any">任意网络</string>
+    <string name="pair_where_ipv6">IPv6 直连</string>
     <string name="pair_hint_same">手机与桌面端直接连接。“设置 → 远程访问”中列出的任一地址都可以——局域网的，或 Tailscale 等隧道软件提供的。</string>
-    <string name="pair_hint_any">在桌面端“设置 → 远程访问”里打开“任意网络”，复制 8 位设备 ID。在这里输入 ID 和配对密钥——无需 VPN、无需端口映射。</string>
-    <string name="pair_invalid_id">请输入桌面端显示的 8 位设备 ID。</string>
+    <string name="pair_hint_ipv6">在桌面端「设置 → 远程访问」中选择「IPv6 直连」并复制地址。在这里输入地址和配对密钥——只要两端都有 IPv6，跨网络也能直连。</string>
+    <string name="pair_ipv6_warn">当前网络可能没有 IPv6（蜂窝数据通常有，Wi-Fi 下经常没有）。仍然可以尝试连接。</string>
 
     <!-- Settings -->
     <string name="settings_title">设置</string>

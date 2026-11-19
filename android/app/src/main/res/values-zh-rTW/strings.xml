@@ -20,8 +20,7 @@
     <string name="pair_name_hint">辦公電腦</string>
     <string name="pair_host">位址</string>
     <string name="pair_host_hint_same">桌面端顯示的任一位址，如 192.168.1.20</string>
-    <string name="pair_id">裝置 ID</string>
-    <string name="pair_id_hint">8 位數字，桌面端會顯示</string>
+    <string name="pair_host_hint_ipv6">桌面端顯示的 IPv6 位址，如 [2408:8256::1]</string>
     <string name="pair_port">連接埠</string>
     <string name="pair_secret">配對金鑰</string>
     <string name="pair_secret_hint">來自「設定 → 遠端存取」</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">無法連線 %1$s。請檢查手機能否存取桌面端（同一網路，或兩邊都開著 Tailscale 等通道軟體）、CodeCockpit 是否已啟用遠端存取，以及防火牆是否放行該連接埠。</string>
-    <string name="err_network_link">無法透過中繼連線 %1$s。請確認桌面 CodeCockpit 正在執行、遠端存取已開啟且選擇了「任意網路」（設定頁信號圓點為綠色），手機能正常上網，然後重試。</string>
     <string name="err_auth_secret">配對失敗：金鑰不正確。</string>
     <string name="err_auth_token">配對已在桌面端被撤銷。請重新輸入金鑰進行配對。</string>
     <string name="err_banned">失敗次數過多——請稍候一分鐘再試。</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows 第一次會要求防火牆權限——請允許</string>
     <string name="onb3_title">隨時隨地連線</string>
     <string name="onb3_step1">填入桌面端的位址和配對金鑰，或只填它的裝置 ID 和配對金鑰</string>
-    <string name="onb3_step2">同一網路：桌面端顯示的任一位址都可以。任意網路：只需它的 8 位裝置 ID 和配對金鑰。</string>
+    <string name="onb3_step2">同一網路：桌面端顯示的任一位址都可以。IPv6 直連：用公網 IPv6 位址——兩端都有 IPv6 時跨網路也能連。</string>
     <string name="onb3_step3">首次連線時，請將憑證指紋與桌面端顯示的進行比對</string>
     <string name="guide_show">查看設定指南</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">這些資訊在哪裡找？</string>
     <string name="add_help_address_same">位址：CodeCockpit → 設定 → 遠端存取中列出的任一位址——區域網路的，或 Tailscale 等通道軟體提供的都可以。</string>
-    <string name="add_help_address_any">裝置 ID：同一頁「任意網路」下顯示的 8 位數字。搭配配對金鑰輸入即可——無需 VPN 或連接埠映射。</string>
+    <string name="add_help_address_ipv6">IPv6 位址：「CodeCockpit → 設定 → 遠端存取」中「IPv6 直連」下列出的位址，含方括號，如 [2408:8256::1]。</string>
     <string name="add_help_port">連接埠：顯示在同一位置。預設是 47315。</string>
     <string name="add_help_secret">配對金鑰：從該頁複製。它絕不會離開你的裝置。</string>
     <string name="pair_invalid_host">請輸入桌面端的位址。</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">顯示或隱藏配對金鑰</string>
     <string name="pair_where_title">你的電腦在哪裡？</string>
     <string name="pair_where_same">同一網路</string>
-    <string name="pair_where_any">任意網路</string>
+    <string name="pair_where_ipv6">IPv6 直連</string>
     <string name="pair_hint_same">手機與桌面端直接連線。「設定 → 遠端存取」中列出的任一位址都可以——區域網路的，或 Tailscale 等通道軟體提供的。</string>
-    <string name="pair_hint_any">在桌面端「設定 → 遠端存取」裡打開「任意網路」，複製 8 位裝置 ID。在這裡輸入 ID 和配對金鑰——無需 VPN、無需連接埠映射。</string>
-    <string name="pair_invalid_id">請輸入桌面端顯示的 8 位裝置 ID。</string>
+    <string name="pair_hint_ipv6">在桌面端「設定 → 遠端存取」中選擇「IPv6 直連」並複製位址。在這裡輸入位址和配對金鑰——只要兩端都有 IPv6，跨網路也能直連。</string>
+    <string name="pair_ipv6_warn">目前網路可能沒有 IPv6（行動網路通常有，Wi-Fi 下經常沒有）。仍然可以嘗試連線。</string>
 
     <!-- Settings -->
     <string name="settings_title">設定</string>

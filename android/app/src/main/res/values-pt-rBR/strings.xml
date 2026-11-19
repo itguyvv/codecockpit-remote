@@ -20,8 +20,7 @@
     <string name="pair_name_hint">PC do trabalho</string>
     <string name="pair_host">Endereço</string>
     <string name="pair_host_hint_same">Um endereço exibido no desktop, ex.: 192.168.1.20</string>
-    <string name="pair_id">ID do dispositivo</string>
-    <string name="pair_id_hint">8 dígitos, exibido no desktop</string>
+    <string name="pair_host_hint_ipv6">Endereço IPv6 exibido no desktop, ex. [2408:8256::1]</string>
     <string name="pair_port">Porta</string>
     <string name="pair_secret">Segredo de pareamento</string>
     <string name="pair_secret_hint">De «Configurações → Acesso remoto»</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">Não foi possível alcançar %1$s. Verifique se o celular alcança o desktop (mesma rede, ou um túnel como o Tailscale nos dois), se o acesso remoto está ativado no CodeCockpit e se o firewall libera a porta.</string>
-    <string name="err_network_link">Não foi possível alcançar %1$s pelo relé. Verifique se o CodeCockpit está em execução com o acesso remoto ativado e “Qualquer rede” selecionado (o ponto de sinalização nas Configurações está verde), se o celular tem acesso à Internet e tente novamente.</string>
     <string name="err_auth_secret">Pareamento falhou: segredo incorreto.</string>
     <string name="err_auth_token">O pareamento foi revogado no desktop. Informe o segredo de novo para parear.</string>
     <string name="err_banned">Muitas tentativas falhas — espere um minuto e tente de novo.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">O Windows pedirá acesso ao firewall na primeira vez — aceite</string>
     <string name="onb3_title">Conecte de qualquer lugar</string>
     <string name="onb3_step1">Adicione o desktop — com um endereço e o segredo, ou apenas o ID de dispositivo dele e o segredo</string>
-    <string name="onb3_step2">Mesma rede: qualquer endereço exibido no desktop serve. Qualquer rede: apenas o ID de dispositivo de 8 dígitos dele e o segredo.</string>
+    <string name="onb3_step2">Mesma rede: qualquer endereço exibido no desktop serve. IPv6 direto: o endereço IPv6 público — também pela internet quando os dois lados tiverem IPv6.</string>
     <string name="onb3_step3">Na primeira conexão, compare a impressão digital do certificado com a exibida no desktop</string>
     <string name="guide_show">Mostrar guia de configuração</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Onde encontro isso?</string>
     <string name="add_help_address_same">Endereço: qualquer um listado em CodeCockpit → Configurações → Acesso remoto — o da rede local, ou o de um túnel como o Tailscale.</string>
-    <string name="add_help_address_any">ID do dispositivo: o número de 8 dígitos exibido em «Qualquer rede» nessa mesma aba. Informe-o junto com o segredo — sem VPN nem redirecionamento de porta.</string>
+    <string name="add_help_address_ipv6">Endereço IPv6: um dos listados em “IPv6 direto” em CodeCockpit → Configurações → Acesso remoto, com colchetes, ex. [2408:8256::1].</string>
     <string name="add_help_port">Porta: exibida no mesmo lugar. O padrão é 47315.</string>
     <string name="add_help_secret">Segredo de pareamento: copie dessa aba. Ele nunca sai dos seus dispositivos.</string>
     <string name="pair_invalid_host">Informe o endereço do desktop.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">Mostrar ou ocultar o segredo de pareamento</string>
     <string name="pair_where_title">Onde está seu computador?</string>
     <string name="pair_where_same">Mesma rede</string>
-    <string name="pair_where_any">Qualquer rede</string>
+    <string name="pair_where_ipv6">IPv6 direto</string>
     <string name="pair_hint_same">O celular se conecta diretamente ao desktop. Qualquer endereço listado em «Configurações → Acesso remoto» funciona — o local, ou o de um túnel como o Tailscale.</string>
-    <string name="pair_hint_any">No desktop, ative «Qualquer rede» em «Configurações → Acesso remoto» e copie o ID de dispositivo de 8 dígitos. Informe aqui o ID e o segredo — sem VPN nem redirecionamento de porta.</string>
-    <string name="pair_invalid_id">Informe o ID de dispositivo de 8 dígitos exibido no desktop.</string>
+    <string name="pair_hint_ipv6">No desktop, escolha “IPv6 direto” em Configurações → Acesso remoto e copie um endereço. Informe-o aqui junto com a chave de pareamento — funciona pela internet assim que os dois lados tiverem IPv6.</string>
+    <string name="pair_ipv6_warn">Provavelmente esta rede não tem IPv6 (geralmente disponível em dados móveis, raramente no Wi-Fi). Você ainda pode tentar.</string>
 
     <!-- Settings -->
     <string name="settings_title">Configurações</string>

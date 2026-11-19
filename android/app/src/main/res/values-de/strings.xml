@@ -20,8 +20,7 @@
     <string name="pair_name_hint">Arbeits-PC</string>
     <string name="pair_host">Adresse</string>
     <string name="pair_host_hint_same">Eine auf dem Desktop angezeigte Adresse, z. B. 192.168.1.20</string>
-    <string name="pair_id">Geräte-ID</string>
-    <string name="pair_id_hint">8 Ziffern, wird auf dem Desktop angezeigt</string>
+    <string name="pair_host_hint_ipv6">Am Desktop angezeigte IPv6-Adresse, z. B. [2408:8256::1]</string>
     <string name="pair_port">Port</string>
     <string name="pair_secret">Kopplungsgeheimnis</string>
     <string name="pair_secret_hint">Aus „Einstellungen → Fernzugriff“</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s ist nicht erreichbar. Prüfen Sie, ob das Handy den Desktop erreicht (gleiches Netzwerk, oder auf beiden ein Tunnel wie Tailscale), ob der Fernzugriff in CodeCockpit aktiviert ist und ob die Firewall den Port zulässt.</string>
-    <string name="err_network_link">%1$s ist über das Relais nicht erreichbar. Prüfe, ob CodeCockpit mit aktiviertem Fernzugriff und „Beliebiges Netzwerk“ läuft (der Signalisierungspunkt in den Einstellungen ist grün), ob das Handy Internetzugriff hat, und versuche es erneut.</string>
     <string name="err_auth_secret">Kopplung fehlgeschlagen: falsches Geheimnis.</string>
     <string name="err_auth_token">Die Kopplung wurde auf dem Desktop widerrufen. Geben Sie das Geheimnis erneut ein, um neu zu koppeln.</string>
     <string name="err_banned">Zu viele Fehlversuche — warten Sie eine Minute und versuchen Sie es erneut.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows fragt beim ersten Mal nach Firewall-Zugriff — zustimmen</string>
     <string name="onb3_title">Von überall verbinden</string>
     <string name="onb3_step1">Desktop hinzufügen — mit Adresse und Geheimnis oder nur mit Geräte-ID und Geheimnis</string>
-    <string name="onb3_step2">Gleiches Netzwerk: eine beliebige auf dem Desktop angezeigte Adresse. Beliebiges Netzwerk: nur die 8-stellige Geräte-ID und das Geheimnis.</string>
+    <string name="onb3_step2">Gleiches Netzwerk: eine beliebige auf dem Desktop angezeigte Adresse. IPv6 direkt: die öffentliche IPv6-Adresse — klappt auch über das Internet, sobald beide Seiten IPv6 haben.</string>
     <string name="onb3_step3">Beim ersten Verbinden den Zertifikat-Fingerabdruck mit dem auf dem Desktop angezeigten vergleichen</string>
     <string name="guide_show">Einrichtungsleitfaden anzeigen</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Wo finde ich diese Angaben?</string>
     <string name="add_help_address_same">Adresse: eine beliebige unter CodeCockpit → Einstellungen → Fernzugriff gelistete — die aus dem lokalen Netzwerk oder die eines Tunnels wie Tailscale.</string>
-    <string name="add_help_address_any">Geräte-ID: die 8-stellige Zahl unter „Beliebiges Netzwerk“ im selben Tab. Zusammen mit dem Geheimnis eingeben — kein VPN, keine Port-Freigabe nötig.</string>
+    <string name="add_help_address_ipv6">IPv6-Adresse: eine unter „IPv6 direkt“ in CodeCockpit → Einstellungen → Remote-Zugriff gelistete Adresse, inklusive Klammern, z. B. [2408:8256::1].</string>
     <string name="add_help_port">Port: wird an derselben Stelle angezeigt. Standard ist 47315.</string>
     <string name="add_help_secret">Kopplungsgeheimnis: aus diesem Tab kopieren. Es verlässt Ihre Geräte nie.</string>
     <string name="pair_invalid_host">Adresse des Desktops eingeben.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">Kopplungsgeheimnis ein-/ausblenden</string>
     <string name="pair_where_title">Wo steht Ihr Rechner?</string>
     <string name="pair_where_same">Gleiches Netzwerk</string>
-    <string name="pair_where_any">Beliebiges Netzwerk</string>
+    <string name="pair_where_ipv6">IPv6 direkt</string>
     <string name="pair_hint_same">Das Handy verbindet sich direkt mit dem Desktop. Eine beliebige unter „Einstellungen → Fernzugriff“ gelistete Adresse funktioniert — die lokale oder eine von einem Tunnel wie Tailscale.</string>
-    <string name="pair_hint_any">Aktivieren Sie auf dem Desktop „Beliebiges Netzwerk“ unter „Einstellungen → Fernzugriff“ und kopieren Sie die 8-stellige Geräte-ID. Geben Sie hier die ID und das Geheimnis ein — kein VPN, keine Port-Freigabe.</string>
-    <string name="pair_invalid_id">Geben Sie die 8-stellige Geräte-ID ein, die auf dem Desktop angezeigt wird.</string>
+    <string name="pair_hint_ipv6">Wählen Sie am Desktop unter Einstellungen → Remote-Zugriff „IPv6 direkt“ und kopieren Sie eine Adresse. Geben Sie sie hier zusammen mit dem Pairing-Secret ein — es klappt über das Internet, sobald beide Seiten IPv6 haben.</string>
+    <string name="pair_ipv6_warn">Dieses Netzwerk hat wahrscheinlich kein IPv6 (mobil meist ja, im WLAN oft nein). Sie können es trotzdem versuchen.</string>
 
     <!-- Settings -->
     <string name="settings_title">Einstellungen</string>

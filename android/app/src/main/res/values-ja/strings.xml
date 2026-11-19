@@ -20,8 +20,7 @@
     <string name="pair_name_hint">作業用 PC</string>
     <string name="pair_host">アドレス</string>
     <string name="pair_host_hint_same">デスクトップに表示されたアドレス（例 192.168.1.20）</string>
-    <string name="pair_id">デバイス ID</string>
-    <string name="pair_id_hint">デスクトップに表示される 8 桁の数字</string>
+    <string name="pair_host_hint_ipv6">デスクトップに表示された IPv6 アドレス（例: [2408:8256::1]）</string>
     <string name="pair_port">ポート</string>
     <string name="pair_secret">ペアリングシークレット</string>
     <string name="pair_secret_hint">「設定 → リモートアクセス」から</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s に接続できません。スマホからデスクトップに到達できるか（同じネットワーク、または両方で Tailscale などのトンネルアプリ）、CodeCockpit でリモートアクセスが有効か、ファイアウォールがポートを許可しているかを確認してください。</string>
-    <string name="err_network_link">リレー経由で %1$s に接続できません。デスクトップの CodeCockpit が起動し、リモートアクセスが有効で「任意のネットワーク」が選択されていること（設定画面のシグナリングのドットが緑色）、スマホがインターネットに接続できることを確認してから、再試行してください。</string>
     <string name="err_auth_secret">ペアリング失敗：シークレットが違います。</string>
     <string name="err_auth_token">ペアリングがデスクトップ側で取り消されました。もう一度シークレットを入力してペアリングしてください。</string>
     <string name="err_banned">失敗が多すぎます — 1 分待ってから再試行してください。</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">初回は Windows がファイアウォール許可を求めてきます — 許可してください</string>
     <string name="onb3_title">どこからでも接続</string>
     <string name="onb3_step1">デスクトップを追加 — アドレスとシークレット、またはデバイス ID とシークレットだけでも OK</string>
-    <string name="onb3_step2">同じネットワーク：デスクトップに表示された任意のアドレスで OK。任意のネットワーク：8 桁のデバイス ID とシークレットだけ。</string>
+    <string name="onb3_step2">同じネットワーク：デスクトップに表示された任意のアドレスで OK。IPv6 ダイレクト：公開 IPv6 アドレスで接続 — 両端に IPv6 があればネットワーク越えも可能。</string>
     <string name="onb3_step3">初回接続時に、証明書フィンガープリントをデスクトップに表示されているものと比較してください</string>
     <string name="guide_show">セットアップガイドを表示</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">この情報はどこで見つかる？</string>
     <string name="add_help_address_same">アドレス：CodeCockpit → 設定 → リモートアクセスに一覧表示された任意のもの — ローカルネットワークのものでも、Tailscale などのトンネルアプリのものでも可。</string>
-    <string name="add_help_address_any">デバイス ID：同じタブの「任意のネットワーク」の下に表示される 8 桁の数字。シークレットと一緒に入力 — VPN もポート転送も不要です。</string>
+    <string name="add_help_address_ipv6">IPv6 アドレス: CodeCockpit の「設定 → リモートアクセス」にある「IPv6 ダイレクト」のアドレス。括弧ごと入力します（例: [2408:8256::1]）。</string>
     <string name="add_help_port">ポート：同じ場所に表示されます。既定は 47315。</string>
     <string name="add_help_secret">ペアリングシークレット：そのタブからコピー。デバイスの外に出ることはありません。</string>
     <string name="pair_invalid_host">デスクトップのアドレスを入力してください。</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">ペアリングシークレットの表示/非表示</string>
     <string name="pair_where_title">あなたのコンピューターはどこ？</string>
     <string name="pair_where_same">同じネットワーク</string>
-    <string name="pair_where_any">任意のネットワーク</string>
+    <string name="pair_where_ipv6">IPv6 ダイレクト</string>
     <string name="pair_hint_same">スマホはデスクトップに直接接続します。「設定 → リモートアクセス」に一覧表示された任意のアドレスで接続できます — ローカルのものでも、Tailscale などのトンネルアプリのものでも。</string>
-    <string name="pair_hint_any">デスクトップの「設定 → リモートアクセス」で「任意のネットワーク」をオンにし、8 桁のデバイス ID をコピーします。ここに ID とシークレットを入力 — VPN もポート転送も不要です。</string>
-    <string name="pair_invalid_id">デスクトップに表示された 8 桁のデバイス ID を入力してください。</string>
+    <string name="pair_hint_ipv6">デスクトップの「設定 → リモートアクセス」で「IPv6 ダイレクト」を選んでアドレスをコピーし、ここに入力してください。両端に IPv6 があれば、ネットワークを越えて直接接続できます。</string>
+    <string name="pair_ipv6_warn">このネットワークには IPv6 がない可能性があります（モバイル回線にはあることが多く、Wi-Fi では使えないことも）。それでも試すことはできます。</string>
 
     <!-- Settings -->
     <string name="settings_title">設定</string>

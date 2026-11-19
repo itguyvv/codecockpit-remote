@@ -1,7 +1,5 @@
 package io.github.itguyvv.codecockpitremote.net
 
-import android.content.Context
-import io.github.itguyvv.codecockpitremote.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,11 +17,9 @@ import io.github.itguyvv.codecockpitremote.protocol.parseServerEvent
 data class ServerProfile(
     val id: String,
     val name: String,
-    /** Direct address (Same network); empty for link-mode profiles */
+    /** Direct address — LAN, Tailscale, or a bracketed IPv6 literal like [2408:…]:port */
     val host: String = "",
     val port: Int = 0,
-    /** 8-digit rendezvous ID; non-empty selects the link transport (Any network) */
-    val linkId: String = "",
     /** Pairing secret — reused automatically if the desktop revokes the token */
     val secret: String = "",
     /** Empty until the first pairing succeeds */
@@ -54,15 +50,13 @@ sealed interface ConnState {
 }
 
 /**
- * One connection to a CodeCockpit desktop, over WSS ([WssTransport]) or a WebRTC
- * DataChannel ([LinkTransport]) depending on the profile. Lifecycle: [connect] →
- * (TOFU on WSS) → auth → Ready; [close] tears everything down. Server frames are
- * re-emitted on [events]; auth frames are intercepted here.
+ * One connection to a CodeCockpit desktop over WSS ([WssTransport]). Lifecycle:
+ * [connect] → (TOFU) → auth → Ready; [close] tears everything down. Server frames
+ * are re-emitted on [events]; auth frames are intercepted here.
  */
 class RemoteClient(
     private val scope: CoroutineScope,
     private val server: ServerProfile,
-    private val appContext: Context,
     /** Called once the user accepted a first-seen fingerprint (persist it) */
     private val onFingerprintTrusted: (fp: String) -> Unit,
     /** Called with the freshly minted device token after secret pairing (persist it) */
@@ -87,11 +81,7 @@ class RemoteClient(
      * no stored token yet; ignored on token reconnects.
      */
     fun connect(secret: String): RemoteClient {
-        val t: Transport = if (server.linkId.isNotBlank()) {
-            LinkTransport(scope, BuildConfig.SIGNAL_SERVER, server.linkId, appContext)
-        } else {
-            WssTransport(scope, server, onFingerprintTrusted, decideFingerprint)
-        }
+        val t: Transport = WssTransport(scope, server, onFingerprintTrusted, decideFingerprint)
         transport = t
         observe(t, secret)
         t.start()

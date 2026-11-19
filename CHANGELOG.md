@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **IPv6 direct scenario** — the add-desktop dialog now offers *Same network* vs *IPv6 direct*. The IPv6 scenario takes the desktop's public IPv6 address (e.g. `2408:8256:…`) plus the pairing secret and warns up front when the phone's own network has no global IPv6 address, so the user knows before trying.
+
+### Removed
+
+- **Any-network link mode** (device ID + signaling relay + WebRTC DataChannel). Relayed fallbacks required either an untrusted public TURN or a paid one, and hole punching is unreliable when both ends sit behind carrier-grade NAT. The direct WebSocket protocol is unchanged; IPv6 direct covers the across-the-internet case whenever both ends have IPv6, and tunnel apps such as Tailscale remain the general answer. v0.2.0 remains available as the last link-mode release.
+
 ## [0.2.0] - 2026-11-19
 
 ### Added

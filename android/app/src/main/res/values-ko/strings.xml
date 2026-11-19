@@ -20,8 +20,7 @@
     <string name="pair_name_hint">회사 PC</string>
     <string name="pair_host">주소</string>
     <string name="pair_host_hint_same">데스크톱에 표시된 주소 (예: 192.168.1.20)</string>
-    <string name="pair_id">기기 ID</string>
-    <string name="pair_id_hint">데스크톱에 표시되는 8자리 숫자</string>
+    <string name="pair_host_hint_ipv6">데스크톱에 표시된 IPv6 주소(예: [2408:8256::1])</string>
     <string name="pair_port">포트</string>
     <string name="pair_secret">페어링 시크릿</string>
     <string name="pair_secret_hint">설정 → 원격 액세스에서</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s에 연결할 수 없습니다. 휴대폰에서 데스크톱에 도달할 수 있는지(같은 네트워크, 또는 양쪽 모두 Tailscale 같은 터널 앱), CodeCockpit에서 원격 액세스가 켜져 있는지, 방화벽이 포트를 허용하는지 확인하세요.</string>
-    <string name="err_network_link">릴레이를 통해 %1$s에 연결할 수 없습니다. 데스크톱 CodeCockpit이 실행 중이고 원격 액세스가 켜져 있으며 ‘임의의 네트워크’가 선택되어 있는지(설정의 신호 점이 녹색), 휴대전화가 인터넷에 연결되어 있는지 확인한 뒤 다시 시도하세요.</string>
     <string name="err_auth_secret">페어링 실패: 시크릿이 올바르지 않습니다.</string>
     <string name="err_auth_token">데스크톱에서 페어링이 취소되었습니다. 시크릿을 다시 입력해 페어링하세요.</string>
     <string name="err_banned">실패가 너무 많습니다 — 1분 후에 다시 시도하세요.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">처음에는 Windows가 방화벽 권한을 요청합니다 — 허용하세요</string>
     <string name="onb3_title">어디서든 연결</string>
     <string name="onb3_step1">데스크톱 추가 — 주소와 시크릿, 또는 기기 ID와 시크릿만으로도 가능</string>
-    <string name="onb3_step2">같은 네트워크: 데스크톱에 표시된 주소 아무거나 사용. 임의의 네트워크: 8자리 기기 ID와 시크릿만.</string>
+    <string name="onb3_step2">같은 네트워크: 데스크톱에 표시된 주소 아무거나 사용. IPv6 직접 연결: 공용 IPv6 주소 사용 — 양쪽 모두에 IPv6가 있으면 네트워크를 넘어 연결 가능.</string>
     <string name="onb3_step3">첫 연결 시 인증서 지문을 데스크톱에 표시된 것과 비교하세요</string>
     <string name="guide_show">설정 가이드 보기</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">이 정보는 어디서 찾나요?</string>
     <string name="add_help_address_same">주소: CodeCockpit → 설정 → 원격 액세스에 나열된 것 중 아무거나 — 로컬 네트워크 주소나 Tailscale 같은 터널 앱의 주소 모두 가능.</string>
-    <string name="add_help_address_any">기기 ID: 같은 탭의 ‘임의의 네트워크’ 아래에 표시되는 8자리 숫자. 시크릿과 함께 입력 — VPN이나 포트 포워딩이 필요 없습니다.</string>
+    <string name="add_help_address_ipv6">IPv6 주소: CodeCockpit → 설정 → 원격 액세스의 ‘IPv6 직접 연결’에 표시된 주소. 대괄호 포함(예: [2408:8256::1]).</string>
     <string name="add_help_port">포트: 같은 곳에 표시됩니다. 기본값은 47315.</string>
     <string name="add_help_secret">페어링 시크릿: 그 탭에서 복사. 기기를 벗어나지 않습니다.</string>
     <string name="pair_invalid_host">데스크톱의 주소를 입력하세요.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">페어링 시크릿 표시/숨기기</string>
     <string name="pair_where_title">컴퓨터가 어디에 있나요?</string>
     <string name="pair_where_same">같은 네트워크</string>
-    <string name="pair_where_any">임의의 네트워크</string>
+    <string name="pair_where_ipv6">IPv6 직접 연결</string>
     <string name="pair_hint_same">휴대폰이 데스크톱에 직접 연결됩니다. 설정 → 원격 액세스에 나열된 주소 아무거나 사용할 수 있습니다 — 로컬 주소든 Tailscale 같은 터널 앱의 주소든.</string>
-    <string name="pair_hint_any">데스크톱의 설정 → 원격 액세스에서 ‘임의의 네트워크’를 켜고 8자리 기기 ID를 복사하세요. 여기에 ID와 시크릿을 입력 — VPN이나 포트 포워딩이 필요 없습니다.</string>
-    <string name="pair_invalid_id">데스크톱에 표시된 8자리 기기 ID를 입력하세요.</string>
+    <string name="pair_hint_ipv6">데스크톱의 ‘설정 → 원격 액세스’에서 ‘IPv6 직접 연결’을 선택하고 주소를 복사한 뒤 여기에 입력하세요. 양쪽 모두에 IPv6가 있으면 네트워크를 넘어 직접 연결할 수 있습니다.</string>
+    <string name="pair_ipv6_warn">이 네트워크에는 IPv6가 없을 수 있습니다(모바일 데이터에는 보통 있고 Wi-Fi에서는 없는 경우가 많습니다). 그래도 시도할 수는 있습니다.</string>
 
     <!-- Settings -->
     <string name="settings_title">설정</string>

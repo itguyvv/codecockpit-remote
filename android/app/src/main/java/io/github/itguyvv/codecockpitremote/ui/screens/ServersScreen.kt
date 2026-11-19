@@ -56,6 +56,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.net.Inet6Address
+import java.net.NetworkInterface
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnError
 import io.github.itguyvv.codecockpitremote.net.ConnState
@@ -63,6 +65,7 @@ import io.github.itguyvv.codecockpitremote.net.FingerprintTls
 import io.github.itguyvv.codecockpitremote.net.ServerProfile
 import io.github.itguyvv.codecockpitremote.net.UpdateInfo
 import io.github.itguyvv.codecockpitremote.ui.theme.Accent
+import io.github.itguyvv.codecockpitremote.ui.theme.Busy
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
@@ -160,11 +163,7 @@ fun ServersScreen(vm: AppViewModel) {
                 item {
                     connError?.let { err ->
                         Text(
-                            errorText(
-                                err,
-                                activeHost(servers, activeServerId),
-                                servers.find { it.id == activeServerId }?.linkId != null
-                            ),
+                            errorText(err, activeHost(servers, activeServerId)),
                             color = Danger,
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(top = 4.dp)
@@ -179,9 +178,9 @@ fun ServersScreen(vm: AppViewModel) {
     if (showAdd) {
         AddServerDialog(
             onDismiss = { showAdd = false },
-            onSave = { name, host, port, secret, linkId ->
+            onSave = { name, host, port, secret ->
                 showAdd = false
-                vm.addServer(name, host, port, secret, linkId) { vm.connect(it) }
+                vm.addServer(name, host, port, secret) { vm.connect(it) }
             }
         )
     }
@@ -225,7 +224,7 @@ fun ServersScreen(vm: AppViewModel) {
     }
 }
 
-/** Display name for error messages: the direct address, or the profile name for link mode */
+/** Display name for error messages: the direct address, falling back to the profile name */
 private fun activeHost(servers: List<ServerProfile>, activeId: String?): String =
     servers.find { it.id == activeId }?.let { it.host.ifBlank { it.name } } ?: ""
 
@@ -267,10 +266,6 @@ private fun UpdateBanner(
     }
 }
 
-/** 12345678 → "1234 5678", matching how the desktop displays it */
-private fun formatLinkId(id: String): String =
-    if (id.length == 8) "${id.slice(0..3)} ${id.slice(4..7)}" else id
-
 @Composable
 private fun ServerCard(
     server: ServerProfile,
@@ -304,7 +299,7 @@ private fun ServerCard(
                 }
             }
             Text(
-                if (server.linkId.isNotBlank()) formatLinkId(server.linkId) else "${server.host}:${server.port}",
+                "${server.host}:${server.port}",
                 style = MaterialTheme.typography.bodySmall,
                 fontFamily = FontFamily.Monospace,
                 color = TextMid
@@ -352,21 +347,20 @@ private fun onAddressInput(value: String, setHost: (String) -> Unit, setPort: (S
 }
 
 @Composable
-private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: String, port: Int, secret: String, linkId: String) -> Unit) {
+private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: String, port: Int, secret: String) -> Unit) {
     var name by remember { mutableStateOf("") }
     var host by remember { mutableStateOf("") }
     var port by remember { mutableStateOf("47315") }
-    var deviceId by remember { mutableStateOf("") }
     var secret by remember { mutableStateOf("") }
     var showSecret by remember { mutableStateOf(false) }
     var showHelp by remember { mutableStateOf(false) }
     var hostErr by remember { mutableStateOf(false) }
     var portErr by remember { mutableStateOf(false) }
-    var idErr by remember { mutableStateOf(false) }
     var secretErr by remember { mutableStateOf(false) }
-    // 0 = same network (any direct address), 1 = any network (device ID + secret)
+    // 0 = same network (LAN / Tailscale), 1 = IPv6 direct from another network
     var scenario by remember { mutableStateOf(0) }
-    val anyNetwork = scenario == 1
+    val ipv6 = scenario == 1
+    val ipv6Available = remember { hasGlobalIpv6() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -394,15 +388,23 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                         onClick = { scenario = 1 },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                     ) {
-                        Text(stringResource(R.string.pair_where_any))
+                        Text(stringResource(R.string.pair_where_ipv6))
                     }
                 }
                 Text(
-                    stringResource(if (anyNetwork) R.string.pair_hint_any else R.string.pair_hint_same),
+                    stringResource(if (ipv6) R.string.pair_hint_ipv6 else R.string.pair_hint_same),
                     style = MaterialTheme.typography.bodySmall,
                     color = TextMid,
                     modifier = Modifier.padding(horizontal = 4.dp)
                 )
+                if (ipv6 && !ipv6Available) {
+                    Text(
+                        stringResource(R.string.pair_ipv6_warn),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Busy,
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                }
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -411,55 +413,36 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
-                if (!anyNetwork) {
-                    OutlinedTextField(
-                        value = host,
-                        onValueChange = { onAddressInput(it, { host = it }, { port = it }) },
-                        label = { Text(stringResource(R.string.pair_host)) },
-                        placeholder = { Text(stringResource(R.string.pair_host_hint_same)) },
-                        isError = hostErr,
-                        supportingText = if (hostErr) {
-                            { Text(stringResource(R.string.pair_invalid_host)) }
-                        } else {
-                            null
-                        },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = port,
-                        onValueChange = { port = it.filter { c -> c.isDigit() }.take(5) },
-                        label = { Text(stringResource(R.string.pair_port)) },
-                        isError = portErr,
-                        supportingText = if (portErr) {
-                            { Text(stringResource(R.string.pair_invalid_port)) }
-                        } else {
-                            null
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                } else {
-                    OutlinedTextField(
-                        value = deviceId,
-                        onValueChange = {
-                            deviceId = it.filter { c -> c.isDigit() }.take(8)
-                            idErr = false
-                        },
-                        label = { Text(stringResource(R.string.pair_id)) },
-                        placeholder = { Text(stringResource(R.string.pair_id_hint)) },
-                        isError = idErr,
-                        supportingText = if (idErr) {
-                            { Text(stringResource(R.string.pair_invalid_id)) }
-                        } else {
-                            null
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                OutlinedTextField(
+                    value = host,
+                    onValueChange = { onAddressInput(it, { host = it }, { port = it }) },
+                    label = { Text(stringResource(R.string.pair_host)) },
+                    placeholder = {
+                        Text(stringResource(if (ipv6) R.string.pair_host_hint_ipv6 else R.string.pair_host_hint_same))
+                    },
+                    isError = hostErr,
+                    supportingText = if (hostErr) {
+                        { Text(stringResource(R.string.pair_invalid_host)) }
+                    } else {
+                        null
+                    },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = port,
+                    onValueChange = { port = it.filter { c -> c.isDigit() }.take(5) },
+                    label = { Text(stringResource(R.string.pair_port)) },
+                    isError = portErr,
+                    supportingText = if (portErr) {
+                        { Text(stringResource(R.string.pair_invalid_port)) }
+                    } else {
+                        null
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 OutlinedTextField(
                     value = secret,
                     onValueChange = {
@@ -491,8 +474,8 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                 }
                 if (showHelp) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        HelpLine(if (anyNetwork) R.string.add_help_address_any else R.string.add_help_address_same)
-                        if (!anyNetwork) HelpLine(R.string.add_help_port)
+                        HelpLine(if (ipv6) R.string.add_help_address_ipv6 else R.string.add_help_address_same)
+                        HelpLine(R.string.add_help_port)
                         HelpLine(R.string.add_help_secret)
                     }
                 }
@@ -501,25 +484,14 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
         confirmButton = {
             TextButton(onClick = {
                 secretErr = secret.isBlank()
-                var ok = !secretErr
-                var saveHost = ""
-                var savePort = 0
-                var saveId = ""
-                if (anyNetwork) {
-                    idErr = deviceId.length != 8
-                    ok = ok && !idErr
-                    saveId = deviceId
-                } else {
-                    val p = port.toIntOrNull() ?: 0
-                    hostErr = host.isBlank()
-                    portErr = p !in 1024..65535
-                    ok = ok && !hostErr && !portErr
-                    saveHost = host.trim()
-                    savePort = p
-                }
-                if (!ok) return@TextButton
-                val fallbackName = saveId.ifBlank { saveHost }
-                onSave(name.ifBlank { fallbackName }, saveHost, savePort, secret.trim(), saveId)
+                val p = port.toIntOrNull() ?: 0
+                val rawHost = host.trim().removeSurrounding("[", "]")
+                hostErr = rawHost.isBlank() || (ipv6 && !rawHost.contains(':'))
+                portErr = p !in 1024..65535
+                if (secretErr || hostErr || portErr) return@TextButton
+                // Bracket bare IPv6 literals so wss://host:port stays parseable
+                val saveHost = if (rawHost.contains(':')) "[$rawHost]" else rawHost
+                onSave(name.ifBlank { saveHost }, saveHost, p, secret.trim())
             }) { Text(stringResource(R.string.pair_save)) }
         },
         dismissButton = {
@@ -527,6 +499,15 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
         }
     )
 }
+
+/** True when this device currently holds a global unicast (2000::/3) IPv6 address */
+private fun hasGlobalIpv6(): Boolean = runCatching {
+    NetworkInterface.getNetworkInterfaces().asSequence()
+        .flatMap { nif -> nif.inetAddresses.asSequence() }
+        .any { addr ->
+            addr is Inet6Address && (addr.address[0].toInt() and 0xFF) in 0x20..0x3F
+        }
+}.getOrDefault(false)
 
 @Composable
 private fun HelpLine(textRes: Int) {
@@ -564,10 +545,8 @@ private fun FingerprintDialog(host: String, fingerprint: String, onTrust: () -> 
 }
 
 @Composable
-fun errorText(err: ConnError, host: String, isLink: Boolean = false): String = when (err) {
-    ConnError.NETWORK ->
-        if (isLink) stringResource(R.string.err_network_link, host)
-        else stringResource(R.string.err_network, host)
+fun errorText(err: ConnError, host: String): String = when (err) {
+    ConnError.NETWORK -> stringResource(R.string.err_network, host)
     ConnError.TLS -> stringResource(R.string.err_tls)
     ConnError.OFFLINE -> stringResource(R.string.err_offline)
     ConnError.BAD_SECRET -> stringResource(R.string.err_auth_secret)

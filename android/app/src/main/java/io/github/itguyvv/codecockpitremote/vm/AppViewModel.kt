@@ -164,15 +164,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val _chatBg = MutableStateFlow(0)
     val chatBg: StateFlow<Int> = _chatBg
 
-    fun addServer(name: String, host: String, port: Int, secret: String, linkId: String = "", onDone: (ServerProfile) -> Unit) {
+    fun addServer(name: String, host: String, port: Int, secret: String, onDone: (ServerProfile) -> Unit) {
         viewModelScope.launch {
-            // Same host:port (or the same device ID) twice would only ever race one connection
-            if (linkId.isNotBlank()) {
-                if (servers.value.any { it.linkId == linkId.trim() }) return@launch
-            } else {
-                if (servers.value.any { it.host == host.trim() && it.port == port }) return@launch
-            }
-            val profile = store.add(name, host, port, secret, linkId)
+            // The same host:port twice would only ever race one connection
+            if (servers.value.any { it.host == host.trim() && it.port == port }) return@launch
+            val profile = store.add(name, host, port, secret)
             onDone(profile)
         }
     }
@@ -225,7 +221,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val c = RemoteClient(
             scope = viewModelScope,
             server = profile,
-            appContext = getApplication(),
             onFingerprintTrusted = { fp -> persistActive { it.copy(fingerprint = fp) } },
             onTokenIssued = { token -> persistActive { it.copy(token = token) } },
             decideFingerprint = { fp ->

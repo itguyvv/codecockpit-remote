@@ -20,8 +20,7 @@
     <string name="pair_name_hint">PC du bureau</string>
     <string name="pair_host">Adresse</string>
     <string name="pair_host_hint_same">Une adresse affichée sur l’ordinateur, ex. 192.168.1.20</string>
-    <string name="pair_id">ID de l’appareil</string>
-    <string name="pair_id_hint">8 chiffres, affiché sur l’ordinateur</string>
+    <string name="pair_host_hint_ipv6">Adresse IPv6 affichée sur le bureau, ex. [2408:8256::1]</string>
     <string name="pair_port">Port</string>
     <string name="pair_secret">Secret d’appariement</string>
     <string name="pair_secret_hint">Depuis « Paramètres → Accès distant »</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">Impossible de joindre %1$s. Vérifiez que le téléphone peut atteindre l’ordinateur (même réseau, ou un tunnel comme Tailscale des deux côtés), que l’accès distant est activé dans CodeCockpit, et que le pare-feu autorise le port.</string>
-    <string name="err_network_link">Impossible de joindre %1$s via le relais. Vérifiez que CodeCockpit est lancé avec l’accès à distance activé et « Tout réseau » sélectionné (le point de signalisation dans les réglages est vert), que le téléphone accède à Internet, puis réessayez.</string>
     <string name="err_auth_secret">Appariement échoué : secret incorrect.</string>
     <string name="err_auth_token">L’appariement a été révoqué sur l’ordinateur. Saisissez à nouveau le secret pour réappairer.</string>
     <string name="err_banned">Trop d’échecs — attendez une minute puis réessayez.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows demande l’accès au pare-feu la première fois — acceptez</string>
     <string name="onb3_title">Connectez-vous de n’importe où</string>
     <string name="onb3_step1">Ajoutez l’ordinateur — avec une adresse et le secret, ou seulement son ID d’appareil et le secret</string>
-    <string name="onb3_step2">Même réseau : n’importe quelle adresse affichée sur l’ordinateur fonctionne. Tout réseau : seulement son ID d’appareil à 8 chiffres et le secret.</string>
+    <string name="onb3_step2">Même réseau : n’importe quelle adresse affichée sur l’ordinateur fonctionne. IPv6 direct : l’adresse IPv6 publique — fonctionne aussi par Internet lorsque les deux extrémités ont IPv6.</string>
     <string name="onb3_step3">À la première connexion, comparez l’empreinte du certificat avec celle affichée sur l’ordinateur</string>
     <string name="guide_show">Afficher le guide d’installation</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Où trouver ces informations ?</string>
     <string name="add_help_address_same">Adresse : n’importe laquelle listée dans CodeCockpit → Paramètres → Accès distant — celle du réseau local, ou celle d’un tunnel comme Tailscale.</string>
-    <string name="add_help_address_any">ID de l’appareil : le nombre à 8 chiffres affiché sous « Tout réseau » dans ce même onglet. Saisissez-le avec le secret — sans VPN ni transfert de port.</string>
+    <string name="add_help_address_ipv6">Adresse IPv6 : une adresse listée sous « IPv6 direct » dans CodeCockpit → Paramètres → Accès distant, crochets inclus, ex. [2408:8256::1].</string>
     <string name="add_help_port">Port : affiché au même endroit. La valeur par défaut est 47315.</string>
     <string name="add_help_secret">Secret d’appariement : copiez-le depuis cet onglet. Il ne quitte jamais vos appareils.</string>
     <string name="pair_invalid_host">Saisissez l’adresse de l’ordinateur.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">Afficher ou masquer le secret d’appariement</string>
     <string name="pair_where_title">Où se trouve votre ordinateur ?</string>
     <string name="pair_where_same">Même réseau</string>
-    <string name="pair_where_any">Tout réseau</string>
+    <string name="pair_where_ipv6">IPv6 direct</string>
     <string name="pair_hint_same">Le téléphone se connecte directement à l’ordinateur. N’importe quelle adresse listée sous « Paramètres → Accès distant » fonctionne — celle locale, ou celle d’un tunnel comme Tailscale.</string>
-    <string name="pair_hint_any">Sur l’ordinateur, activez « Tout réseau » sous « Paramètres → Accès distant » et copiez l’ID de l’appareil à 8 chiffres. Saisissez ici l’ID et le secret — sans VPN ni transfert de port.</string>
-    <string name="pair_invalid_id">Saisissez l’ID de l’appareil à 8 chiffres affiché sur l’ordinateur.</string>
+    <string name="pair_hint_ipv6">Sur le bureau, choisissez « IPv6 direct » dans Paramètres → Accès distant et copiez une adresse. Saisissez-la ici avec le secret d’appairage — cela fonctionne par Internet dès que les deux extrémités ont IPv6.</string>
+    <string name="pair_ipv6_warn">Ce réseau n’a probablement pas d’IPv6 (souvent disponible en données mobiles, rarement en Wi-Fi). Vous pouvez quand même essayer.</string>
 
     <!-- Settings -->
     <string name="settings_title">Paramètres</string>

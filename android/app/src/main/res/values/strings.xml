@@ -20,8 +20,7 @@
     <string name="pair_name_hint">Work PC</string>
     <string name="pair_host">Address</string>
     <string name="pair_host_hint_same">An address shown on the desktop, e.g. 192.168.1.20</string>
-    <string name="pair_id">Device ID</string>
-    <string name="pair_id_hint">8 digits, shown on the desktop</string>
+    <string name="pair_host_hint_ipv6">IPv6 address shown on the desktop, e.g. [2408:8256::1]</string>
     <string name="pair_port">Port</string>
     <string name="pair_secret">Pairing secret</string>
     <string name="pair_secret_hint">From Settings → Remote access</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">Cannot reach %1$s. Check that the phone can reach the desktop (same network, or a tunnel app such as Tailscale on both), that remote access is enabled in CodeCockpit, and that the firewall allows the port.</string>
-    <string name="err_network_link">Cannot reach %1$s through the relay. Check that CodeCockpit is running with remote access enabled and “Any network” selected (the signaling dot in Settings is green), that the phone has internet access, and try again.</string>
     <string name="err_auth_secret">Pairing failed: wrong secret.</string>
     <string name="err_auth_token">Pairing was revoked on the desktop. Enter the secret again to pair.</string>
     <string name="err_banned">Too many failed attempts — wait a minute and try again.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows asks for firewall access the first time — accept it</string>
     <string name="onb3_title">Connect from anywhere</string>
     <string name="onb3_step1">Add the desktop — with an address and the secret, or just its device ID and the secret</string>
-    <string name="onb3_step2">Same network: any address shown on the desktop works. Any network: just its 8-digit device ID and the secret.</string>
+    <string name="onb3_step2">Same network: any address shown on the desktop works. IPv6 direct: the public IPv6 address — also across the internet when both ends have IPv6.</string>
     <string name="onb3_step3">On first connect, compare the certificate fingerprint with the one shown on the desktop</string>
     <string name="guide_show">Show setup guide</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">Where do I find these?</string>
     <string name="add_help_address_same">Address: any one listed in CodeCockpit → Settings → Remote access — the local network one, or one from a tunnel app such as Tailscale.</string>
-    <string name="add_help_address_any">Device ID: the 8-digit number shown under “Any network” in that same tab. Enter it with the pairing secret — no VPN or port forwarding needed.</string>
+    <string name="add_help_address_ipv6">IPv6 address: one listed under “IPv6 direct” in CodeCockpit → Settings → Remote access, brackets included, e.g. [2408:8256::1].</string>
     <string name="add_help_port">Port: shown in the same place. The default is 47315.</string>
     <string name="add_help_secret">Pairing secret: copy it from that tab. It never leaves your devices.</string>
     <string name="pair_invalid_host">Enter the desktop’s address.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">Show or hide the pairing secret</string>
     <string name="pair_where_title">Where is your computer?</string>
     <string name="pair_where_same">Same network</string>
-    <string name="pair_where_any">Any network</string>
+    <string name="pair_where_ipv6">IPv6 direct</string>
     <string name="pair_hint_same">The phone connects to the desktop directly. Any address listed under Settings → Remote access works — the local one, or one from a tunnel app such as Tailscale.</string>
-    <string name="pair_hint_any">On the desktop, turn on “Any network” under Settings → Remote access and copy the 8-digit device ID. Enter the ID and the pairing secret here — no VPN, no port forwarding.</string>
-    <string name="pair_invalid_id">Enter the 8-digit device ID shown on the desktop.</string>
+    <string name="pair_hint_ipv6">On the desktop, pick “IPv6 direct” under Settings → Remote access and copy an address. Enter it here with the pairing secret — it works across the internet whenever both ends have IPv6.</string>
+    <string name="pair_ipv6_warn">This network probably has no IPv6 (cellular data usually does, Wi-Fi often does not). You can still try.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

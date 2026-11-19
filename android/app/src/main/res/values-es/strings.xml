@@ -20,8 +20,7 @@
     <string name="pair_name_hint">PC del trabajo</string>
     <string name="pair_host">Dirección</string>
     <string name="pair_host_hint_same">Una dirección mostrada en el escritorio, p. ej. 192.168.1.20</string>
-    <string name="pair_id">ID del dispositivo</string>
-    <string name="pair_id_hint">8 dígitos, se muestra en el escritorio</string>
+    <string name="pair_host_hint_ipv6">Dirección IPv6 mostrada en el escritorio, p. ej. [2408:8256::1]</string>
     <string name="pair_port">Puerto</string>
     <string name="pair_secret">Secreto de emparejamiento</string>
     <string name="pair_secret_hint">De «Ajustes → Acceso remoto»</string>
@@ -38,7 +37,6 @@
 
     <!-- Connection errors -->
     <string name="err_network">No se puede alcanzar %1$s. Comprueba que el móvil llega al escritorio (misma red, o un túnel como Tailscale en ambos), que el acceso remoto está activado en CodeCockpit y que el cortafuegos permite el puerto.</string>
-    <string name="err_network_link">No se puede alcanzar %1$s a través del relé. Comprueba que CodeCockpit esté en ejecución con el acceso remoto activado y «Cualquier red» seleccionado (el punto de señalización en Ajustes está en verde), que el teléfono tenga acceso a Internet y vuelve a intentarlo.</string>
     <string name="err_auth_secret">Emparejamiento fallido: secreto incorrecto.</string>
     <string name="err_auth_token">El emparejamiento fue revocado en el escritorio. Introduce el secreto de nuevo para emparejar.</string>
     <string name="err_banned">Demasiados intentos fallidos — espera un minuto y prueba otra vez.</string>
@@ -88,14 +86,14 @@
     <string name="onb2_step3">Windows pedirá acceso al cortafuegos la primera vez — acéptalo</string>
     <string name="onb3_title">Conecta desde cualquier lugar</string>
     <string name="onb3_step1">Añade el escritorio — con una dirección y el secreto, o solo con su ID de dispositivo y el secreto</string>
-    <string name="onb3_step2">Misma red: sirve cualquier dirección mostrada en el escritorio. Cualquier red: solo su ID de dispositivo de 8 dígitos y el secreto.</string>
+    <string name="onb3_step2">Misma red: sirve cualquier dirección mostrada en el escritorio. IPv6 directo: la dirección IPv6 pública — también por Internet cuando ambos extremos tengan IPv6.</string>
     <string name="onb3_step3">En la primera conexión, compara la huella del certificado con la mostrada en el escritorio</string>
     <string name="guide_show">Mostrar guía de configuración</string>
 
     <!-- Add-desktop help -->
     <string name="add_help_title">¿Dónde encuentro esto?</string>
     <string name="add_help_address_same">Dirección: cualquiera de las que figuran en CodeCockpit → Ajustes → Acceso remoto — la de la red local, o la de un túnel como Tailscale.</string>
-    <string name="add_help_address_any">ID de dispositivo: el número de 8 dígitos mostrado bajo «Cualquier red» en esa misma pestaña. Introdúcelo junto con el secreto — sin VPN ni reenvío de puertos.</string>
+    <string name="add_help_address_ipv6">Dirección IPv6: una de las listadas en «IPv6 directo» en CodeCockpit → Ajustes → Acceso remoto, corchetes incluidos, p. ej. [2408:8256::1].</string>
     <string name="add_help_port">Puerto: se muestra en el mismo sitio. El predeterminado es 47315.</string>
     <string name="add_help_secret">Secreto de emparejamiento: cópialo de esa pestaña. Nunca sale de tus dispositivos.</string>
     <string name="pair_invalid_host">Introduce la dirección del escritorio.</string>
@@ -104,10 +102,10 @@
     <string name="pair_show_secret">Mostrar u ocultar el secreto de emparejamiento</string>
     <string name="pair_where_title">¿Dónde está tu ordenador?</string>
     <string name="pair_where_same">Misma red</string>
-    <string name="pair_where_any">Cualquier red</string>
+    <string name="pair_where_ipv6">IPv6 directo</string>
     <string name="pair_hint_same">El móvil se conecta directamente al escritorio. Sirve cualquier dirección listada en «Ajustes → Acceso remoto» — la local, o la de un túnel como Tailscale.</string>
-    <string name="pair_hint_any">En el escritorio, activa «Cualquier red» en «Ajustes → Acceso remoto» y copia el ID del dispositivo de 8 dígitos. Introduce aquí el ID y el secreto — sin VPN ni reenvío de puertos.</string>
-    <string name="pair_invalid_id">Introduce el ID de dispositivo de 8 dígitos mostrado en el escritorio.</string>
+    <string name="pair_hint_ipv6">En el escritorio, elige «IPv6 directo» en Ajustes → Acceso remoto y copia una dirección. Introdúcela aquí junto con la clave de emparejamiento — funciona por Internet en cuanto ambos extremos tengan IPv6.</string>
+    <string name="pair_ipv6_warn">Es probable que esta red no tenga IPv6 (normalmente sí con datos móviles, a menudo no por Wi-Fi). Aún puedes intentarlo.</string>
 
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>

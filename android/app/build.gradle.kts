@@ -25,12 +25,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Signaling relay base URL for link mode (production Cloudflare Worker)
-            buildConfigField("String", "SIGNAL_SERVER", "\"https://signal.ieeh.com\"")
-        }
-        debug {
-            // Emulator loopback: host machine's wrangler dev (http://localhost:8787)
-            buildConfigField("String", "SIGNAL_SERVER", "\"http://10.0.2.2:8787\"")
         }
     }
     compileOptions {
@@ -42,7 +36,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -62,7 +55,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.biometric)
     implementation(libs.okhttp)
-    implementation(libs.stream.webrtc)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
     debugImplementation(libs.androidx.compose.ui.tooling)
