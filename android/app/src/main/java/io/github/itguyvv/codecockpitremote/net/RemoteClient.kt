@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import io.github.itguyvv.codecockpitremote.protocol.ServerEvent
 import io.github.itguyvv.codecockpitremote.protocol.authRequest
 import io.github.itguyvv.codecockpitremote.protocol.parseServerEvent
 
 /** Desktop endpoint as persisted on the phone */
+@Serializable
 data class ServerProfile(
     val id: String,
     val name: String,
