@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-19
+
+### Added
+
+- **Any-network connection (link mode)** — connect by the desktop's 8-digit device ID plus the pairing secret, from anywhere: a lightweight signaling relay (self-hostable Cloudflare Worker) introduces the peers, then all traffic flows over a WebRTC DataChannel with hole punching and a TURN fallback. The secret is never sent to the relay; authentication still happens end-to-end inside the DataChannel. Scenario picker in the add-desktop dialog: *Direct (ID + secret for any network)* vs *Same network (host & port)*.
+- In-app language picker with 10 languages, applied immediately and persisted.
+- Automatic self-update: the app checks GitHub Releases on launch, shows a banner when a new version is out, and installs the downloaded APK.
+- The link-mode server address defaults to the production relay; release builds point at it out of the box.
+
+### Fixed
+
+- Crash on saving a desktop profile (a serializer was only resolved at runtime, so release builds crashed while debug builds worked).
+- Error messages for link-mode desktops now name the profile instead of a host:port.
+
+## [0.1.1] - 2026-11-18
+
+### Fixed
+
+- Sign-in and pairing hints no longer assume a local network; direct connections are described as direct (with Tailscale as one example).
+
+## [0.1.0] - 2026-11-18
+
 ### Added
 
 - Initial release in development: companion Android app for CodeCockpit (requires a CodeCockpit desktop with the Remote access feature enabled).
