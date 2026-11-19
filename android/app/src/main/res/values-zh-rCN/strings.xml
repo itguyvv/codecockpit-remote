@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">无法连接 %1$s。请检查手机能否访问桌面端（同一网络，或两边都开着 Tailscale 等隧道软件）、CodeCockpit 是否已启用远程访问，以及防火墙是否放行该端口。</string>
+    <string name="err_network_link">无法通过中继连接 %1$s。请确认桌面 CodeCockpit 正在运行、远程访问已开启且选择了「任意网络」（设置页信令圆点为绿色），手机能正常上网，然后重试。</string>
     <string name="err_auth_secret">配对失败：密钥不正确。</string>
     <string name="err_auth_token">配对已在桌面端被撤销。请重新输入密钥进行配对。</string>
     <string name="err_banned">失败次数过多——请稍等一分钟再试。</string>

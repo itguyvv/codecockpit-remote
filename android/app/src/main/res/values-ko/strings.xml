@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s에 연결할 수 없습니다. 휴대폰에서 데스크톱에 도달할 수 있는지(같은 네트워크, 또는 양쪽 모두 Tailscale 같은 터널 앱), CodeCockpit에서 원격 액세스가 켜져 있는지, 방화벽이 포트를 허용하는지 확인하세요.</string>
+    <string name="err_network_link">릴레이를 통해 %1$s에 연결할 수 없습니다. 데스크톱 CodeCockpit이 실행 중이고 원격 액세스가 켜져 있으며 ‘임의의 네트워크’가 선택되어 있는지(설정의 신호 점이 녹색), 휴대전화가 인터넷에 연결되어 있는지 확인한 뒤 다시 시도하세요.</string>
     <string name="err_auth_secret">페어링 실패: 시크릿이 올바르지 않습니다.</string>
     <string name="err_auth_token">데스크톱에서 페어링이 취소되었습니다. 시크릿을 다시 입력해 페어링하세요.</string>
     <string name="err_banned">실패가 너무 많습니다 — 1분 후에 다시 시도하세요.</string>

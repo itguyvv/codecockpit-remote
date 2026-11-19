@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">No se puede alcanzar %1$s. Comprueba que el móvil llega al escritorio (misma red, o un túnel como Tailscale en ambos), que el acceso remoto está activado en CodeCockpit y que el cortafuegos permite el puerto.</string>
+    <string name="err_network_link">No se puede alcanzar %1$s a través del relé. Comprueba que CodeCockpit esté en ejecución con el acceso remoto activado y «Cualquier red» seleccionado (el punto de señalización en Ajustes está en verde), que el teléfono tenga acceso a Internet y vuelve a intentarlo.</string>
     <string name="err_auth_secret">Emparejamiento fallido: secreto incorrecto.</string>
     <string name="err_auth_token">El emparejamiento fue revocado en el escritorio. Introduce el secreto de nuevo para emparejar.</string>
     <string name="err_banned">Demasiados intentos fallidos — espera un minuto y prueba otra vez.</string>

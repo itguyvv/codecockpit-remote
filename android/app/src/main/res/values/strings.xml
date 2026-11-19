@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">Cannot reach %1$s. Check that the phone can reach the desktop (same network, or a tunnel app such as Tailscale on both), that remote access is enabled in CodeCockpit, and that the firewall allows the port.</string>
+    <string name="err_network_link">Cannot reach %1$s through the relay. Check that CodeCockpit is running with remote access enabled and “Any network” selected (the signaling dot in Settings is green), that the phone has internet access, and try again.</string>
     <string name="err_auth_secret">Pairing failed: wrong secret.</string>
     <string name="err_auth_token">Pairing was revoked on the desktop. Enter the secret again to pair.</string>
     <string name="err_banned">Too many failed attempts — wait a minute and try again.</string>

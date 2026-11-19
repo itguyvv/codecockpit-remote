@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">Não foi possível alcançar %1$s. Verifique se o celular alcança o desktop (mesma rede, ou um túnel como o Tailscale nos dois), se o acesso remoto está ativado no CodeCockpit e se o firewall libera a porta.</string>
+    <string name="err_network_link">Não foi possível alcançar %1$s pelo relé. Verifique se o CodeCockpit está em execução com o acesso remoto ativado e “Qualquer rede” selecionado (o ponto de sinalização nas Configurações está verde), se o celular tem acesso à Internet e tente novamente.</string>
     <string name="err_auth_secret">Pareamento falhou: segredo incorreto.</string>
     <string name="err_auth_token">O pareamento foi revogado no desktop. Informe o segredo de novo para parear.</string>
     <string name="err_banned">Muitas tentativas falhas — espere um minuto e tente de novo.</string>

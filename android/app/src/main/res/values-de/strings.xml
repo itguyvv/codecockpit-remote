@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s ist nicht erreichbar. Prüfen Sie, ob das Handy den Desktop erreicht (gleiches Netzwerk, oder auf beiden ein Tunnel wie Tailscale), ob der Fernzugriff in CodeCockpit aktiviert ist und ob die Firewall den Port zulässt.</string>
+    <string name="err_network_link">%1$s ist über das Relais nicht erreichbar. Prüfe, ob CodeCockpit mit aktiviertem Fernzugriff und „Beliebiges Netzwerk“ läuft (der Signalisierungspunkt in den Einstellungen ist grün), ob das Handy Internetzugriff hat, und versuche es erneut.</string>
     <string name="err_auth_secret">Kopplung fehlgeschlagen: falsches Geheimnis.</string>
     <string name="err_auth_token">Die Kopplung wurde auf dem Desktop widerrufen. Geben Sie das Geheimnis erneut ein, um neu zu koppeln.</string>
     <string name="err_banned">Zu viele Fehlversuche — warten Sie eine Minute und versuchen Sie es erneut.</string>

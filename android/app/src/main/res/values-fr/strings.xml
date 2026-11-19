@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">Impossible de joindre %1$s. Vérifiez que le téléphone peut atteindre l’ordinateur (même réseau, ou un tunnel comme Tailscale des deux côtés), que l’accès distant est activé dans CodeCockpit, et que le pare-feu autorise le port.</string>
+    <string name="err_network_link">Impossible de joindre %1$s via le relais. Vérifiez que CodeCockpit est lancé avec l’accès à distance activé et « Tout réseau » sélectionné (le point de signalisation dans les réglages est vert), que le téléphone accède à Internet, puis réessayez.</string>
     <string name="err_auth_secret">Appariement échoué : secret incorrect.</string>
     <string name="err_auth_token">L’appariement a été révoqué sur l’ordinateur. Saisissez à nouveau le secret pour réappairer.</string>
     <string name="err_banned">Trop d’échecs — attendez une minute puis réessayez.</string>

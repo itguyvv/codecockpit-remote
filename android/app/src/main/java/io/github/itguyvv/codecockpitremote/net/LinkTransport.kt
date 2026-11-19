@@ -125,7 +125,7 @@ class LinkTransport(
                             // candidate for a torn-down peer — ignore
                         }
                     }
-                    Signal.DeviceGone -> fail(ConnError.NETWORK)
+                    Signal.DeviceGone -> fail(ConnError.OFFLINE)
                     is Signal.Refused -> fail(
                         if (signal.httpCode == 404) ConnError.OFFLINE else ConnError.NETWORK
                     )

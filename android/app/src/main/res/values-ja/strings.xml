@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">%1$s に接続できません。スマホからデスクトップに到達できるか（同じネットワーク、または両方で Tailscale などのトンネルアプリ）、CodeCockpit でリモートアクセスが有効か、ファイアウォールがポートを許可しているかを確認してください。</string>
+    <string name="err_network_link">リレー経由で %1$s に接続できません。デスクトップの CodeCockpit が起動し、リモートアクセスが有効で「任意のネットワーク」が選択されていること（設定画面のシグナリングのドットが緑色）、スマホがインターネットに接続できることを確認してから、再試行してください。</string>
     <string name="err_auth_secret">ペアリング失敗：シークレットが違います。</string>
     <string name="err_auth_token">ペアリングがデスクトップ側で取り消されました。もう一度シークレットを入力してペアリングしてください。</string>
     <string name="err_banned">失敗が多すぎます — 1 分待ってから再試行してください。</string>

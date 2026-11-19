@@ -160,7 +160,11 @@ fun ServersScreen(vm: AppViewModel) {
                 item {
                     connError?.let { err ->
                         Text(
-                            errorText(err, activeHost(servers, activeServerId)),
+                            errorText(
+                                err,
+                                activeHost(servers, activeServerId),
+                                servers.find { it.id == activeServerId }?.linkId != null
+                            ),
                             color = Danger,
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(top = 4.dp)
@@ -560,8 +564,10 @@ private fun FingerprintDialog(host: String, fingerprint: String, onTrust: () -> 
 }
 
 @Composable
-fun errorText(err: ConnError, host: String): String = when (err) {
-    ConnError.NETWORK -> stringResource(R.string.err_network, host)
+fun errorText(err: ConnError, host: String, isLink: Boolean = false): String = when (err) {
+    ConnError.NETWORK ->
+        if (isLink) stringResource(R.string.err_network_link, host)
+        else stringResource(R.string.err_network, host)
     ConnError.TLS -> stringResource(R.string.err_tls)
     ConnError.OFFLINE -> stringResource(R.string.err_offline)
     ConnError.BAD_SECRET -> stringResource(R.string.err_auth_secret)

@@ -38,6 +38,7 @@
 
     <!-- Connection errors -->
     <string name="err_network">無法連線 %1$s。請檢查手機能否存取桌面端（同一網路，或兩邊都開著 Tailscale 等通道軟體）、CodeCockpit 是否已啟用遠端存取，以及防火牆是否放行該連接埠。</string>
+    <string name="err_network_link">無法透過中繼連線 %1$s。請確認桌面 CodeCockpit 正在執行、遠端存取已開啟且選擇了「任意網路」（設定頁信號圓點為綠色），手機能正常上網，然後重試。</string>
     <string name="err_auth_secret">配對失敗：金鑰不正確。</string>
     <string name="err_auth_token">配對已在桌面端被撤銷。請重新輸入金鑰進行配對。</string>
     <string name="err_banned">失敗次數過多——請稍候一分鐘再試。</string>
