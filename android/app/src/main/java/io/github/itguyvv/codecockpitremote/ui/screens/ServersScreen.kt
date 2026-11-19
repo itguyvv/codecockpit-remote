@@ -156,7 +156,13 @@ fun ServersScreen(vm: AppViewModel) {
                         server = server,
                         isActive = server.id == activeServerId && connState != null,
                         connState = connState,
-                        onClick = { vm.connect(server) },
+                        onClick = {
+                            if (server.id == activeServerId && connState is ConnState.Ready) {
+                                vm.goSessions()
+                            } else {
+                                vm.connect(server)
+                            }
+                        },
                         onRemove = { confirmRemove = server }
                     )
                 }

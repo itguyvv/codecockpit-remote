@@ -239,6 +239,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     // Fresh (re)connection: refresh the list and re-attach an open chat
                     c.send(listRequest())
                     attachedId?.let { c.send(attachRequest(it)) }
+                    // The session list is the app's main screen — land there once connected
+                    if (_screen.value is Screen.Servers) _screen.value = Screen.Sessions
                 }
                 if (st is ConnState.Failed) {
                     _connError.value = st.error
