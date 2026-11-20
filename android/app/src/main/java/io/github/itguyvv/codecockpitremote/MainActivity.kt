@@ -26,11 +26,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.itguyvv.codecockpitremote.data.LanguagePrefs
-import io.github.itguyvv.codecockpitremote.ui.screens.ChatScreen
 import io.github.itguyvv.codecockpitremote.ui.screens.LockScreen
 import io.github.itguyvv.codecockpitremote.ui.screens.OnboardingScreen
 import io.github.itguyvv.codecockpitremote.ui.screens.ServersScreen
-import io.github.itguyvv.codecockpitremote.ui.screens.SessionsScreen
+import io.github.itguyvv.codecockpitremote.ui.screens.MainScreen
 import io.github.itguyvv.codecockpitremote.ui.screens.SettingsScreen
 import io.github.itguyvv.codecockpitremote.ui.theme.CodeCockpitRemoteTheme
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
@@ -91,8 +90,7 @@ class MainActivity : FragmentActivity() {
                         else -> Crossfade(targetState = screen, label = "screen") { s ->
                             when (s) {
                                 is AppViewModel.Screen.Servers -> ServersScreen(vm)
-                                is AppViewModel.Screen.Sessions -> SessionsScreen(vm)
-                                is AppViewModel.Screen.Chat -> ChatScreen(vm, s.sessionId)
+                                is AppViewModel.Screen.Workbench -> MainScreen(vm)
                                 is AppViewModel.Screen.Settings -> SettingsScreen(vm)
                             }
                         }

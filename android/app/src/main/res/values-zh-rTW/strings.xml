@@ -138,4 +138,27 @@
     <string name="common_cancel">取消</string>
     <string name="common_ok">確定</string>
     <string name="common_back">返回</string>
+    <!-- Workbench (工作階段直欄 + 分組側邊欄 + 聊天工具) -->
+    <string name="wb_select_hint">在左側選擇一個工作階段，或建立新的。</string>
+    <string name="wb_open_sidebar">全部工作階段</string>
+    <string name="wb_new_session">新增工作階段</string>
+    <string name="wb_new_session_title">新增工作階段</string>
+    <string name="wb_cwd">資料夾</string>
+    <string name="wb_cwd_hint">電腦上的絕對路徑，如 D:/work/app</string>
+    <string name="wb_engine">引擎</string>
+    <string name="wb_create">建立</string>
+    <string name="wb_kill">關閉工作階段</string>
+    <string name="wb_kill_confirm">關閉「%s」？電腦上的代理程式將被終止。</string>
+    <string name="wb_rename">重新命名</string>
+    <string name="wb_rename_title">重新命名工作階段</string>
+    <string name="wb_history">歷史記錄</string>
+    <string name="wb_history_empty">此引擎尚無歷史記錄</string>
+    <string name="wb_history_resume">恢復</string>
+    <string name="wb_history_delete">刪除</string>
+    <string name="wb_history_delete_confirm">從歷史記錄刪除「%s」？電腦上的記錄將被永久刪除。</string>
+    <string name="wb_toggle_group">展開或收起此資料夾</string>
+    <string name="wb_op_failed">操作失敗：%s</string>
+    <string name="chat_tool_output">輸出</string>
+    <string name="chat_stats_tools">%d 次工具呼叫</string>
+    <string name="chat_stats_time">運算 %s</string>
 </resources>

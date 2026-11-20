@@ -13,15 +13,21 @@ import io.github.itguyvv.codecockpitremote.net.UpdateInfo
 import io.github.itguyvv.codecockpitremote.net.UpdateResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import io.github.itguyvv.codecockpitremote.protocol.NativeSessionInfo
 import io.github.itguyvv.codecockpitremote.protocol.RemoteMessage
 import io.github.itguyvv.codecockpitremote.protocol.ServerEvent
 import io.github.itguyvv.codecockpitremote.protocol.SessionStatus
 import io.github.itguyvv.codecockpitremote.protocol.SessionSummary
 import io.github.itguyvv.codecockpitremote.protocol.attachRequest
+import io.github.itguyvv.codecockpitremote.protocol.createRequest
+import io.github.itguyvv.codecockpitremote.protocol.deleteHistoryRequest
 import io.github.itguyvv.codecockpitremote.protocol.detachRequest
+import io.github.itguyvv.codecockpitremote.protocol.historyRequest
 import io.github.itguyvv.codecockpitremote.protocol.inputRequest
+import io.github.itguyvv.codecockpitremote.protocol.killRequest
 import io.github.itguyvv.codecockpitremote.protocol.listRequest
 import io.github.itguyvv.codecockpitremote.protocol.modeRequest
+import io.github.itguyvv.codecockpitremote.protocol.renameRequest
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -118,9 +124,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     // ── Navigation ──
     sealed interface Screen {
         data object Servers : Screen
-        data object Sessions : Screen
+        data object Workbench : Screen
         data object Settings : Screen
-        data class Chat(val sessionId: String) : Screen
     }
 
     private val _screen = MutableStateFlow<Screen>(Screen.Servers)
@@ -152,6 +157,20 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     // ── Sessions ──
     private val _sessions = MutableStateFlow<List<SessionSummary>>(emptyList())
     val sessions: StateFlow<List<SessionSummary>> = _sessions
+
+    // ── Workbench selection: the session shown in the right pane ──
+    private val _selectedId = MutableStateFlow<String?>(null)
+    val selectedId: StateFlow<String?> = _selectedId
+
+    /** Last failed remote operation (create/rename/…), surfaced once as a snackbar */
+    private val _lastOpError = MutableStateFlow<String?>(null)
+    val lastOpError: StateFlow<String?> = _lastOpError
+
+    /** History list of the engine last requested (null = loading) */
+    private val _history = MutableStateFlow<List<NativeSessionInfo>?>(null)
+    val history: StateFlow<List<NativeSessionInfo>?> = _history
+    private val _historyEngine = MutableStateFlow("claude")
+    val historyEngine: StateFlow<String> = _historyEngine
 
     // ── Chat (attached session) ──
     private var attachedId: String? = null
@@ -202,6 +221,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         reconnectJob = null
         attachedId = null
         _activeServerId.value = null
+        _selectedId.value = null
         _chatMessages.value = emptyList()
         _chatStatus.value = null
         _chatBusy.value = false
@@ -212,6 +232,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         _connState.value = null
         _connError.value = null
         _sessions.value = emptyList()
+        _lastOpError.value = null
+        _history.value = null
         if (_screen.value !is Screen.Servers) _screen.value = Screen.Servers
     }
 
@@ -239,8 +261,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     // Fresh (re)connection: refresh the list and re-attach an open chat
                     c.send(listRequest())
                     attachedId?.let { c.send(attachRequest(it)) }
-                    // The session list is the app's main screen — land there once connected
-                    if (_screen.value is Screen.Servers) _screen.value = Screen.Sessions
+                    // The workbench is the app's main screen — land there once connected
+                    if (_screen.value is Screen.Servers) _screen.value = Screen.Workbench
                 }
                 if (st is ConnState.Failed) {
                     _connError.value = st.error
@@ -289,7 +311,19 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             is ServerEvent.SessionId -> Unit
-            is ServerEvent.Error -> Unit
+            is ServerEvent.SessionCreated -> {
+                // Select the fresh session right away; its summary arrives via the sessions broadcast
+                attachedId = event.sessionId
+                _selectedId.value = event.sessionId
+                _chatMessages.value = emptyList()
+                _chatStatus.value = null
+                client?.send(attachRequest(event.sessionId))
+            }
+            is ServerEvent.History -> {
+                _historyEngine.value = event.engine
+                _history.value = event.list
+            }
+            is ServerEvent.Error -> _lastOpError.value = event.message
             ServerEvent.Pong -> Unit
             else -> Unit
         }
@@ -319,21 +353,52 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         fingerprintDeferred?.complete(trusted)
     }
 
-    fun enterChat(summary: SessionSummary) {
+    fun clearOpError() {
+        _lastOpError.value = null
+    }
+
+    /** Select a session for the right pane: attach and stream it (selection survives deselect) */
+    fun selectSession(summary: SessionSummary) {
         attachedId = summary.id
+        _selectedId.value = summary.id
         _chatMessages.value = emptyList()
         _chatStatus.value = null
         _chatBusy.value = summary.busy
         client?.send(attachRequest(summary.id))
-        _screen.value = Screen.Chat(summary.id)
     }
 
-    fun leaveChat() {
+    /** Close the chat pane but keep the workbench (the session keeps running on the desktop) */
+    fun deselect() {
         attachedId?.let { client?.send(detachRequest(it)) }
         attachedId = null
+        _selectedId.value = null
         _chatMessages.value = emptyList()
         _chatStatus.value = null
-        _screen.value = Screen.Sessions
+    }
+
+    // ── Remote session management ──
+
+    fun createSession(cwd: String, mode: String, engine: String, title: String, resumeId: String? = null) {
+        client?.send(createRequest(cwd, mode, engine, title, resumeId))
+    }
+
+    fun killSession(id: String) {
+        if (id == _selectedId.value) deselect()
+        client?.send(killRequest(id))
+    }
+
+    fun renameSession(id: String, title: String) {
+        client?.send(renameRequest(id, title.trim()))
+    }
+
+    fun loadHistory(engine: String) {
+        _historyEngine.value = engine
+        _history.value = null
+        client?.send(historyRequest(engine))
+    }
+
+    fun deleteHistory(id: String) {
+        client?.send(deleteHistoryRequest(id, _historyEngine.value))
     }
 
     fun sendPrompt(text: String) {
@@ -346,8 +411,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         client?.send(modeRequest(id, mode))
     }
 
-    fun goSessions() {
-        if (_screen.value is Screen.Chat) leaveChat() else _screen.value = Screen.Sessions
+    /** Tap on an already-connected card: back into the workbench */
+    fun goWorkbench() {
+        if (_screen.value is Screen.Settings || _screen.value is Screen.Servers) {
+            _screen.value = Screen.Workbench
+        }
     }
 
     fun goServers() {

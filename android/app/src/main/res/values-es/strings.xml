@@ -138,4 +138,27 @@
     <string name="common_cancel">Cancelar</string>
     <string name="common_ok">OK</string>
     <string name="common_back">Atrás</string>
+    <!-- Workbench (rail de sesiones + panel agrupado + herramientas de chat) -->
+    <string name="wb_select_hint">Elige una sesión a la izquierda o inicia una nueva.</string>
+    <string name="wb_open_sidebar">Todas las sesiones</string>
+    <string name="wb_new_session">Nueva sesión</string>
+    <string name="wb_new_session_title">Nueva sesión</string>
+    <string name="wb_cwd">Carpeta</string>
+    <string name="wb_cwd_hint">Ruta absoluta en el escritorio, p. ej. D:/work/app</string>
+    <string name="wb_engine">Motor</string>
+    <string name="wb_create">Crear</string>
+    <string name="wb_kill">Cerrar sesión</string>
+    <string name="wb_kill_confirm">¿Cerrar “%s”? El proceso del agente se termina en el escritorio.</string>
+    <string name="wb_rename">Renombrar</string>
+    <string name="wb_rename_title">Renombrar sesión</string>
+    <string name="wb_history">Historial</string>
+    <string name="wb_history_empty">Aún no hay historial de este motor</string>
+    <string name="wb_history_resume">Reanudar</string>
+    <string name="wb_history_delete">Eliminar</string>
+    <string name="wb_history_delete_confirm">¿Eliminar “%s” del historial? El registro se borra en el escritorio de forma permanente.</string>
+    <string name="wb_toggle_group">Mostrar u ocultar esta carpeta</string>
+    <string name="wb_op_failed">Operación fallida: %s</string>
+    <string name="chat_tool_output">Salida</string>
+    <string name="chat_stats_tools">%d llamadas a herramientas</string>
+    <string name="chat_stats_time">%s computando</string>
 </resources>

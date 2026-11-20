@@ -138,4 +138,27 @@
     <string name="common_cancel">キャンセル</string>
     <string name="common_ok">OK</string>
     <string name="common_back">戻る</string>
+    <!-- Workbench (セッションレール + グループ化サイドバー + チャットツール) -->
+    <string name="wb_select_hint">左からセッションを選ぶか、新しく開始してください。</string>
+    <string name="wb_open_sidebar">すべてのセッション</string>
+    <string name="wb_new_session">新規セッション</string>
+    <string name="wb_new_session_title">新規セッション</string>
+    <string name="wb_cwd">フォルダー</string>
+    <string name="wb_cwd_hint">デスクトップ上の絶対パス（例: D:/work/app）</string>
+    <string name="wb_engine">エンジン</string>
+    <string name="wb_create">作成</string>
+    <string name="wb_kill">セッションを終了</string>
+    <string name="wb_kill_confirm">「%s」を終了しますか？デスクトップ上のエージェントプロセスを終了します。</string>
+    <string name="wb_rename">名前を変更</string>
+    <string name="wb_rename_title">セッション名を変更</string>
+    <string name="wb_history">履歴</string>
+    <string name="wb_history_empty">このエンジンの履歴はまだありません</string>
+    <string name="wb_history_resume">再開</string>
+    <string name="wb_history_delete">削除</string>
+    <string name="wb_history_delete_confirm">「%s」を履歴から削除しますか？デスクトップ上の記録が完全に削除されます。</string>
+    <string name="wb_toggle_group">このフォルダーの表示を切り替える</string>
+    <string name="wb_op_failed">操作に失敗しました: %s</string>
+    <string name="chat_tool_output">出力</string>
+    <string name="chat_stats_tools">ツール呼び出し %d 回</string>
+    <string name="chat_stats_time">計算 %s</string>
 </resources>

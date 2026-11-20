@@ -138,4 +138,27 @@
     <string name="common_cancel">취소</string>
     <string name="common_ok">확인</string>
     <string name="common_back">뒤로</string>
+    <!-- Workbench (세션 레일 + 그룹 사이드바 + 채팅 도구) -->
+    <string name="wb_select_hint">왼쪽에서 세션을 선택하거나 새로 시작하세요.</string>
+    <string name="wb_open_sidebar">모든 세션</string>
+    <string name="wb_new_session">새 세션</string>
+    <string name="wb_new_session_title">새 세션</string>
+    <string name="wb_cwd">폴더</string>
+    <string name="wb_cwd_hint">데스크톱의 절대 경로 (예: D:/work/app)</string>
+    <string name="wb_engine">엔진</string>
+    <string name="wb_create">만들기</string>
+    <string name="wb_kill">세션 종료</string>
+    <string name="wb_kill_confirm">“%s”을(를) 종료할까요? 데스크톱의 에이전트 프로세스가 종료됩니다.</string>
+    <string name="wb_rename">이름 바꾸기</string>
+    <string name="wb_rename_title">세션 이름 바꾸기</string>
+    <string name="wb_history">기록</string>
+    <string name="wb_history_empty">이 엔진의 기록이 아직 없습니다</string>
+    <string name="wb_history_resume">재개</string>
+    <string name="wb_history_delete">삭제</string>
+    <string name="wb_history_delete_confirm">기록에서 “%s”을(를) 삭제할까요? 데스크톱에서 영구 삭제됩니다.</string>
+    <string name="wb_toggle_group">이 폴더 표시 전환</string>
+    <string name="wb_op_failed">작업 실패: %s</string>
+    <string name="chat_tool_output">출력</string>
+    <string name="chat_stats_tools">도구 호출 %d회</string>
+    <string name="chat_stats_time">계산 %s</string>
 </resources>

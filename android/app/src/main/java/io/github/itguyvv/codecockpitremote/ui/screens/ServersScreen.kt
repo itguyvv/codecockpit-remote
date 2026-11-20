@@ -158,7 +158,7 @@ fun ServersScreen(vm: AppViewModel) {
                         connState = connState,
                         onClick = {
                             if (server.id == activeServerId && connState is ConnState.Ready) {
-                                vm.goSessions()
+                                vm.goWorkbench()
                             } else {
                                 vm.connect(server)
                             }

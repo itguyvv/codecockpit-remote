@@ -138,4 +138,27 @@
     <string name="common_cancel">取消</string>
     <string name="common_ok">确定</string>
     <string name="common_back">返回</string>
+    <!-- Workbench (会话竖条 + 分组侧边栏 + 聊天工具) -->
+    <string name="wb_select_hint">在左侧选择一个会话，或新建一个。</string>
+    <string name="wb_open_sidebar">全部会话</string>
+    <string name="wb_new_session">新建会话</string>
+    <string name="wb_new_session_title">新建会话</string>
+    <string name="wb_cwd">文件夹</string>
+    <string name="wb_cwd_hint">电脑上的绝对路径，如 D:/work/app</string>
+    <string name="wb_engine">引擎</string>
+    <string name="wb_create">创建</string>
+    <string name="wb_kill">关闭会话</string>
+    <string name="wb_kill_confirm">关闭“%s”？电脑上的代理进程将被终止。</string>
+    <string name="wb_rename">重命名</string>
+    <string name="wb_rename_title">重命名会话</string>
+    <string name="wb_history">历史记录</string>
+    <string name="wb_history_empty">该引擎还没有历史记录</string>
+    <string name="wb_history_resume">恢复</string>
+    <string name="wb_history_delete">删除</string>
+    <string name="wb_history_delete_confirm">从历史记录中删除“%s”？电脑上的记录将被永久删除。</string>
+    <string name="wb_toggle_group">展开或收起该文件夹</string>
+    <string name="wb_op_failed">操作失败：%s</string>
+    <string name="chat_tool_output">输出</string>
+    <string name="chat_stats_tools">%d 次工具调用</string>
+    <string name="chat_stats_time">计算 %s</string>
 </resources>

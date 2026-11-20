@@ -138,4 +138,27 @@
     <string name="common_cancel">Annuler</string>
     <string name="common_ok">OK</string>
     <string name="common_back">Retour</string>
+    <!-- Workbench (rail de sessions + panneau groupé + outils de chat) -->
+    <string name="wb_select_hint">Choisissez une session à gauche ou démarrez-en une nouvelle.</string>
+    <string name="wb_open_sidebar">Toutes les sessions</string>
+    <string name="wb_new_session">Nouvelle session</string>
+    <string name="wb_new_session_title">Nouvelle session</string>
+    <string name="wb_cwd">Dossier</string>
+    <string name="wb_cwd_hint">Chemin absolu sur le bureau, ex. D:/work/app</string>
+    <string name="wb_engine">Moteur</string>
+    <string name="wb_create">Créer</string>
+    <string name="wb_kill">Fermer la session</string>
+    <string name="wb_kill_confirm">Fermer « %s » ? Le processus de l\'agent est arrêté sur le bureau.</string>
+    <string name="wb_rename">Renommer</string>
+    <string name="wb_rename_title">Renommer la session</string>
+    <string name="wb_history">Historique</string>
+    <string name="wb_history_empty">Aucun historique pour ce moteur</string>
+    <string name="wb_history_resume">Reprendre</string>
+    <string name="wb_history_delete">Supprimer</string>
+    <string name="wb_history_delete_confirm">Supprimer « %s » de l\'historique ? L\'entrée est définitivement supprimée sur le bureau.</string>
+    <string name="wb_toggle_group">Afficher ou masquer ce dossier</string>
+    <string name="wb_op_failed">Échec de l\'opération : %s</string>
+    <string name="chat_tool_output">Sortie</string>
+    <string name="chat_stats_tools">%d appels d\'outils</string>
+    <string name="chat_stats_time">%s calculé</string>
 </resources>

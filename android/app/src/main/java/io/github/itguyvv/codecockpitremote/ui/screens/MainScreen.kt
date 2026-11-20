@@ -1,0 +1,875 @@
+package io.github.itguyvv.codecockpitremote.ui.screens
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LinkOff
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import io.github.itguyvv.codecockpitremote.R
+import io.github.itguyvv.codecockpitremote.net.ConnState
+import io.github.itguyvv.codecockpitremote.protocol.NativeSessionInfo
+import io.github.itguyvv.codecockpitremote.protocol.SessionSummary
+import io.github.itguyvv.codecockpitremote.ui.theme.Accent
+import io.github.itguyvv.codecockpitremote.ui.theme.Border
+import io.github.itguyvv.codecockpitremote.ui.theme.Busy
+import io.github.itguyvv.codecockpitremote.ui.theme.Danger
+import io.github.itguyvv.codecockpitremote.ui.theme.Ok
+import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
+import io.github.itguyvv.codecockpitremote.ui.theme.TextHigh
+import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
+import io.github.itguyvv.codecockpitremote.vm.AppViewModel
+
+private val ENGINES = listOf("claude", "codex", "opencode")
+private val MODES = listOf("default", "acceptEdits", "plan", "bypassPermissions")
+
+/** Desktop-grade workbench: session rail on the left, grouped sidebar drawer, chat pane right. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreen(vm: AppViewModel) {
+    val sessions by vm.sessions.collectAsStateWithLifecycle()
+    val selectedId by vm.selectedId.collectAsStateWithLifecycle()
+    val connState by vm.connState.collectAsStateWithLifecycle()
+    val opError by vm.lastOpError.collectAsStateWithLifecycle()
+
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val snackbar = remember { SnackbarHostState() }
+    var showNew by remember { mutableStateOf(false) }
+    var newCwd by remember { mutableStateOf("") }
+    var showHistory by remember { mutableStateOf(false) }
+    var confirmKill by remember { mutableStateOf<SessionSummary?>(null) }
+    var renaming by remember { mutableStateOf<SessionSummary?>(null) }
+
+    val selected = sessions.find { it.id == selectedId }
+    val ctx = LocalContext.current
+
+    LaunchedEffect(opError) {
+        opError?.let {
+            snackbar.showSnackbar(ctx.getString(R.string.wb_op_failed, it))
+            vm.clearOpError()
+        }
+    }
+
+    BackHandler {
+        when {
+            drawerState.isOpen -> scope.launch { drawerState.close() }
+            selectedId != null -> vm.deselect()
+            else -> vm.goServers()
+        }
+    }
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
+                SidebarPanel(
+                    vm = vm,
+                    sessions = sessions,
+                    onOpen = { s ->
+                        vm.selectSession(s)
+                        scope.launch { drawerState.close() }
+                    },
+                    onRename = { renaming = it },
+                    onKill = { confirmKill = it },
+                    onNewInCwd = {
+                        newCwd = it
+                        showNew = true
+                        scope.launch { drawerState.close() }
+                    },
+                    onNew = {
+                        newCwd = ""
+                        showNew = true
+                        scope.launch { drawerState.close() }
+                    },
+                    onHistory = {
+                        showHistory = true
+                        scope.launch { drawerState.close() }
+                    },
+                    onClose = { scope.launch { drawerState.close() } }
+                )
+            }
+        }
+    ) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbar) },
+            topBar = {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.wb_open_sidebar))
+                        }
+                    },
+                    title = {
+                        Column {
+                            Text(
+                                selected?.title ?: stringResource(R.string.sessions_title),
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            if (selected != null) {
+                                Text(
+                                    busyLine(selected.busy, selected.status == "exited"),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = when {
+                                        selected.status == "exited" -> Danger
+                                        selected.busy -> Ok
+                                        else -> TextMid
+                                    }
+                                )
+                            }
+                        }
+                    },
+                    actions = {
+                        if (selected != null) ModeMenu(vm, selected.permissionMode)
+                        IconButton(onClick = { vm.refreshSessions() }) {
+                            Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.sessions_refresh))
+                        }
+                        IconButton(onClick = { vm.goServers() }) {
+                            Icon(Icons.Default.LinkOff, contentDescription = stringResource(R.string.sessions_disconnect))
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                if (connState !is ConnState.Ready) {
+                    Text(
+                        stringResource(R.string.sessions_disconnected),
+                        color = Busy,
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                    )
+                }
+                Row(Modifier.fillMaxSize()) {
+                    SessionRail(
+                        sessions = sessions,
+                        selectedId = selectedId,
+                        onSelect = { vm.selectSession(it) },
+                        onNew = {
+                            newCwd = ""
+                            showNew = true
+                        },
+                        onExpand = { scope.launch { drawerState.open() } }
+                    )
+                    Box(Modifier.width(1.dp).fillMaxHeight().background(Border))
+                    Box(Modifier.weight(1f).fillMaxHeight()) {
+                        if (selected == null) {
+                            Column(
+                                modifier = Modifier.fillMaxSize().padding(32.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    stringResource(R.string.wb_select_hint),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = TextMid
+                                )
+                            }
+                        } else {
+                            ChatScreen(vm, selected.id)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (showNew) {
+        NewSessionDialog(
+            vm = vm,
+            initialCwd = newCwd,
+            knownCwds = sessions.map { it.cwd }.filter { it.isNotBlank() }.distinct(),
+            onDismiss = { showNew = false }
+        )
+    }
+
+    if (showHistory) {
+        HistorySheet(vm = vm, onDismiss = { showHistory = false })
+    }
+
+    confirmKill?.let { s ->
+        AlertDialog(
+            onDismissRequest = { confirmKill = null },
+            title = { Text(stringResource(R.string.wb_kill)) },
+            text = { Text(stringResource(R.string.wb_kill_confirm, s.title.ifBlank { s.cwd })) },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.killSession(s.id)
+                    confirmKill = null
+                }) { Text(stringResource(R.string.wb_kill), color = Danger) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmKill = null }) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            }
+        )
+    }
+
+    renaming?.let { s ->
+        RenameDialog(
+            initial = s.title,
+            onDismiss = { renaming = null },
+            onSave = {
+                vm.renameSession(s.id, it)
+                renaming = null
+            }
+        )
+    }
+}
+
+@Composable
+private fun ModeMenu(vm: AppViewModel, current: String) {
+    var open by remember { mutableStateOf(false) }
+    Box {
+        TextButton(onClick = { open = true }) {
+            Text(
+                modeLabel(current),
+                style = MaterialTheme.typography.labelMedium
+            )
+            Icon(Icons.Default.ArrowDropDown, contentDescription = stringResource(R.string.chat_mode_label))
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            MODES.forEach { mode ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            modeLabel(mode),
+                            color = if (mode == current) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    onClick = {
+                        open = false
+                        vm.setMode(mode)
+                    }
+                )
+            }
+        }
+    }
+}
+
+/** Always-visible narrow column: one tile per session, plus new-session and expand buttons */
+@Composable
+private fun SessionRail(
+    sessions: List<SessionSummary>,
+    selectedId: String?,
+    onSelect: (SessionSummary) -> Unit,
+    onNew: () -> Unit,
+    onExpand: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(48.dp)
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.surface),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(sessions, key = { it.id }) { s ->
+                RailTile(s, selected = s.id == selectedId, onClick = { onSelect(s) })
+            }
+        }
+        IconButton(onClick = onNew) {
+            Icon(Icons.Default.Add, contentDescription = stringResource(R.string.wb_new_session), tint = TextMid)
+        }
+        IconButton(onClick = onExpand) {
+            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.wb_open_sidebar), tint = TextMid)
+        }
+    }
+}
+
+@Composable
+private fun RailTile(s: SessionSummary, selected: Boolean, onClick: () -> Unit) {
+    val label = s.title.ifBlank { folderName(s.cwd) }.take(2).ifBlank { "?" }
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (selected) Surface2 else Color.Transparent)
+            .clickable(onClick = onClick)
+    ) {
+        if (selected) {
+            Box(
+                Modifier
+                    .width(2.dp)
+                    .height(24.dp)
+                    .background(Accent)
+                    .align(Alignment.CenterStart)
+            )
+        }
+        Text(
+            label,
+            style = MaterialTheme.typography.labelMedium,
+            fontFamily = FontFamily.Monospace,
+            color = if (selected) TextHigh else TextMid,
+            modifier = Modifier.align(Alignment.Center)
+        )
+        Box(
+            Modifier
+                .size(7.dp)
+                .background(dotColor(s), CircleShape)
+                .align(Alignment.BottomEnd)
+        )
+    }
+}
+
+/** Grouped sidebar: cwd folders with collapsible headers, per-session row menu, top actions */
+@Composable
+private fun SidebarPanel(
+    vm: AppViewModel,
+    sessions: List<SessionSummary>,
+    onOpen: (SessionSummary) -> Unit,
+    onRename: (SessionSummary) -> Unit,
+    onKill: (SessionSummary) -> Unit,
+    onNewInCwd: (String) -> Unit,
+    onNew: () -> Unit,
+    onHistory: () -> Unit,
+    onClose: () -> Unit
+) {
+    val groups = remember(sessions) {
+        sessions.groupBy { folderName(it.cwd) }.toSortedMap()
+    }
+    val collapsed = remember { mutableStateMapOf<String, Boolean>() }
+    Column(Modifier.fillMaxSize()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Text(
+                stringResource(R.string.sessions_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = onClose) {
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.common_cancel))
+            }
+        }
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            TextButton(onClick = onNew) {
+                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.size(4.dp))
+                Text(stringResource(R.string.wb_new_session))
+            }
+            TextButton(onClick = onHistory) {
+                Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.size(4.dp))
+                Text(stringResource(R.string.wb_history))
+            }
+        }
+        Spacer(Modifier.height(4.dp))
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
+            groups.forEach { (folder, list) ->
+                item(key = "g:$folder") {
+                    val isCollapsed = collapsed[folder] ?: true
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { collapsed[folder] = !isCollapsed }
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            folder,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontFamily = FontFamily.Monospace,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            list.size.toString(),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextMid
+                        )
+                        IconButton(onClick = { onNewInCwd(list.firstOrNull()?.cwd ?: folder) }) {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.wb_new_session),
+                                tint = TextMid,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                        Icon(
+                            Icons.Default.ArrowDropDown,
+                            contentDescription = stringResource(R.string.wb_toggle_group),
+                            tint = TextMid,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+                if (!(collapsed[folder] ?: true)) {
+                    items(list, key = { it.id }) { s ->
+                        SessionRow(
+                            session = s,
+                            onOpen = { onOpen(s) },
+                            onRename = { onRename(s) },
+                            onKill = { onKill(s) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SessionRow(
+    session: SessionSummary,
+    onOpen: () -> Unit,
+    onRename: () -> Unit,
+    onKill: () -> Unit
+) {
+    var menuOpen by remember { mutableStateOf(false) }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onOpen)
+            .padding(start = 24.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
+    ) {
+        Box(Modifier.size(8.dp).background(dotColor(session), CircleShape))
+        Spacer(Modifier.size(8.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                session.title.ifBlank { folderName(session.cwd) },
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                session.engine,
+                style = MaterialTheme.typography.labelSmall,
+                fontFamily = FontFamily.Monospace,
+                color = TextMid
+            )
+        }
+        Box {
+            IconButton(onClick = { menuOpen = true }) {
+                Icon(Icons.Default.MoreVert, contentDescription = null, tint = TextMid)
+            }
+            DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.wb_open_sidebar)) },
+                    onClick = {
+                        menuOpen = false
+                        onOpen()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.wb_rename)) },
+                    onClick = {
+                        menuOpen = false
+                        onRename()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.wb_kill), color = Danger) },
+                    onClick = {
+                        menuOpen = false
+                        onKill()
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RenameDialog(initial: String, onDismiss: () -> Unit, onSave: (String) -> Unit) {
+    var text by remember { mutableStateOf(initial) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.wb_rename_title)) },
+        text = {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onSave(text.trim()) },
+                enabled = text.isNotBlank()
+            ) { Text(stringResource(R.string.common_ok)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) }
+        }
+    )
+}
+
+/** Launch a new desktop session: engine chip row, mode + folder pickers, optional title */
+@Composable
+private fun NewSessionDialog(
+    vm: AppViewModel,
+    initialCwd: String,
+    knownCwds: List<String>,
+    onDismiss: () -> Unit
+) {
+    var engine by remember { mutableStateOf("claude") }
+    var mode by remember { mutableStateOf("default") }
+    var cwd by remember { mutableStateOf(initialCwd) }
+    var title by remember { mutableStateOf("") }
+    var modeOpen by remember { mutableStateOf(false) }
+    var cwdOpen by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.wb_new_session_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    stringResource(R.string.wb_engine),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = TextMid
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ENGINES.forEach { e ->
+                        FilterChip(
+                            selected = engine == e,
+                            onClick = { engine = e },
+                            label = { Text(e, fontFamily = FontFamily.Monospace) }
+                        )
+                    }
+                }
+                Box {
+                    OutlinedTextField(
+                        value = modeLabel(mode),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(stringResource(R.string.chat_mode_label)) },
+                        trailingIcon = {
+                            IconButton(onClick = { modeOpen = true }) {
+                                Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                            }
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    DropdownMenu(expanded = modeOpen, onDismissRequest = { modeOpen = false }) {
+                        MODES.forEach { m ->
+                            DropdownMenuItem(text = { Text(modeLabel(m)) }, onClick = {
+                                mode = m
+                                modeOpen = false
+                            })
+                        }
+                    }
+                }
+                Box {
+                    OutlinedTextField(
+                        value = cwd,
+                        onValueChange = { cwd = it },
+                        label = { Text(stringResource(R.string.wb_cwd)) },
+                        placeholder = { Text(stringResource(R.string.wb_cwd_hint), color = TextMid) },
+                        trailingIcon = if (knownCwds.isNotEmpty()) {
+                            {
+                                IconButton(onClick = { cwdOpen = true }) {
+                                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                                }
+                            }
+                        } else {
+                            null
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    DropdownMenu(expanded = cwdOpen, onDismissRequest = { cwdOpen = false }) {
+                        knownCwds.forEach { c ->
+                            DropdownMenuItem(
+                                text = { Text(folderName(c), fontFamily = FontFamily.Monospace) },
+                                onClick = {
+                                    cwd = c
+                                    cwdOpen = false
+                                }
+                            )
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text(stringResource(R.string.pair_name)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    vm.createSession(cwd.trim(), mode, engine, title.trim())
+                    onDismiss()
+                },
+                enabled = cwd.isNotBlank()
+            ) { Text(stringResource(R.string.wb_create)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) }
+        }
+    )
+}
+
+/** Engine history browser: pick engine, grouped by folder, resume or delete entries */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
+    val sheetState = rememberModalBottomSheetState()
+    val engine by vm.historyEngine.collectAsStateWithLifecycle()
+    val history by vm.history.collectAsStateWithLifecycle()
+    var confirmResume by remember { mutableStateOf<NativeSessionInfo?>(null) }
+    var confirmDelete by remember { mutableStateOf<NativeSessionInfo?>(null) }
+
+    LaunchedEffect(engine) { vm.loadHistory(engine) }
+
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
+        Column(Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.wb_history),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ENGINES.forEach { e ->
+                    FilterChip(
+                        selected = engine == e,
+                        onClick = { vm.loadHistory(e) },
+                        label = { Text(e, fontFamily = FontFamily.Monospace) }
+                    )
+                }
+            }
+            val list = history
+            if (list == null) {
+                Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (list.isEmpty()) {
+                Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        stringResource(R.string.wb_history_empty),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextMid
+                    )
+                }
+            } else {
+                val groups = remember(list) {
+                    list.groupBy { folderName(it.cwd) }.toSortedMap()
+                }
+                LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
+                    groups.forEach { (folder, items) ->
+                        item(key = "h:$folder") {
+                            Text(
+                                folder,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontFamily = FontFamily.Monospace,
+                                color = TextMid,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
+                        items(items, key = { it.sessionId }) { info ->
+                            HistoryRow(
+                                info = info,
+                                onResume = { confirmResume = info },
+                                onDelete = { confirmDelete = info }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    confirmResume?.let { info ->
+        AlertDialog(
+            onDismissRequest = { confirmResume = null },
+            title = { Text(stringResource(R.string.wb_history_resume)) },
+            text = { Text(info.title.ifBlank { folderName(info.cwd) }) },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.createSession(
+                        cwd = info.cwd,
+                        mode = info.permissionMode.ifBlank { "default" },
+                        engine = info.engine.ifBlank { "claude" },
+                        title = "",
+                        resumeId = info.sessionId
+                    )
+                    confirmResume = null
+                    onDismiss()
+                }) { Text(stringResource(R.string.wb_history_resume)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmResume = null }) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            }
+        )
+    }
+
+    confirmDelete?.let { info ->
+        AlertDialog(
+            onDismissRequest = { confirmDelete = null },
+            title = { Text(stringResource(R.string.wb_history_delete)) },
+            text = { Text(stringResource(R.string.wb_history_delete_confirm, info.title.ifBlank { folderName(info.cwd) })) },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.deleteHistory(info.sessionId)
+                    confirmDelete = null
+                }) { Text(stringResource(R.string.wb_history_delete), color = Danger) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmDelete = null }) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun HistoryRow(info: NativeSessionInfo, onResume: () -> Unit, onDelete: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onResume)
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                info.title.ifBlank { folderName(info.cwd) },
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                info.cwd,
+                style = MaterialTheme.typography.labelSmall,
+                fontFamily = FontFamily.Monospace,
+                color = TextMid,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        IconButton(onClick = onDelete) {
+            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.wb_history_delete), tint = TextMid)
+        }
+    }
+}
+
+/** Permission mode display name for menus and pickers */
+@Composable
+internal fun modeLabel(mode: String): String = when (mode) {
+    "default" -> stringResource(R.string.mode_default)
+    "acceptEdits" -> stringResource(R.string.mode_acceptEdits)
+    "plan" -> stringResource(R.string.mode_plan)
+    "bypassPermissions" -> stringResource(R.string.mode_bypassPermissions)
+    else -> mode
+}
+
+/** Top-bar status line: exited (red), busy, or idle running */
+@Composable
+internal fun busyLine(busy: Boolean, exited: Boolean): String = when {
+    exited -> stringResource(R.string.chat_exited)
+    busy -> stringResource(R.string.sessions_busy)
+    else -> stringResource(R.string.sessions_running)
+}
+
+/** Working = yellow pulse candidate, exited = red, background shells = accent, idle running = green */
+private fun dotColor(s: SessionSummary): Color = when {
+    s.busy -> Busy
+    s.status == "exited" -> Danger
+    s.bg > 0 -> Accent
+    else -> Ok
+}
+
+/** Basename of either path separator; empty cwd falls back to a dash */
+private fun folderName(cwd: String): String =
+    cwd.trim().substringAfterLast('/').substringAfterLast('\\').ifBlank { "-" }

@@ -138,4 +138,27 @@
     <string name="common_cancel">Отмена</string>
     <string name="common_ok">ОК</string>
     <string name="common_back">Назад</string>
+    <!-- Workbench (панель сессий + сгруппированная боковая панель + инструменты чата) -->
+    <string name="wb_select_hint">Выберите сессию слева или начните новую.</string>
+    <string name="wb_open_sidebar">Все сессии</string>
+    <string name="wb_new_session">Новая сессия</string>
+    <string name="wb_new_session_title">Новая сессия</string>
+    <string name="wb_cwd">Папка</string>
+    <string name="wb_cwd_hint">Абсолютный путь на десктопе, напр. D:/work/app</string>
+    <string name="wb_engine">Движок</string>
+    <string name="wb_create">Создать</string>
+    <string name="wb_kill">Закрыть сессию</string>
+    <string name="wb_kill_confirm">Закрыть «%s»? Процесс агента на десктопе будет завершён.</string>
+    <string name="wb_rename">Переименовать</string>
+    <string name="wb_rename_title">Переименовать сессию</string>
+    <string name="wb_history">История</string>
+    <string name="wb_history_empty">Истории для этого движка пока нет</string>
+    <string name="wb_history_resume">Возобновить</string>
+    <string name="wb_history_delete">Удалить</string>
+    <string name="wb_history_delete_confirm">Удалить «%s» из истории? Запись будет удалена на десктопе навсегда.</string>
+    <string name="wb_toggle_group">Показать или скрыть папку</string>
+    <string name="wb_op_failed">Ошибка операции: %s</string>
+    <string name="chat_tool_output">Вывод</string>
+    <string name="chat_stats_tools">Вызовов инструментов: %d</string>
+    <string name="chat_stats_time">Вычисления %s</string>
 </resources>

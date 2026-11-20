@@ -138,4 +138,27 @@
     <string name="common_cancel">Abbrechen</string>
     <string name="common_ok">OK</string>
     <string name="common_back">Zurück</string>
+    <!-- Workbench (Sitzungsleiste + gruppierte Seitenleiste + Chat-Tools) -->
+    <string name="wb_select_hint">Wählen Sie links eine Sitzung oder starten Sie eine neue.</string>
+    <string name="wb_open_sidebar">Alle Sitzungen</string>
+    <string name="wb_new_session">Neue Sitzung</string>
+    <string name="wb_new_session_title">Neue Sitzung</string>
+    <string name="wb_cwd">Ordner</string>
+    <string name="wb_cwd_hint">Absoluter Pfad auf dem Desktop, z. B. D:/work/app</string>
+    <string name="wb_engine">Engine</string>
+    <string name="wb_create">Erstellen</string>
+    <string name="wb_kill">Sitzung beenden</string>
+    <string name="wb_kill_confirm">„%s“ beenden? Der Agent-Prozess auf dem Desktop wird beendet.</string>
+    <string name="wb_rename">Umbenennen</string>
+    <string name="wb_rename_title">Sitzung umbenennen</string>
+    <string name="wb_history">Verlauf</string>
+    <string name="wb_history_empty">Noch kein Verlauf für diese Engine</string>
+    <string name="wb_history_resume">Fortsetzen</string>
+    <string name="wb_history_delete">Löschen</string>
+    <string name="wb_history_delete_confirm">„%s“ aus dem Verlauf löschen? Der Eintrag wird auf dem Desktop dauerhaft entfernt.</string>
+    <string name="wb_toggle_group">Ordner ein- oder ausklappen</string>
+    <string name="wb_op_failed">Vorgang fehlgeschlagen: %s</string>
+    <string name="chat_tool_output">Ausgabe</string>
+    <string name="chat_stats_tools">%d Tool-Aufrufe</string>
+    <string name="chat_stats_time">%s gerechnet</string>
 </resources>

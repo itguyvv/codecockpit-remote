@@ -138,4 +138,27 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_ok">OK</string>
     <string name="common_back">Back</string>
+    <!-- Workbench (session rail + grouped sidebar + chat tools) -->
+    <string name="wb_select_hint">Select a session on the left, or start a new one.</string>
+    <string name="wb_open_sidebar">All sessions</string>
+    <string name="wb_new_session">New session</string>
+    <string name="wb_new_session_title">New session</string>
+    <string name="wb_cwd">Folder</string>
+    <string name="wb_cwd_hint">Absolute path on the desktop, e.g. D:/work/app</string>
+    <string name="wb_engine">Engine</string>
+    <string name="wb_create">Create</string>
+    <string name="wb_kill">Close session</string>
+    <string name="wb_kill_confirm">Close “%s”? The agent process on the desktop is terminated.</string>
+    <string name="wb_rename">Rename</string>
+    <string name="wb_rename_title">Rename session</string>
+    <string name="wb_history">History</string>
+    <string name="wb_history_empty">No history for this engine yet</string>
+    <string name="wb_history_resume">Resume</string>
+    <string name="wb_history_delete">Delete</string>
+    <string name="wb_history_delete_confirm">Delete “%s” from history? The record is removed on the desktop permanently.</string>
+    <string name="wb_toggle_group">Show or hide this folder</string>
+    <string name="wb_op_failed">Operation failed: %s</string>
+    <string name="chat_tool_output">Output</string>
+    <string name="chat_stats_tools">%d tool calls</string>
+    <string name="chat_stats_time">%s computing</string>
 </resources>
