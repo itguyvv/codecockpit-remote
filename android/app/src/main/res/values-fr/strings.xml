@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">Déconnecté — reconnexion…</string>
     <string name="sessions_exited">Terminée</string>
     <string name="sessions_running">En cours</string>
-    <string name="sessions_busy">Travaille</string>
+    <string name="sessions_busy">En cours</string>
     <string name="sessions_bg">%d en arrière-plan</string>
     <string name="sessions_disconnect">Déconnecter</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">Demander</string>
     <string name="mode_acceptEdits">Accepter les modifications</string>
     <string name="mode_plan">Planifier</string>
-    <string name="mode_bypassPermissions">Contourner les permissions</string>
-    <string name="mode_bypass_confirm">En mode « Contourner les permissions », l’agent peut exécuter n’importe quelle commande sans approbation. Activer ?</string>
+    <string name="mode_bypassPermissions">Accès complet</string>
+    <string name="mode_bypass_confirm">En mode « Accès complet », l’agent peut exécuter n’importe quelle commande sans approbation. Activer ?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Passer</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">Sortie</string>
     <string name="chat_stats_tools">%d outils</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">Terminée</string>
+    <string name="wb_state_idle">Inactive</string>
+    <string name="wb_state_bg">Arrière-plan</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">Plan</string>
+    <string name="chat_stop">Arrêter</string>
+    <string name="chat_scroll_bottom">Défiler vers le bas</string>
 </resources>

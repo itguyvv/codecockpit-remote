@@ -298,9 +298,16 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             is ServerEvent.ConvAppend -> if (event.sessionId == attachedId) {
                 _chatMessages.value = upsert(_chatMessages.value, event.messages)
             }
-            is ServerEvent.Busy -> if (event.sessionId == attachedId) {
-                _chatBusy.value = event.busy
-                _chatBg.value = event.bg
+            is ServerEvent.Busy -> {
+                // Patch the list immediately so sidebar dots stay correct even if the
+                // follow-up sessions broadcast is still in flight
+                _sessions.value = _sessions.value.map {
+                    if (it.id == event.sessionId) it.copy(busy = event.busy, bg = event.bg) else it
+                }
+                if (event.sessionId == attachedId) {
+                    _chatBusy.value = event.busy
+                    _chatBg.value = event.bg
+                }
             }
             is ServerEvent.Status -> if (event.sessionId == attachedId) {
                 _chatStatus.value = event.status
@@ -410,6 +417,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun sendPrompt(text: String) {
         val id = attachedId ?: return
         client?.send(inputRequest(id, text + PROMPT_SUFFIX))
+    }
+
+    /** Interrupt the running turn: a bare Esc keystroke, exactly like the desktop terminal */
+    fun interrupt(sessionId: String) {
+        client?.send(inputRequest(sessionId, "\u001b"))
     }
 
     fun setMode(mode: String) {

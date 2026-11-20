@@ -18,6 +18,9 @@ val Ok = Color(0xFF4CC38A)
 val Busy = Color(0xFFF2C94C)
 val Danger = Color(0xFFE5484D)
 
+/** Idle live session — matches the desktop's gray idle dot (#6e7681) */
+val Idle = Color(0xFF6E7681)
+
 private val DarkScheme = darkColorScheme(
     primary = Accent,
     onPrimary = Color(0xFF0B1220),

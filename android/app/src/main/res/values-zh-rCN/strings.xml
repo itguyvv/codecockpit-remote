@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">已断开——正在重连…</string>
     <string name="sessions_exited">已退出</string>
     <string name="sessions_running">运行中</string>
-    <string name="sessions_busy">工作中</string>
+    <string name="sessions_busy">处理中</string>
     <string name="sessions_bg">%d 个后台任务</string>
     <string name="sessions_disconnect">断开连接</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">询问</string>
     <string name="mode_acceptEdits">自动接受编辑</string>
     <string name="mode_plan">计划模式</string>
-    <string name="mode_bypassPermissions">绕过权限</string>
-    <string name="mode_bypass_confirm">绕过权限模式下，智能体执行任何命令都无需逐条确认。确定启用？</string>
+    <string name="mode_bypassPermissions">完整权限</string>
+    <string name="mode_bypass_confirm">完整权限模式下，智能体执行任何命令都无需逐条确认。确定启用？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">跳过</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">输出</string>
     <string name="chat_stats_tools">%d 工具</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">已退出</string>
+    <string name="wb_state_idle">空闲</string>
+    <string name="wb_state_bg">后台任务</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">计划</string>
+    <string name="chat_stop">停止</string>
+    <string name="chat_scroll_bottom">滚动到底部</string>
 </resources>

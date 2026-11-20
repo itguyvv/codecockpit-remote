@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">切断されました — 再接続中…</string>
     <string name="sessions_exited">終了</string>
     <string name="sessions_running">実行中</string>
-    <string name="sessions_busy">作業中</string>
+    <string name="sessions_busy">処理中</string>
     <string name="sessions_bg">バックグラウンド %d</string>
     <string name="sessions_disconnect">切断</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">確認</string>
     <string name="mode_acceptEdits">編集を自動承認</string>
     <string name="mode_plan">計画</string>
-    <string name="mode_bypassPermissions">権限をバイパス</string>
-    <string name="mode_bypass_confirm">権限バイパスモードでは、エージェントが承認を求めずに任意のコマンドを実行します。有効にしますか？</string>
+    <string name="mode_bypassPermissions">フル権限</string>
+    <string name="mode_bypass_confirm">フル権限モードでは、エージェントは承認なしで任意のコマンドを実行できます。有効にしますか？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">スキップ</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">出力</string>
     <string name="chat_stats_tools">%d ツール</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">終了</string>
+    <string name="wb_state_idle">アイドル</string>
+    <string name="wb_state_bg">バックグラウンド</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">計画</string>
+    <string name="chat_stop">停止</string>
+    <string name="chat_scroll_bottom">最下部へスクロール</string>
 </resources>

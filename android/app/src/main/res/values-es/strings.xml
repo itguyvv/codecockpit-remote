@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">Desconectado — reconectando…</string>
     <string name="sessions_exited">Finalizada</string>
     <string name="sessions_running">En curso</string>
-    <string name="sessions_busy">Trabajando</string>
+    <string name="sessions_busy">Ocupada</string>
     <string name="sessions_bg">%d en segundo plano</string>
     <string name="sessions_disconnect">Desconectar</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">Preguntar</string>
     <string name="mode_acceptEdits">Aceptar ediciones</string>
     <string name="mode_plan">Planificar</string>
-    <string name="mode_bypassPermissions">Omitir permisos</string>
-    <string name="mode_bypass_confirm">En el modo «Omitir permisos», el agente puede ejecutar cualquier comando sin pedir aprobación. ¿Activarlo?</string>
+    <string name="mode_bypassPermissions">Permisos completos</string>
+    <string name="mode_bypass_confirm">En el modo de permisos completos, el agente puede ejecutar cualquier comando sin pedir aprobación. ¿Activarlo?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Omitir</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">Salida</string>
     <string name="chat_stats_tools">%d herramientas</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">Terminada</string>
+    <string name="wb_state_idle">Inactiva</string>
+    <string name="wb_state_bg">En segundo plano</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">Plan</string>
+    <string name="chat_stop">Detener</string>
+    <string name="chat_scroll_bottom">Desplazar al final</string>
 </resources>

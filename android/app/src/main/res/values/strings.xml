@@ -71,8 +71,8 @@
     <string name="mode_default">Ask</string>
     <string name="mode_acceptEdits">Accept edits</string>
     <string name="mode_plan">Plan</string>
-    <string name="mode_bypassPermissions">Bypass permissions</string>
-    <string name="mode_bypass_confirm">Bypass mode lets the agent run any command without asking for approval. Enable it?</string>
+    <string name="mode_bypassPermissions">Full permissions</string>
+    <string name="mode_bypass_confirm">Full-permissions mode lets the agent run any command without asking for approval. Enable it?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Skip</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">Output</string>
     <string name="chat_stats_tools">%d tools</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">Exited</string>
+    <string name="wb_state_idle">Idle</string>
+    <string name="wb_state_bg">Background</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">Plan</string>
+    <string name="chat_stop">Stop</string>
+    <string name="chat_scroll_bottom">Scroll to bottom</string>
 </resources>

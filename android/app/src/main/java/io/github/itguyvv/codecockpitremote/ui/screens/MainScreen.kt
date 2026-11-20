@@ -64,6 +64,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -75,10 +76,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.protocol.NativeSessionInfo
+import io.github.itguyvv.codecockpitremote.protocol.SessionStatus
 import io.github.itguyvv.codecockpitremote.protocol.SessionSummary
 import io.github.itguyvv.codecockpitremote.ui.theme.Accent
 import io.github.itguyvv.codecockpitremote.ui.theme.Busy
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
+import io.github.itguyvv.codecockpitremote.ui.theme.Idle
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
@@ -94,6 +97,7 @@ fun MainScreen(vm: AppViewModel) {
     val selectedId by vm.selectedId.collectAsStateWithLifecycle()
     val connState by vm.connState.collectAsStateWithLifecycle()
     val opError by vm.lastOpError.collectAsStateWithLifecycle()
+    val chatStatus by vm.chatStatus.collectAsStateWithLifecycle()
 
     val snackbar = remember { SnackbarHostState() }
     var showNew by remember { mutableStateOf(false) }
@@ -151,15 +155,11 @@ fun MainScreen(vm: AppViewModel) {
                                             .background(dotColor(selected), CircleShape)
                                     )
                                     Text(
-                                        busyLine(selected.busy, selected.status == "exited"),
+                                        stateLine(selected, chatStatus),
                                         style = MaterialTheme.typography.labelSmall,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
-                                        color = when {
-                                            selected.status == "exited" -> Danger
-                                            selected.busy -> Ok
-                                            else -> TextMid
-                                        },
+                                        color = stateColor(selected),
                                         modifier = Modifier.weight(1f, fill = false)
                                     )
                                     Text("·", style = MaterialTheme.typography.labelSmall, color = TextMid)
@@ -264,7 +264,6 @@ fun MainScreen(vm: AppViewModel) {
         NewSessionDialog(
             vm = vm,
             initialCwd = newCwd,
-            knownCwds = sessions.map { it.cwd }.filter { it.isNotBlank() }.distinct(),
             onDismiss = { showNew = false }
         )
     }
@@ -523,6 +522,16 @@ private fun SessionRow(
                 color = TextMid
             )
         }
+        Text(
+            when {
+                session.status == "exited" -> stringResource(R.string.wb_state_exited)
+                session.busy -> stringResource(R.string.sessions_busy)
+                session.bg > 0 -> stringResource(R.string.wb_state_bg)
+                else -> stringResource(R.string.wb_state_idle)
+            },
+            style = MaterialTheme.typography.labelSmall,
+            color = stateColor(session)
+        )
         Box {
             IconButton(onClick = { menuOpen = true }) {
                 Icon(Icons.Default.MoreVert, contentDescription = null, tint = TextMid)
@@ -585,15 +594,28 @@ private fun RenameDialog(initial: String, onDismiss: () -> Unit, onSave: (String
 private fun NewSessionDialog(
     vm: AppViewModel,
     initialCwd: String,
-    knownCwds: List<String>,
     onDismiss: () -> Unit
 ) {
     var engine by remember { mutableStateOf("claude") }
-    var mode by remember { mutableStateOf("default") }
+    // Default to full permissions (desktop parity: new sessions work out of the box)
+    var mode by remember { mutableStateOf("bypassPermissions") }
     var cwd by remember { mutableStateOf(initialCwd) }
     var title by remember { mutableStateOf("") }
     var modeOpen by remember { mutableStateOf(false) }
     var cwdOpen by remember { mutableStateOf(false) }
+    val sessions by vm.sessions.collectAsStateWithLifecycle()
+    val history by vm.history.collectAsStateWithLifecycle()
+
+    // Folder suggestions come from everywhere the desktop has seen: live sessions
+    // plus the engine's native history (the user asked for history dirs, not a
+    // whole-computer browser)
+    LaunchedEffect(engine) { vm.loadHistory(engine) }
+    val knownCwds = remember(sessions, history) {
+        (sessions.map { it.cwd } + (history?.map { it.cwd } ?: emptyList()))
+            .filter { it.isNotBlank() }
+            .distinct()
+            .sorted()
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -666,7 +688,22 @@ private fun NewSessionDialog(
                     DropdownMenu(expanded = cwdOpen, onDismissRequest = { cwdOpen = false }) {
                         knownCwds.forEach { c ->
                             DropdownMenuItem(
-                                text = { Text(folderName(c), fontFamily = FontFamily.Monospace) },
+                                text = {
+                                    Column {
+                                        Text(
+                                            folderName(c),
+                                            fontFamily = FontFamily.Monospace,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Text(
+                                            c,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = TextMid,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                },
                                 onClick = {
                                     cwd = c
                                     cwdOpen = false
@@ -751,28 +788,54 @@ private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
                     )
                 }
             } else {
+                // Two-level tree: directory nodes collapse their sessions (desktop parity)
                 val groups = remember(list) {
                     list.groupBy { folderName(it.cwd) }.toSortedMap()
                 }
+                val expanded = remember { mutableStateMapOf<String, Boolean>() }
                 LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
                     groups.forEach { (folder, items) ->
                         item(key = "h:$folder") {
-                            Text(
-                                folder,
-                                style = MaterialTheme.typography.labelLarge,
-                                fontFamily = FontFamily.Monospace,
-                                color = TextMid,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                            )
+                            val open = expanded[folder] ?: false
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { expanded[folder] = !open }
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowDropDown,
+                                    contentDescription = stringResource(R.string.wb_toggle_group),
+                                    tint = TextMid,
+                                    modifier = Modifier
+                                        .size(18.dp)
+                                        .rotate(if (open) 0f else -90f)
+                                )
+                                Spacer(Modifier.size(4.dp))
+                                Text(
+                                    folder,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontFamily = FontFamily.Monospace,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    items.size.toString(),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = TextMid
+                                )
+                            }
                         }
-                        items(items, key = { it.sessionId }) { info ->
-                            HistoryRow(
-                                info = info,
-                                onResume = { confirmResume = info },
-                                onDelete = { confirmDelete = info }
-                            )
+                        if (expanded[folder] ?: false) {
+                            items(items, key = { it.sessionId }) { info ->
+                                HistoryRow(
+                                    info = info,
+                                    onResume = { confirmResume = info },
+                                    onDelete = { confirmDelete = info }
+                                )
+                            }
                         }
                     }
                 }
@@ -867,20 +930,37 @@ internal fun modeLabel(mode: String): String = when (mode) {
     else -> mode
 }
 
-/** Top-bar status line: exited (red), busy, or idle running */
+/** Top-bar state line: the desktop badge text, plus the running tool while working */
 @Composable
-internal fun busyLine(busy: Boolean, exited: Boolean): String = when {
-    exited -> stringResource(R.string.chat_exited)
-    busy -> stringResource(R.string.sessions_busy)
-    else -> stringResource(R.string.sessions_running)
+private fun stateLine(s: SessionSummary, status: SessionStatus?): String {
+    val label = when {
+        s.status == "exited" -> stringResource(R.string.wb_state_exited)
+        s.busy -> stringResource(R.string.sessions_busy)
+        s.bg > 0 -> stringResource(R.string.wb_state_bg)
+        else -> stringResource(R.string.wb_state_idle)
+    }
+    val tool = status?.tool?.takeIf { s.busy && it.isNotBlank() } ?: return label
+    return stringResource(R.string.wb_state_tool, label, tool)
 }
 
-/** Working = yellow pulse candidate, exited = red, background shells = accent, idle running = green */
-private fun dotColor(s: SessionSummary): Color = when {
-    s.busy -> Busy
+/** Text color for the state label (idle stays neutral gray) */
+@Composable
+internal fun stateColor(s: SessionSummary): Color = when {
     s.status == "exited" -> Danger
+    s.busy -> Ok
     s.bg > 0 -> Accent
-    else -> Ok
+    else -> TextMid
+}
+
+/**
+ * Dot semantics copied from the desktop sidebar: busy = green pulse, exited = red,
+ * background shells = accent, idle live session = gray (desktop #6e7681).
+ */
+private fun dotColor(s: SessionSummary): Color = when {
+    s.status == "exited" -> Danger
+    s.busy -> Ok
+    s.bg > 0 -> Accent
+    else -> Idle
 }
 
 /** Basename of either path separator; empty cwd falls back to a dash */

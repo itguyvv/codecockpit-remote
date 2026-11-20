@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">Отключено — переподключение…</string>
     <string name="sessions_exited">Завершена</string>
     <string name="sessions_running">Работает</string>
-    <string name="sessions_busy">Занята</string>
+    <string name="sessions_busy">Работает</string>
     <string name="sessions_bg">%d в фоне</string>
     <string name="sessions_disconnect">Отключить</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">Спрашивать</string>
     <string name="mode_acceptEdits">Принимать правки</string>
     <string name="mode_plan">Планировать</string>
-    <string name="mode_bypassPermissions">Обход разрешений</string>
-    <string name="mode_bypass_confirm">В режиме «Обход разрешений» агент сможет выполнять любые команды без запроса подтверждения. Включить?</string>
+    <string name="mode_bypassPermissions">Полные права</string>
+    <string name="mode_bypass_confirm">В режиме полных прав агент может выполнять любые команды без подтверждения. Включить?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Пропустить</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">Вывод</string>
     <string name="chat_stats_tools">%d инструментов</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">Завершена</string>
+    <string name="wb_state_idle">Простой</string>
+    <string name="wb_state_bg">Фоновая задача</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">План</string>
+    <string name="chat_stop">Стоп</string>
+    <string name="chat_scroll_bottom">Прокрутить вниз</string>
 </resources>

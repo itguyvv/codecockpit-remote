@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">Getrennt — verbinde erneut…</string>
     <string name="sessions_exited">Beendet</string>
     <string name="sessions_running">Läuft</string>
-    <string name="sessions_busy">Arbeitet</string>
+    <string name="sessions_busy">Beschäftigt</string>
     <string name="sessions_bg">%d im Hintergrund</string>
     <string name="sessions_disconnect">Trennen</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">Nachfragen</string>
     <string name="mode_acceptEdits">Änderungen akzeptieren</string>
     <string name="mode_plan">Planen</string>
-    <string name="mode_bypassPermissions">Berechtigungen umgehen</string>
-    <string name="mode_bypass_confirm">Im Modus „Berechtigungen umgehen“ kann der Agent beliebige Befehle ohne Nachfrage ausführen. Aktivieren?</string>
+    <string name="mode_bypassPermissions">Vollzugriff</string>
+    <string name="mode_bypass_confirm">Im Vollzugriff-Modus kann der Agent beliebige Befehle ohne Nachfrage ausführen. Aktivieren?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Überspringen</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">Ausgabe</string>
     <string name="chat_stats_tools">%d Tools</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">Beendet</string>
+    <string name="wb_state_idle">Inaktiv</string>
+    <string name="wb_state_bg">Hintergrund</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">Plan</string>
+    <string name="chat_stop">Stopp</string>
+    <string name="chat_scroll_bottom">Nach unten scrollen</string>
 </resources>

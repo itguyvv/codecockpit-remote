@@ -52,7 +52,7 @@
     <string name="sessions_disconnected">已斷線——正在重新連線…</string>
     <string name="sessions_exited">已結束</string>
     <string name="sessions_running">執行中</string>
-    <string name="sessions_busy">工作中</string>
+    <string name="sessions_busy">處理中</string>
     <string name="sessions_bg">%d 個背景工作</string>
     <string name="sessions_disconnect">中斷連線</string>
 
@@ -71,8 +71,8 @@
     <string name="mode_default">詢問</string>
     <string name="mode_acceptEdits">自動接受編輯</string>
     <string name="mode_plan">計畫模式</string>
-    <string name="mode_bypassPermissions">略過權限</string>
-    <string name="mode_bypass_confirm">略過權限模式下，代理執行任何命令都無需逐一確認。確定啟用？</string>
+    <string name="mode_bypassPermissions">完整權限</string>
+    <string name="mode_bypass_confirm">完整權限模式下，智慧代理執行任何命令都無需逐條確認。確定啟用？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">略過</string>
@@ -162,4 +162,11 @@
     <string name="chat_tool_output">輸出</string>
     <string name="chat_stats_tools">%d 工具</string>
     <string name="chat_stats_time">%s</string>
+    <string name="wb_state_exited">已結束</string>
+    <string name="wb_state_idle">閒置</string>
+    <string name="wb_state_bg">背景任務</string>
+    <string name="wb_state_tool">%1$s · %2$s</string>
+    <string name="chat_plan">計劃</string>
+    <string name="chat_stop">停止</string>
+    <string name="chat_scroll_bottom">捲動到底部</string>
 </resources>
