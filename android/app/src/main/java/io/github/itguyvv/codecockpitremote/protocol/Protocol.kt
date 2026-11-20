@@ -71,6 +71,14 @@ data class NativeSessionInfo(
     val custom: Boolean = false
 )
 
+/** One entry of the agent's published plan (TodoWrite / update_plan / todowrite) */
+@Serializable
+data class TodoItem(
+    val content: String = "",
+    val status: String = "pending",
+    val activeForm: String? = null
+)
+
 @Serializable
 data class SessionStatus(
     val model: String = "",
@@ -87,7 +95,8 @@ data class SessionStatus(
     val durationMs: Long = 0,
     val lastActivity: Long = 0,
     val eventCount: Int = 0,
-    val backgroundTasks: Int = 0
+    val backgroundTasks: Int = 0,
+    val todos: List<TodoItem> = emptyList()
 )
 
 // ── Client → Server ──

@@ -1,5 +1,6 @@
 package io.github.itguyvv.codecockpitremote.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,13 +26,17 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +50,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -53,15 +61,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.protocol.RemoteMessage
 import io.github.itguyvv.codecockpitremote.protocol.SessionStatus
+import io.github.itguyvv.codecockpitremote.protocol.TodoItem
+import io.github.itguyvv.codecockpitremote.ui.theme.Accent
 import io.github.itguyvv.codecockpitremote.ui.theme.Border
 import io.github.itguyvv.codecockpitremote.ui.theme.Busy
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
 import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
+import io.github.itguyvv.codecockpitremote.ui.theme.TextHigh
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
 
@@ -84,8 +96,23 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
     val visible = messages.filter { !(it.role == "assistant" && it.text.isNullOrBlank()) }
 
     val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    // Stick-to-bottom: follow new output while the user is pinned at the bottom;
+    // scrolling up to read history wins over the auto-follow (user priority)
+    var autoFollow by remember { mutableStateOf(true) }
+    LaunchedEffect(sessionId) {
+        autoFollow = true
+    }
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.isScrollInProgress }.collect { scrolling ->
+            if (!scrolling && listState.layoutInfo.totalItemsCount > 0) {
+                val last = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+                autoFollow = last != null && last.index >= listState.layoutInfo.totalItemsCount - 2
+            }
+        }
+    }
     LaunchedEffect(visible.size) {
-        if (visible.isNotEmpty()) listState.animateScrollToItem(visible.size - 1)
+        if (visible.isNotEmpty() && autoFollow) listState.scrollToItem(visible.size - 1)
     }
 
     var input by remember { mutableStateOf("") }
@@ -125,19 +152,66 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
         }
         StatsRow(status, busy, bg)
         HorizontalDivider(color = Border)
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(visible, key = { it.id }) { message ->
-                MessageBubble(message)
+        Box(Modifier.weight(1f).fillMaxWidth()) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(visible, key = { it.id }) { message ->
+                    MessageBubble(message)
+                }
+            }
+            if (!autoFollow && visible.isNotEmpty()) {
+                Surface(
+                    shape = CircleShape,
+                    color = Surface2,
+                    shadowElevation = 4.dp,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                ) {
+                    IconButton(onClick = {
+                        autoFollow = true
+                        scope.launch { listState.animateScrollToItem(visible.size - 1) }
+                    }) {
+                        Icon(
+                            Icons.Default.KeyboardArrowDown,
+                            contentDescription = stringResource(R.string.chat_scroll_bottom),
+                            tint = TextMid
+                        )
+                    }
+                }
             }
         }
+        if (status?.todos.orEmpty().isNotEmpty()) {
+            PlanCard(status!!.todos)
+        }
         HorizontalDivider(color = Border)
+        AnimatedVisibility(visible = busy) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+            ) {
+                PulseDot()
+                Text(
+                    buildString {
+                        append(stringResource(R.string.sessions_busy))
+                        status?.tool?.takeIf { it.isNotBlank() }?.let {
+                            append("  ·  ")
+                            append(it)
+                        }
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Ok,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,15 +226,106 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
                 maxLines = 4
             )
             Spacer(Modifier.size(8.dp))
-            IconButton(onClick = {
-                vm.sendPrompt(input.trim())
-                input = ""
-            }, enabled = canSend) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Send,
-                    contentDescription = stringResource(R.string.chat_send),
-                    tint = if (canSend) MaterialTheme.colorScheme.primary else TextMid
+            if (busy) {
+                // The desktop interrupts with Esc; so does a stop tap here
+                IconButton(
+                    onClick = { vm.interrupt(sessionId) },
+                    enabled = connState is ConnState.Ready
+                ) {
+                    Icon(
+                        Icons.Default.Stop,
+                        contentDescription = stringResource(R.string.chat_stop),
+                        tint = Danger
+                    )
+                }
+            } else {
+                IconButton(onClick = {
+                    vm.sendPrompt(input.trim())
+                    input = ""
+                }, enabled = canSend) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.Send,
+                        contentDescription = stringResource(R.string.chat_send),
+                        tint = if (canSend) MaterialTheme.colorScheme.primary else TextMid
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Pinned plan card: the agent's latest TodoWrite/update_plan list with progress */
+@Composable
+private fun PlanCard(todos: List<TodoItem>) {
+    val done = todos.count { it.status == "completed" }
+    Surface(
+        color = Surface2,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .heightIn(max = 180.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    stringResource(R.string.chat_plan),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontFamily = FontFamily.Monospace,
+                    color = Accent,
+                    modifier = Modifier.weight(1f)
                 )
+                Text(
+                    "$done/${todos.size}",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontFamily = FontFamily.Monospace,
+                    color = TextMid
+                )
+            }
+            Spacer(Modifier.size(4.dp))
+            todos.forEach { todo ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    when (todo.status) {
+                        "completed" -> Icon(
+                            Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Ok,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        "in_progress" -> Box(
+                            Modifier
+                                .size(8.dp)
+                                .alpha(1f)
+                                .background(Accent, CircleShape)
+                        )
+                        else -> Box(
+                            Modifier
+                                .size(8.dp)
+                                .border(1.5.dp, TextMid, CircleShape)
+                        )
+                    }
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        todo.activeForm
+                            ?.takeIf { it.isNotBlank() && todo.status == "in_progress" }
+                            ?: todo.content,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = when (todo.status) {
+                            "completed" -> TextMid
+                            "in_progress" -> TextHigh
+                            else -> TextMid
+                        },
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }
