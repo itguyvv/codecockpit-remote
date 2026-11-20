@@ -60,7 +60,7 @@
     <string name="chat_input_hint">Отправьте задание агенту…</string>
     <string name="chat_send">Отправить</string>
     <string name="chat_tool">Инструмент</string>
-    <string name="chat_stats_tokens">Токены %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s токенов</string>
     <string name="chat_stats_cost">Расход ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d ходов</string>
     <string name="chat_exited">Эта сессия завершена на компьютере.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Принимать правки</string>
     <string name="mode_plan">Планировать</string>
     <string name="mode_bypassPermissions">Обход разрешений</string>
+    <string name="mode_bypass_confirm">В режиме «Обход разрешений» агент сможет выполнять любые команды без запроса подтверждения. Включить?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Пропустить</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">ОК</string>
     <string name="common_back">Назад</string>
     <!-- Workbench (панель сессий + сгруппированная боковая панель + инструменты чата) -->
-    <string name="wb_select_hint">Выберите сессию слева или начните новую.</string>
+    <string name="wb_select_hint">Выберите сессию на боковой панели или начните новую.</string>
     <string name="wb_open_sidebar">Все сессии</string>
     <string name="wb_new_session">Новая сессия</string>
     <string name="wb_new_session_title">Новая сессия</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Показать или скрыть папку</string>
     <string name="wb_op_failed">Ошибка операции: %s</string>
     <string name="chat_tool_output">Вывод</string>
-    <string name="chat_stats_tools">Вызовов инструментов: %d</string>
-    <string name="chat_stats_time">Вычисления %s</string>
+    <string name="chat_stats_tools">%d инструментов</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

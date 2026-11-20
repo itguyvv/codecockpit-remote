@@ -60,7 +60,7 @@
     <string name="chat_input_hint">エージェントに指示を送る…</string>
     <string name="chat_send">送信</string>
     <string name="chat_tool">ツール</string>
-    <string name="chat_stats_tokens">トークン %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">コスト ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d ターン</string>
     <string name="chat_exited">このセッションはデスクトップ側で終了しました。</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">編集を自動承認</string>
     <string name="mode_plan">計画</string>
     <string name="mode_bypassPermissions">権限をバイパス</string>
+    <string name="mode_bypass_confirm">権限バイパスモードでは、エージェントが承認を求めずに任意のコマンドを実行します。有効にしますか？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">スキップ</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">戻る</string>
     <!-- Workbench (セッションレール + グループ化サイドバー + チャットツール) -->
-    <string name="wb_select_hint">左からセッションを選ぶか、新しく開始してください。</string>
+    <string name="wb_select_hint">サイドバーからセッションを選ぶか、新しく開始してください。</string>
     <string name="wb_open_sidebar">すべてのセッション</string>
     <string name="wb_new_session">新規セッション</string>
     <string name="wb_new_session_title">新規セッション</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">このフォルダーの表示を切り替える</string>
     <string name="wb_op_failed">操作に失敗しました: %s</string>
     <string name="chat_tool_output">出力</string>
-    <string name="chat_stats_tools">ツール呼び出し %d 回</string>
-    <string name="chat_stats_time">計算 %s</string>
+    <string name="chat_stats_tools">%d ツール</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

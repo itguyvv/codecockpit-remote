@@ -60,7 +60,7 @@
     <string name="chat_input_hint">给 Agent 发送指令…</string>
     <string name="chat_send">发送</string>
     <string name="chat_tool">工具</string>
-    <string name="chat_stats_tokens">Token %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s token</string>
     <string name="chat_stats_cost">费用 ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d 轮对话</string>
     <string name="chat_exited">该会话在桌面端已退出。</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">自动接受编辑</string>
     <string name="mode_plan">计划模式</string>
     <string name="mode_bypassPermissions">绕过权限</string>
+    <string name="mode_bypass_confirm">绕过权限模式下，智能体执行任何命令都无需逐条确认。确定启用？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">跳过</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">确定</string>
     <string name="common_back">返回</string>
     <!-- Workbench (会话竖条 + 分组侧边栏 + 聊天工具) -->
-    <string name="wb_select_hint">在左侧选择一个会话，或新建一个。</string>
+    <string name="wb_select_hint">在侧边栏选择一个会话，或新建一个。</string>
     <string name="wb_open_sidebar">全部会话</string>
     <string name="wb_new_session">新建会话</string>
     <string name="wb_new_session_title">新建会话</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">展开或收起该文件夹</string>
     <string name="wb_op_failed">操作失败：%s</string>
     <string name="chat_tool_output">输出</string>
-    <string name="chat_stats_tools">%d 次工具调用</string>
-    <string name="chat_stats_time">计算 %s</string>
+    <string name="chat_stats_tools">%d 工具</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

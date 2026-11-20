@@ -1,16 +1,22 @@
 package io.github.itguyvv.codecockpitremote.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,13 +25,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Menu
@@ -34,7 +38,6 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,8 +46,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -53,7 +54,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,37 +61,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.launch
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.protocol.NativeSessionInfo
 import io.github.itguyvv.codecockpitremote.protocol.SessionSummary
 import io.github.itguyvv.codecockpitremote.ui.theme.Accent
-import io.github.itguyvv.codecockpitremote.ui.theme.Border
 import io.github.itguyvv.codecockpitremote.ui.theme.Busy
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
-import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
-import io.github.itguyvv.codecockpitremote.ui.theme.TextHigh
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
 
 private val ENGINES = listOf("claude", "codex", "opencode")
 private val MODES = listOf("default", "acceptEdits", "plan", "bypassPermissions")
 
-/** Desktop-grade workbench: session rail on the left, grouped sidebar drawer, chat pane right. */
+/** Desktop-grade workbench: hamburger-toggled sidebar drawer, chat pane main. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(vm: AppViewModel) {
@@ -100,14 +95,13 @@ fun MainScreen(vm: AppViewModel) {
     val connState by vm.connState.collectAsStateWithLifecycle()
     val opError by vm.lastOpError.collectAsStateWithLifecycle()
 
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
     var showNew by remember { mutableStateOf(false) }
     var newCwd by remember { mutableStateOf("") }
     var showHistory by remember { mutableStateOf(false) }
     var confirmKill by remember { mutableStateOf<SessionSummary?>(null) }
     var renaming by remember { mutableStateOf<SessionSummary?>(null) }
+    var sidebarOpen by remember { mutableStateOf(false) }
 
     val selected = sessions.find { it.id == selectedId }
     val ctx = LocalContext.current
@@ -121,76 +115,60 @@ fun MainScreen(vm: AppViewModel) {
 
     BackHandler {
         when {
-            drawerState.isOpen -> scope.launch { drawerState.close() }
+            sidebarOpen -> sidebarOpen = false
             selectedId != null -> vm.deselect()
             else -> vm.goServers()
         }
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
-                SidebarPanel(
-                    vm = vm,
-                    sessions = sessions,
-                    onOpen = { s ->
-                        vm.selectSession(s)
-                        scope.launch { drawerState.close() }
-                    },
-                    onRename = { renaming = it },
-                    onKill = { confirmKill = it },
-                    onNewInCwd = {
-                        newCwd = it
-                        showNew = true
-                        scope.launch { drawerState.close() }
-                    },
-                    onNew = {
-                        newCwd = ""
-                        showNew = true
-                        scope.launch { drawerState.close() }
-                    },
-                    onHistory = {
-                        showHistory = true
-                        scope.launch { drawerState.close() }
-                    },
-                    onClose = { scope.launch { drawerState.close() } }
-                )
-            }
-        }
-    ) {
+    Box(Modifier.fillMaxSize()) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbar) },
             topBar = {
                 TopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        IconButton(onClick = { sidebarOpen = !sidebarOpen }) {
                             Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.wb_open_sidebar))
                         }
                     },
                     title = {
                         Column {
                             Text(
-                                selected?.title ?: stringResource(R.string.sessions_title),
+                                selected?.let { it.title.ifBlank { folderName(it.cwd) } }
+                                    ?: stringResource(R.string.sessions_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             if (selected != null) {
-                                Text(
-                                    busyLine(selected.busy, selected.status == "exited"),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = when {
-                                        selected.status == "exited" -> Danger
-                                        selected.busy -> Ok
-                                        else -> TextMid
-                                    }
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Box(
+                                        Modifier
+                                            .size(7.dp)
+                                            .background(dotColor(selected), CircleShape)
+                                    )
+                                    Text(
+                                        busyLine(selected.busy, selected.status == "exited"),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color = when {
+                                            selected.status == "exited" -> Danger
+                                            selected.busy -> Ok
+                                            else -> TextMid
+                                        },
+                                        modifier = Modifier.weight(1f, fill = false)
+                                    )
+                                    Text("·", style = MaterialTheme.typography.labelSmall, color = TextMid)
+                                    ModeMenu(vm, selected.permissionMode)
+                                }
                             }
                         }
                     },
                     actions = {
-                        if (selected != null) ModeMenu(vm, selected.permissionMode)
                         IconButton(onClick = { vm.refreshSessions() }) {
                             Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.sessions_refresh))
                         }
@@ -214,36 +192,70 @@ fun MainScreen(vm: AppViewModel) {
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
                     )
                 }
-                Row(Modifier.fillMaxSize()) {
-                    SessionRail(
-                        sessions = sessions,
-                        selectedId = selectedId,
-                        onSelect = { vm.selectSession(it) },
-                        onNew = {
-                            newCwd = ""
-                            showNew = true
-                        },
-                        onExpand = { scope.launch { drawerState.open() } }
-                    )
-                    Box(Modifier.width(1.dp).fillMaxHeight().background(Border))
-                    Box(Modifier.weight(1f).fillMaxHeight()) {
-                        if (selected == null) {
-                            Column(
-                                modifier = Modifier.fillMaxSize().padding(32.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    stringResource(R.string.wb_select_hint),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = TextMid
-                                )
-                            }
-                        } else {
-                            ChatScreen(vm, selected.id)
-                        }
+                if (selected == null) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(32.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            stringResource(R.string.wb_select_hint),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TextMid
+                        )
                     }
+                } else {
+                    ChatScreen(vm, selected.id)
                 }
+            }
+        }
+
+        if (sidebarOpen) {
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { sidebarOpen = false }
+            )
+        }
+        AnimatedVisibility(
+            visible = sidebarOpen,
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { -it }) + fadeOut()
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                shadowElevation = 8.dp,
+                modifier = Modifier.width(300.dp).fillMaxHeight()
+            ) {
+                SidebarPanel(
+                    vm = vm,
+                    sessions = sessions,
+                    onOpen = { s ->
+                        vm.selectSession(s)
+                        sidebarOpen = false
+                    },
+                    onRename = { renaming = it },
+                    onKill = { confirmKill = it },
+                    onNewInCwd = {
+                        newCwd = it
+                        showNew = true
+                        sidebarOpen = false
+                    },
+                    onNew = {
+                        newCwd = ""
+                        showNew = true
+                        sidebarOpen = false
+                    },
+                    onHistory = {
+                        showHistory = true
+                        sidebarOpen = false
+                    },
+                    onClose = { sidebarOpen = false }
+                )
             }
         }
     }
@@ -295,13 +307,24 @@ fun MainScreen(vm: AppViewModel) {
 @Composable
 private fun ModeMenu(vm: AppViewModel, current: String) {
     var open by remember { mutableStateOf(false) }
+    var confirmBypass by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { open = true }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { open = true }
+        ) {
             Text(
                 modeLabel(current),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                color = if (current == "plan") Accent else TextMid
             )
-            Icon(Icons.Default.ArrowDropDown, contentDescription = stringResource(R.string.chat_mode_label))
+            Icon(
+                Icons.Default.ArrowDropDown,
+                contentDescription = stringResource(R.string.chat_mode_label),
+                tint = TextMid,
+                modifier = Modifier.size(14.dp)
+            )
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             MODES.forEach { mode ->
@@ -314,80 +337,32 @@ private fun ModeMenu(vm: AppViewModel, current: String) {
                     },
                     onClick = {
                         open = false
-                        vm.setMode(mode)
+                        // Same danger gate as the desktop: one tap must not arm the agent
+                        if (mode == "bypassPermissions" && current != "bypassPermissions") confirmBypass = true
+                        else vm.setMode(mode)
                     }
                 )
             }
         }
     }
-}
-
-/** Always-visible narrow column: one tile per session, plus new-session and expand buttons */
-@Composable
-private fun SessionRail(
-    sessions: List<SessionSummary>,
-    selectedId: String?,
-    onSelect: (SessionSummary) -> Unit,
-    onNew: () -> Unit,
-    onExpand: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .width(48.dp)
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surface),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(vertical = 6.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(sessions, key = { it.id }) { s ->
-                RailTile(s, selected = s.id == selectedId, onClick = { onSelect(s) })
+    if (confirmBypass) {
+        AlertDialog(
+            onDismissRequest = { confirmBypass = false },
+            title = { Text(stringResource(R.string.mode_bypassPermissions)) },
+            text = { Text(stringResource(R.string.mode_bypass_confirm)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmBypass = false
+                    vm.setMode("bypassPermissions")
+                }) {
+                    Text(stringResource(R.string.common_ok), color = Danger)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmBypass = false }) {
+                    Text(stringResource(R.string.common_cancel))
+                }
             }
-        }
-        IconButton(onClick = onNew) {
-            Icon(Icons.Default.Add, contentDescription = stringResource(R.string.wb_new_session), tint = TextMid)
-        }
-        IconButton(onClick = onExpand) {
-            Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.wb_open_sidebar), tint = TextMid)
-        }
-    }
-}
-
-@Composable
-private fun RailTile(s: SessionSummary, selected: Boolean, onClick: () -> Unit) {
-    val label = s.title.ifBlank { folderName(s.cwd) }.take(2).ifBlank { "?" }
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(if (selected) Surface2 else Color.Transparent)
-            .clickable(onClick = onClick)
-    ) {
-        if (selected) {
-            Box(
-                Modifier
-                    .width(2.dp)
-                    .height(24.dp)
-                    .background(Accent)
-                    .align(Alignment.CenterStart)
-            )
-        }
-        Text(
-            label,
-            style = MaterialTheme.typography.labelMedium,
-            fontFamily = FontFamily.Monospace,
-            color = if (selected) TextHigh else TextMid,
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Box(
-            Modifier
-                .size(7.dp)
-                .background(dotColor(s), CircleShape)
-                .align(Alignment.BottomEnd)
         )
     }
 }
@@ -440,9 +415,32 @@ private fun SidebarPanel(
         }
         Spacer(Modifier.height(4.dp))
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
+            if (groups.isEmpty()) {
+                item(key = "empty") {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            stringResource(R.string.sessions_empty_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            stringResource(R.string.sessions_empty_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextMid,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
             groups.forEach { (folder, list) ->
                 item(key = "g:$folder") {
-                    val isCollapsed = collapsed[folder] ?: true
+                    val isCollapsed = collapsed[folder] ?: false
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -479,7 +477,7 @@ private fun SidebarPanel(
                         )
                     }
                 }
-                if (!(collapsed[folder] ?: true)) {
+                if (!(collapsed[folder] ?: false)) {
                     items(list, key = { it.id }) { s ->
                         SessionRow(
                             session = s,
@@ -612,7 +610,15 @@ private fun NewSessionDialog(
                         FilterChip(
                             selected = engine == e,
                             onClick = { engine = e },
-                            label = { Text(e, fontFamily = FontFamily.Monospace) }
+                            label = {
+                                // "opencode" just fits three chips; one size down stops it wrapping
+                                Text(
+                                    e,
+                                    fontFamily = FontFamily.Monospace,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    maxLines = 1
+                                )
+                            }
                         )
                     }
                 }
@@ -720,7 +726,14 @@ private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
                     FilterChip(
                         selected = engine == e,
                         onClick = { vm.loadHistory(e) },
-                        label = { Text(e, fontFamily = FontFamily.Monospace) }
+                        label = {
+                            Text(
+                                e,
+                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.labelSmall,
+                                maxLines = 1
+                            )
+                        }
                     )
                 }
             }

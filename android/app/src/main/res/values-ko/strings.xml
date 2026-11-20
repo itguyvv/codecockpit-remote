@@ -60,7 +60,7 @@
     <string name="chat_input_hint">에이전트에게 지시 보내기…</string>
     <string name="chat_send">보내기</string>
     <string name="chat_tool">도구</string>
-    <string name="chat_stats_tokens">토큰 %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">비용 ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d턴</string>
     <string name="chat_exited">이 세션은 데스크톱에서 종료되었습니다.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">편집 자동 수락</string>
     <string name="mode_plan">계획</string>
     <string name="mode_bypassPermissions">권한 우회</string>
+    <string name="mode_bypass_confirm">권한 우회 모드에서는 에이전트가 승인 없이 모든 명령을 실행합니다. 사용하시겠습니까?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">건너뛰기</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">확인</string>
     <string name="common_back">뒤로</string>
     <!-- Workbench (세션 레일 + 그룹 사이드바 + 채팅 도구) -->
-    <string name="wb_select_hint">왼쪽에서 세션을 선택하거나 새로 시작하세요.</string>
+    <string name="wb_select_hint">사이드바에서 세션을 선택하거나 새로 시작하세요.</string>
     <string name="wb_open_sidebar">모든 세션</string>
     <string name="wb_new_session">새 세션</string>
     <string name="wb_new_session_title">새 세션</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">이 폴더 표시 전환</string>
     <string name="wb_op_failed">작업 실패: %s</string>
     <string name="chat_tool_output">출력</string>
-    <string name="chat_stats_tools">도구 호출 %d회</string>
-    <string name="chat_stats_time">계산 %s</string>
+    <string name="chat_stats_tools">%d 도구</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

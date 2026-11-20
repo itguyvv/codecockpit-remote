@@ -60,7 +60,7 @@
     <string name="chat_input_hint">An den Agenten senden…</string>
     <string name="chat_send">Senden</string>
     <string name="chat_tool">Werkzeug</string>
-    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s Tok.</string>
     <string name="chat_stats_cost">Kosten ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d Runden</string>
     <string name="chat_exited">Diese Sitzung wurde auf dem Desktop beendet.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Änderungen akzeptieren</string>
     <string name="mode_plan">Planen</string>
     <string name="mode_bypassPermissions">Berechtigungen umgehen</string>
+    <string name="mode_bypass_confirm">Im Modus „Berechtigungen umgehen“ kann der Agent beliebige Befehle ohne Nachfrage ausführen. Aktivieren?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Überspringen</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">Zurück</string>
     <!-- Workbench (Sitzungsleiste + gruppierte Seitenleiste + Chat-Tools) -->
-    <string name="wb_select_hint">Wählen Sie links eine Sitzung oder starten Sie eine neue.</string>
+    <string name="wb_select_hint">Wählen Sie in der Seitenleiste eine Sitzung oder starten Sie eine neue.</string>
     <string name="wb_open_sidebar">Alle Sitzungen</string>
     <string name="wb_new_session">Neue Sitzung</string>
     <string name="wb_new_session_title">Neue Sitzung</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Ordner ein- oder ausklappen</string>
     <string name="wb_op_failed">Vorgang fehlgeschlagen: %s</string>
     <string name="chat_tool_output">Ausgabe</string>
-    <string name="chat_stats_tools">%d Tool-Aufrufe</string>
-    <string name="chat_stats_time">%s gerechnet</string>
+    <string name="chat_stats_tools">%d Tools</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

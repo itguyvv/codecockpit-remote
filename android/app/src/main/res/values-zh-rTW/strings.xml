@@ -60,7 +60,7 @@
     <string name="chat_input_hint">向 Agent 傳送指示…</string>
     <string name="chat_send">傳送</string>
     <string name="chat_tool">工具</string>
-    <string name="chat_stats_tokens">權杖 %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s token</string>
     <string name="chat_stats_cost">費用 ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d 輪對話</string>
     <string name="chat_exited">此工作階段已在桌面端結束。</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">自動接受編輯</string>
     <string name="mode_plan">計畫模式</string>
     <string name="mode_bypassPermissions">略過權限</string>
+    <string name="mode_bypass_confirm">略過權限模式下，代理執行任何命令都無需逐一確認。確定啟用？</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">略過</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">確定</string>
     <string name="common_back">返回</string>
     <!-- Workbench (工作階段直欄 + 分組側邊欄 + 聊天工具) -->
-    <string name="wb_select_hint">在左側選擇一個工作階段，或建立新的。</string>
+    <string name="wb_select_hint">在側邊欄選擇一個工作階段，或建立新的。</string>
     <string name="wb_open_sidebar">全部工作階段</string>
     <string name="wb_new_session">新增工作階段</string>
     <string name="wb_new_session_title">新增工作階段</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">展開或收起此資料夾</string>
     <string name="wb_op_failed">操作失敗：%s</string>
     <string name="chat_tool_output">輸出</string>
-    <string name="chat_stats_tools">%d 次工具呼叫</string>
-    <string name="chat_stats_time">運算 %s</string>
+    <string name="chat_stats_tools">%d 工具</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

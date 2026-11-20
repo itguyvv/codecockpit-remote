@@ -184,6 +184,7 @@ fun ServersScreen(vm: AppViewModel) {
     if (showAdd) {
         AddServerDialog(
             onDismiss = { showAdd = false },
+            exists = { h, p -> vm.servers.value.any { it.host == h && it.port == p } },
             onSave = { name, host, port, secret ->
                 showAdd = false
                 vm.addServer(name, host, port, secret) { vm.connect(it) }
@@ -353,7 +354,11 @@ private fun onAddressInput(value: String, setHost: (String) -> Unit, setPort: (S
 }
 
 @Composable
-private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: String, port: Int, secret: String) -> Unit) {
+private fun AddServerDialog(
+    onDismiss: () -> Unit,
+    exists: (host: String, port: Int) -> Boolean,
+    onSave: (name: String, host: String, port: Int, secret: String) -> Unit
+) {
     var name by remember { mutableStateOf("") }
     var host by remember { mutableStateOf("") }
     var port by remember { mutableStateOf("47315") }
@@ -363,6 +368,7 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
     var hostErr by remember { mutableStateOf(false) }
     var portErr by remember { mutableStateOf(false) }
     var secretErr by remember { mutableStateOf(false) }
+    var dupErr by remember { mutableStateOf(false) }
     // 0 = same network (LAN / Tailscale), 1 = IPv6 direct from another network
     var scenario by remember { mutableStateOf(0) }
     val ipv6 = scenario == 1
@@ -426,11 +432,11 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                     placeholder = {
                         Text(stringResource(if (ipv6) R.string.pair_host_hint_ipv6 else R.string.pair_host_hint_same))
                     },
-                    isError = hostErr,
-                    supportingText = if (hostErr) {
-                        { Text(stringResource(R.string.pair_invalid_host)) }
-                    } else {
-                        null
+                    isError = hostErr || dupErr,
+                    supportingText = when {
+                        dupErr -> ({ Text(stringResource(R.string.pair_duplicate)) })
+                        hostErr -> ({ Text(stringResource(R.string.pair_invalid_host)) })
+                        else -> null
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -497,6 +503,8 @@ private fun AddServerDialog(onDismiss: () -> Unit, onSave: (name: String, host: 
                 if (secretErr || hostErr || portErr) return@TextButton
                 // Bracket bare IPv6 literals so wss://host:port stays parseable
                 val saveHost = if (rawHost.contains(':')) "[$rawHost]" else rawHost
+                dupErr = exists(saveHost, p)
+                if (dupErr) return@TextButton
                 onSave(name.ifBlank { saveHost }, saveHost, p, secret.trim())
             }) { Text(stringResource(R.string.pair_save)) }
         },

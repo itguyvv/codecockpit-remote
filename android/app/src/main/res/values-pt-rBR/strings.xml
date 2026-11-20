@@ -60,7 +60,7 @@
     <string name="chat_input_hint">Envie uma instrução ao agente…</string>
     <string name="chat_send">Enviar</string>
     <string name="chat_tool">Ferramenta</string>
-    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">Custo ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d turnos</string>
     <string name="chat_exited">Esta sessão foi encerrada no desktop.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Aceitar edições</string>
     <string name="mode_plan">Planejar</string>
     <string name="mode_bypassPermissions">Ignorar permissões</string>
+    <string name="mode_bypass_confirm">No modo «Ignorar permissões», o agente pode executar qualquer comando sem pedir aprovação. Ativar?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Pular</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">Voltar</string>
     <!-- Workbench (trilho de sessões + painel agrupado + ferramentas de chat) -->
-    <string name="wb_select_hint">Escolha uma sessão à esquerda ou inicie uma nova.</string>
+    <string name="wb_select_hint">Escolha uma sessão na barra lateral ou inicie uma nova.</string>
     <string name="wb_open_sidebar">Todas as sessões</string>
     <string name="wb_new_session">Nova sessão</string>
     <string name="wb_new_session_title">Nova sessão</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Mostrar ou ocultar esta pasta</string>
     <string name="wb_op_failed">Falha na operação: %s</string>
     <string name="chat_tool_output">Saída</string>
-    <string name="chat_stats_tools">%d chamadas de ferramenta</string>
-    <string name="chat_stats_time">%s computando</string>
+    <string name="chat_stats_tools">%d ferramentas</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

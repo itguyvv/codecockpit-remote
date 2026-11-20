@@ -60,7 +60,7 @@
     <string name="chat_input_hint">Send a prompt to the agent…</string>
     <string name="chat_send">Send</string>
     <string name="chat_tool">Tool</string>
-    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">Cost ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d turns</string>
     <string name="chat_exited">This session has exited on the desktop.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Accept edits</string>
     <string name="mode_plan">Plan</string>
     <string name="mode_bypassPermissions">Bypass permissions</string>
+    <string name="mode_bypass_confirm">Bypass mode lets the agent run any command without asking for approval. Enable it?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Skip</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">Back</string>
     <!-- Workbench (session rail + grouped sidebar + chat tools) -->
-    <string name="wb_select_hint">Select a session on the left, or start a new one.</string>
+    <string name="wb_select_hint">Select a session from the sidebar, or start a new one.</string>
     <string name="wb_open_sidebar">All sessions</string>
     <string name="wb_new_session">New session</string>
     <string name="wb_new_session_title">New session</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Show or hide this folder</string>
     <string name="wb_op_failed">Operation failed: %s</string>
     <string name="chat_tool_output">Output</string>
-    <string name="chat_stats_tools">%d tool calls</string>
-    <string name="chat_stats_time">%s computing</string>
+    <string name="chat_stats_tools">%d tools</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

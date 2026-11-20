@@ -310,7 +310,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     if (it.id == event.sessionId) it.copy(status = "exited") else it
                 }
             }
-            is ServerEvent.SessionId -> Unit
+            is ServerEvent.SessionId -> {
+                // The native id arrives mid-session (sniffed after the first exchange);
+                // patch the summary so Resume works without waiting for a re-list
+                _sessions.value = _sessions.value.map {
+                    if (it.id == event.sessionId) it.copy(claudeSessionId = event.nativeId) else it
+                }
+            }
             is ServerEvent.SessionCreated -> {
                 // Select the fresh session right away; its summary arrives via the sessions broadcast
                 attachedId = event.sessionId

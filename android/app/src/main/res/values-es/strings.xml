@@ -60,7 +60,7 @@
     <string name="chat_input_hint">Envía una instrucción al agente…</string>
     <string name="chat_send">Enviar</string>
     <string name="chat_tool">Herramienta</string>
-    <string name="chat_stats_tokens">Tokens %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">Coste ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d turnos</string>
     <string name="chat_exited">Esta sesión terminó en el escritorio.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Aceptar ediciones</string>
     <string name="mode_plan">Planificar</string>
     <string name="mode_bypassPermissions">Omitir permisos</string>
+    <string name="mode_bypass_confirm">En el modo «Omitir permisos», el agente puede ejecutar cualquier comando sin pedir aprobación. ¿Activarlo?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Omitir</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">Atrás</string>
     <!-- Workbench (rail de sesiones + panel agrupado + herramientas de chat) -->
-    <string name="wb_select_hint">Elige una sesión a la izquierda o inicia una nueva.</string>
+    <string name="wb_select_hint">Elige una sesión en el panel lateral o inicia una nueva.</string>
     <string name="wb_open_sidebar">Todas las sesiones</string>
     <string name="wb_new_session">Nueva sesión</string>
     <string name="wb_new_session_title">Nueva sesión</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Mostrar u ocultar esta carpeta</string>
     <string name="wb_op_failed">Operación fallida: %s</string>
     <string name="chat_tool_output">Salida</string>
-    <string name="chat_stats_tools">%d llamadas a herramientas</string>
-    <string name="chat_stats_time">%s computando</string>
+    <string name="chat_stats_tools">%d herramientas</string>
+    <string name="chat_stats_time">%s</string>
 </resources>

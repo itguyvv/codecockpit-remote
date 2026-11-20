@@ -60,7 +60,7 @@
     <string name="chat_input_hint">Envoyer une consigne à l’agent…</string>
     <string name="chat_send">Envoyer</string>
     <string name="chat_tool">Outil</string>
-    <string name="chat_stats_tokens">Jetons %1$s / %2$s</string>
+    <string name="chat_stats_tokens">%1$s / %2$s tok</string>
     <string name="chat_stats_cost">Coût ≈ $%1$.2f</string>
     <string name="chat_stats_turns">%d tours</string>
     <string name="chat_exited">Cette session s’est terminée sur l’ordinateur.</string>
@@ -72,6 +72,7 @@
     <string name="mode_acceptEdits">Accepter les modifications</string>
     <string name="mode_plan">Planifier</string>
     <string name="mode_bypassPermissions">Contourner les permissions</string>
+    <string name="mode_bypass_confirm">En mode « Contourner les permissions », l’agent peut exécuter n’importe quelle commande sans approbation. Activer ?</string>
 
     <!-- Onboarding / setup guide -->
     <string name="onboarding_skip">Passer</string>
@@ -139,7 +140,7 @@
     <string name="common_ok">OK</string>
     <string name="common_back">Retour</string>
     <!-- Workbench (rail de sessions + panneau groupé + outils de chat) -->
-    <string name="wb_select_hint">Choisissez une session à gauche ou démarrez-en une nouvelle.</string>
+    <string name="wb_select_hint">Choisissez une session dans le panneau latéral ou démarrez-en une nouvelle.</string>
     <string name="wb_open_sidebar">Toutes les sessions</string>
     <string name="wb_new_session">Nouvelle session</string>
     <string name="wb_new_session_title">Nouvelle session</string>
@@ -159,6 +160,6 @@
     <string name="wb_toggle_group">Afficher ou masquer ce dossier</string>
     <string name="wb_op_failed">Échec de l\'opération : %s</string>
     <string name="chat_tool_output">Sortie</string>
-    <string name="chat_stats_tools">%d appels d\'outils</string>
-    <string name="chat_stats_time">%s calculé</string>
+    <string name="chat_stats_tools">%d outils</string>
+    <string name="chat_stats_time">%s</string>
 </resources>
