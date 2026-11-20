@@ -33,6 +33,7 @@ data class RemoteMessage(
     val text: String? = null,
     val toolName: String? = null,
     val toolInput: String? = null,
+    val toolOutput: String? = null,
     val tokensIn: Long? = null,
     val tokensOut: Long? = null,
     val costUsd: Double? = null
@@ -55,6 +56,19 @@ data class SessionSummary(
     val tokensOut: Long = 0,
     val costUsd: Double = 0.0,
     val turns: Int = 0
+)
+
+/** One engine-native history entry (a resume candidate or deletable record) */
+@Serializable
+data class NativeSessionInfo(
+    val sessionId: String,
+    val cwd: String = "",
+    val title: String = "",
+    val permissionMode: String = "default",
+    val lastTs: Long = 0,
+    val sizeBytes: Long = 0,
+    val engine: String = "claude",
+    val custom: Boolean = false
 )
 
 @Serializable
@@ -113,6 +127,44 @@ fun modeRequest(sessionId: String, mode: String): JsonObject = buildJsonObject {
     put("mode", mode)
 }
 
+fun createRequest(
+    cwd: String,
+    mode: String,
+    engine: String = "claude",
+    title: String = "",
+    resumeId: String? = null
+): JsonObject = buildJsonObject {
+    put("type", "create")
+    put("cwd", cwd)
+    put("mode", mode)
+    put("engine", engine)
+    put("title", title)
+    if (resumeId != null) put("resumeId", resumeId)
+}
+
+fun killRequest(sessionId: String): JsonObject = buildJsonObject {
+    put("type", "kill")
+    put("id", sessionId)
+}
+
+fun renameRequest(sessionId: String, title: String): JsonObject = buildJsonObject {
+    put("type", "rename")
+    put("id", sessionId)
+    put("title", title)
+}
+
+fun historyRequest(engine: String = "claude", limit: Int = 100): JsonObject = buildJsonObject {
+    put("type", "history")
+    put("engine", engine)
+    put("limit", limit)
+}
+
+fun deleteHistoryRequest(sessionId: String, engine: String = "claude"): JsonObject = buildJsonObject {
+    put("type", "delete_history")
+    put("id", sessionId)
+    put("engine", engine)
+}
+
 fun pingRequest(): JsonObject = buildJsonObject { put("type", "ping") }
 
 // ── Server → Client (parsed form) ──
@@ -127,6 +179,8 @@ sealed interface ServerEvent {
     data class Status(val sessionId: String, val status: SessionStatus) : ServerEvent
     data class Exit(val sessionId: String, val code: Int) : ServerEvent
     data class SessionId(val sessionId: String, val nativeId: String) : ServerEvent
+    data class SessionCreated(val sessionId: String) : ServerEvent
+    data class History(val engine: String, val list: List<NativeSessionInfo>) : ServerEvent
     data object Pong : ServerEvent
     data class Error(val message: String) : ServerEvent
 }
@@ -162,6 +216,13 @@ fun parseServerEvent(frame: String): ServerEvent? {
         }
         "exit" -> ServerEvent.Exit(str(obj, "id"), intOr(obj, "code"))
         "session_id" -> ServerEvent.SessionId(str(obj, "id"), str(obj, "claudeSessionId"))
+        "session_created" -> ServerEvent.SessionCreated(str(obj, "id"))
+        "history" -> ServerEvent.History(
+            engine = str(obj, "engine"),
+            list = obj["sessions"]?.let {
+                protocolJson.decodeFromJsonElement<List<NativeSessionInfo>>(it)
+            } ?: emptyList()
+        )
         "pong" -> ServerEvent.Pong
         "error" -> ServerEvent.Error(str(obj, "message"))
         else -> null
