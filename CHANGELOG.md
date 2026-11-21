@@ -6,13 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-21
+
 ### Added
 
 - **IPv6 direct scenario** — the add-desktop dialog now offers *Same network* vs *IPv6 direct*. The IPv6 scenario takes the desktop's public IPv6 address (e.g. `2408:8256:…`) plus the pairing secret and warns up front when the phone's own network has no global IPv6 address, so the user knows before trying.
+- **Workbench home screen** — the session list becomes a rail of compact tiles (title snippet + live status dot) with a slide-in drawer grouping sessions by folder: collapse groups, and open, rename, or stop sessions from each row's menu. Requires CodeCockpit v1.5.0+ on the desktop.
+- **Create sessions from the phone** — pick an engine, a permission mode (full permissions is the default), and a folder (from your project history with name + full path, or free text), plus an optional title. Destructive actions (stop session, delete a history entry) ask for confirmation first.
+- **Session history & resume** — browse the desktop's native session history per engine, grouped by folder, and resume any past session; the conversation and stats rebuild within seconds.
+- **Tool output in chat** — tool cards show a command summary line, expand to the full input (selectable text, no line cap), and display the captured tool output.
+- **Plan cards** — task/plan updates (TodoWrite, TaskCreate/TaskUpdate, update_plan) render as progress cards.
+- **Follow the stream** — the chat auto-follows while output streams, yields when you scroll up, and a jump-to-latest button returns to the bottom; a busy pulse row and a red stop button (sends Esc) appear while the agent works.
+
+### Changed
+
+- Status badges match the desktop's four states (running / busy / exited / idle) and update in real time; the top bar is two-row with the live status line and a permission-mode menu.
+- Enabling bypass permissions requires an explicit confirmation.
 
 ### Removed
 
 - **Any-network link mode** (device ID + signaling relay + WebRTC DataChannel). Relayed fallbacks required either an untrusted public TURN or a paid one, and hole punching is unreliable when both ends sit behind carrier-grade NAT. The direct WebSocket protocol is unchanged; IPv6 direct covers the across-the-internet case whenever both ends have IPv6, and tunnel apps such as Tailscale remain the general answer. v0.2.0 remains available as the last link-mode release.
+
+### Fixed
+
+- Empty assistant bubbles (messages that only carried token usage) no longer render as blank rows.
 
 ## [0.2.0] - 2026-11-19
 
