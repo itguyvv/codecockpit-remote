@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">需要配对</string>
     <string name="servers_remove">移除</string>
     <string name="servers_remove_confirm">移除“%s”？该桌面端已保存的令牌也会一并删除。</string>
+    <string name="srv_edit">编辑服务器</string>
+    <string name="srv_updated">服务器已更新</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">添加桌面端</string>

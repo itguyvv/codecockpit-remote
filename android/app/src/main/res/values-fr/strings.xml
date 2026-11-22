@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Appariement requis</string>
     <string name="servers_remove">Retirer</string>
     <string name="servers_remove_confirm">Retirer « %s » ? Le jeton stocké pour cet ordinateur sera également supprimé.</string>
+    <string name="srv_edit">Modifier le serveur</string>
+    <string name="srv_updated">Serveur mis à jour</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Ajouter un ordinateur</string>

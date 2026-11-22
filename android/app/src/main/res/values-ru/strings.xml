@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Нужно сопряжение</string>
     <string name="servers_remove">Удалить</string>
     <string name="servers_remove_confirm">Удалить «%s»? Сохранённый токен для этого компьютера тоже будет удалён.</string>
+    <string name="srv_edit">Изменить сервер</string>
+    <string name="srv_updated">Сервер обновлён</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Добавить компьютер</string>

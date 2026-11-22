@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">需要配對</string>
     <string name="servers_remove">移除</string>
     <string name="servers_remove_confirm">移除「%s」？此桌面端已儲存的權杖也會一併刪除。</string>
+    <string name="srv_edit">編輯伺服器</string>
+    <string name="srv_updated">伺服器已更新</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">新增桌面端</string>

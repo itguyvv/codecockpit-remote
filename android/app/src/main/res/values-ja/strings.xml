@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">ペアリングが必要</string>
     <string name="servers_remove">削除</string>
     <string name="servers_remove_confirm">「%s」を削除しますか？このデスクトップの保存済みトークンも削除されます。</string>
+    <string name="srv_edit">サーバーを編集</string>
+    <string name="srv_updated">サーバーを更新しました</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">デスクトップを追加</string>

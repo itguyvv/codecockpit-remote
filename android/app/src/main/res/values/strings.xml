@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Needs pairing</string>
     <string name="servers_remove">Remove</string>
     <string name="servers_remove_confirm">Remove "%s"? The stored token for this desktop is deleted too.</string>
+    <string name="srv_edit">Edit server</string>
+    <string name="srv_updated">Server updated</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Add desktop</string>

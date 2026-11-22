@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Necesita emparejar</string>
     <string name="servers_remove">Quitar</string>
     <string name="servers_remove_confirm">¿Quitar «%s»? El token guardado de este escritorio también se borrará.</string>
+    <string name="srv_edit">Editar servidor</string>
+    <string name="srv_updated">Servidor actualizado</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Añadir escritorio</string>

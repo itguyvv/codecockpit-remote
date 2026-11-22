@@ -204,11 +204,22 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateServerSecret(id: String, secret: String) {
+    /** Edit a saved desktop; a changed secret invalidates the stored token + fingerprint
+     *  (the next connect re-pairs from scratch), a changed address drops the live connection */
+    fun updateServerProfile(updated: ServerProfile, onDone: () -> Unit = {}) {
         viewModelScope.launch {
-            servers.value.find { it.id == id }?.let {
-                store.updateProfile(it.copy(secret = secret))
+            val secretChanged =
+                servers.value.find { it.id == updated.id }?.let { it.secret != updated.secret } == true
+            val toSave = if (secretChanged) updated.copy(token = "", fingerprint = "") else updated
+            store.updateProfile(toSave)
+            active?.takeIf { it.id == updated.id }?.let { cur ->
+                if (secretChanged || cur.host != updated.host || cur.port != updated.port) {
+                    disconnect()
+                } else {
+                    active = toSave
+                }
             }
+            onDone()
         }
     }
 

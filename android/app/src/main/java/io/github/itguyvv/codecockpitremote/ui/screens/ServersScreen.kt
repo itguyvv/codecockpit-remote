@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
@@ -38,6 +39,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,6 +49,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +60,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import java.net.Inet6Address
 import java.net.NetworkInterface
 import io.github.itguyvv.codecockpitremote.R
@@ -90,6 +95,10 @@ fun ServersScreen(vm: AppViewModel) {
     var showAdd by remember { mutableStateOf(false) }
     var showGuide by remember { mutableStateOf(false) }
     var confirmRemove by remember { mutableStateOf<ServerProfile?>(null) }
+    var editing by remember { mutableStateOf<ServerProfile?>(null) }
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val updatedMsg = stringResource(R.string.srv_updated)
 
     Scaffold(
         topBar = {
@@ -102,6 +111,7 @@ fun ServersScreen(vm: AppViewModel) {
                 }
             )
         },
+        snackbarHost = { SnackbarHost(snackbar) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAdd = true }) {
                 Icon(Icons.Default.Add, contentDescription = stringResource(R.string.servers_add))
@@ -163,6 +173,7 @@ fun ServersScreen(vm: AppViewModel) {
                                 vm.connect(server)
                             }
                         },
+                        onEdit = { editing = server },
                         onRemove = { confirmRemove = server }
                     )
                 }
@@ -188,6 +199,20 @@ fun ServersScreen(vm: AppViewModel) {
             onSave = { name, host, port, secret ->
                 showAdd = false
                 vm.addServer(name, host, port, secret) { vm.connect(it) }
+            }
+        )
+    }
+
+    editing?.let { server ->
+        AddServerDialog(
+            initial = server,
+            onDismiss = { editing = null },
+            exists = { h, p -> vm.servers.value.any { it.host == h && it.port == p && it.id != server.id } },
+            onSave = { name, host, port, secret ->
+                editing = null
+                vm.updateServerProfile(server.copy(name = name, host = host, port = port, secret = secret)) {
+                    scope.launch { snackbar.showSnackbar(updatedMsg) }
+                }
             }
         )
     }
@@ -279,6 +304,7 @@ private fun ServerCard(
     isActive: Boolean,
     connState: ConnState?,
     onClick: () -> Unit,
+    onEdit: () -> Unit,
     onRemove: () -> Unit
 ) {
     Card(
@@ -297,6 +323,13 @@ private fun ServerCard(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
+                IconButton(onClick = onEdit) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.srv_edit),
+                        tint = TextMid
+                    )
+                }
                 IconButton(onClick = onRemove) {
                     Icon(
                         Icons.Default.LinkOff,
@@ -357,12 +390,13 @@ private fun onAddressInput(value: String, setHost: (String) -> Unit, setPort: (S
 private fun AddServerDialog(
     onDismiss: () -> Unit,
     exists: (host: String, port: Int) -> Boolean,
-    onSave: (name: String, host: String, port: Int, secret: String) -> Unit
+    onSave: (name: String, host: String, port: Int, secret: String) -> Unit,
+    initial: ServerProfile? = null
 ) {
-    var name by remember { mutableStateOf("") }
-    var host by remember { mutableStateOf("") }
-    var port by remember { mutableStateOf("47315") }
-    var secret by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(initial?.name ?: "") }
+    var host by remember { mutableStateOf(initial?.host ?: "") }
+    var port by remember { mutableStateOf(initial?.port?.takeIf { it > 0 }?.toString() ?: "47315") }
+    var secret by remember { mutableStateOf(initial?.secret ?: "") }
     var showSecret by remember { mutableStateOf(false) }
     var showHelp by remember { mutableStateOf(false) }
     var hostErr by remember { mutableStateOf(false) }
@@ -376,7 +410,7 @@ private fun AddServerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.pair_title)) },
+        title = { Text(stringResource(if (initial == null) R.string.pair_title else R.string.srv_edit)) },
         text = {
             Column(
                 Modifier.verticalScroll(rememberScrollState()),

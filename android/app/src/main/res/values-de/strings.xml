@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Kopplung nötig</string>
     <string name="servers_remove">Entfernen</string>
     <string name="servers_remove_confirm">„%s“ entfernen? Das gespeicherte Token für diesen Desktop wird ebenfalls gelöscht.</string>
+    <string name="srv_edit">Server bearbeiten</string>
+    <string name="srv_updated">Server aktualisiert</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Desktop hinzufügen</string>

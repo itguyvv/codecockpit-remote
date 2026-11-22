@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">Precisa parear</string>
     <string name="servers_remove">Remover</string>
     <string name="servers_remove_confirm">Remover «%s»? O token salvo deste desktop também será excluído.</string>
+    <string name="srv_edit">Editar servidor</string>
+    <string name="srv_updated">Servidor atualizado</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">Adicionar desktop</string>

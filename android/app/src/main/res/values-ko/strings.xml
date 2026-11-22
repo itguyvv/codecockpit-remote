@@ -13,6 +13,8 @@
     <string name="servers_needs_pairing">페어링 필요</string>
     <string name="servers_remove">제거</string>
     <string name="servers_remove_confirm">‘%s’을(를) 제거할까요? 이 데스크톱의 저장된 토큰도 함께 삭제됩니다.</string>
+    <string name="srv_edit">서버 편집</string>
+    <string name="srv_updated">서버가 업데이트되었습니다</string>
 
     <!-- Add / pair dialog -->
     <string name="pair_title">데스크톱 추가</string>
