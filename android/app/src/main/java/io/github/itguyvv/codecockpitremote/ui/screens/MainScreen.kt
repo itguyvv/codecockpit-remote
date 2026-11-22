@@ -740,7 +740,9 @@ private fun NewSessionDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
-    val sheetState = rememberModalBottomSheetState()
+    // Skip the partial anchor: the sheet opens full-height and content swaps (loading →
+    // list → grouped) never re-anchor it back down to half screen
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val engine by vm.historyEngine.collectAsStateWithLifecycle()
     val history by vm.history.collectAsStateWithLifecycle()
     var confirmResume by remember { mutableStateOf<NativeSessionInfo?>(null) }

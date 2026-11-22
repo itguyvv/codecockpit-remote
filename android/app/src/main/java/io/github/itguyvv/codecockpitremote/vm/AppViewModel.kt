@@ -468,8 +468,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadHistory(engine: String) {
-        _historyEngine.value = engine
-        _history.value = null
+        // Same engine: keep the cached list visible while the fresh one is in flight —
+        // nulling it makes the sheet flash a spinner on every open/group tap
+        if (engine != _historyEngine.value) {
+            _historyEngine.value = engine
+            _history.value = null
+        }
         client?.send(historyRequest(engine))
     }
 
