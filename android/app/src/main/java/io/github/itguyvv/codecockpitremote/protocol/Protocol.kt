@@ -188,7 +188,7 @@ sealed interface ServerEvent {
     data class Status(val sessionId: String, val status: SessionStatus) : ServerEvent
     data class Exit(val sessionId: String, val code: Int) : ServerEvent
     data class SessionId(val sessionId: String, val nativeId: String) : ServerEvent
-    data class SessionCreated(val sessionId: String) : ServerEvent
+    data class SessionCreated(val sessionId: String, val summary: SessionSummary? = null) : ServerEvent
     data class History(val engine: String, val list: List<NativeSessionInfo>) : ServerEvent
     data object Pong : ServerEvent
     data class Error(val message: String) : ServerEvent
@@ -225,7 +225,10 @@ fun parseServerEvent(frame: String): ServerEvent? {
         }
         "exit" -> ServerEvent.Exit(str(obj, "id"), intOr(obj, "code"))
         "session_id" -> ServerEvent.SessionId(str(obj, "id"), str(obj, "claudeSessionId"))
-        "session_created" -> ServerEvent.SessionCreated(str(obj, "id"))
+        "session_created" -> ServerEvent.SessionCreated(
+            sessionId = str(obj, "id"),
+            summary = obj["summary"]?.let { protocolJson.decodeFromJsonElement<SessionSummary>(it) }
+        )
         "history" -> ServerEvent.History(
             engine = str(obj, "engine"),
             list = obj["sessions"]?.let {

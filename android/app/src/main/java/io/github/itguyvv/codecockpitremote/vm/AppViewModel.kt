@@ -44,6 +44,9 @@ private const val PROMPT_SUFFIX = "\r"
 /** Optimistic user bubble: rendered immediately on send, reconciled away when the engine echoes the prompt */
 data class PendingMsg(val localId: String, val text: String, val at: Long, val failed: Boolean = false)
 
+/** Arguments of the most recent create call, used to synthesize a summary when the server omits it */
+private data class CreateArgs(val cwd: String, val mode: String, val engine: String, val title: String)
+
 class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     private val store = ConnectionStore(application)
@@ -189,6 +192,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val _pending = MutableStateFlow<PendingMsg?>(null)
     val pending: StateFlow<PendingMsg?> = _pending
     private var pendingTimeoutJob: Job? = null
+
+    private var lastCreateArgs: CreateArgs? = null
 
     fun addServer(name: String, host: String, port: Int, secret: String, onDone: (ServerProfile) -> Unit) {
         viewModelScope.launch {
@@ -339,11 +344,27 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             is ServerEvent.SessionCreated -> {
-                // Select the fresh session right away; its summary arrives via the sessions broadcast
+                // Insert the session at once (event summary, or synthesized from the create
+                // args when the desktop is older) — the next sessions broadcast replaces it
+                val summary = event.summary ?: lastCreateArgs?.let { a ->
+                    SessionSummary(
+                        id = event.sessionId,
+                        engine = a.engine,
+                        title = a.title.ifBlank { a.cwd.substringAfterLast('/').ifBlank { a.cwd } },
+                        cwd = a.cwd,
+                        status = "running",
+                        permissionMode = a.mode,
+                        startedAt = System.currentTimeMillis()
+                    )
+                }
+                if (summary != null && _sessions.value.none { it.id == summary.id }) {
+                    _sessions.value = listOf(summary) + _sessions.value
+                }
                 attachedId = event.sessionId
                 _selectedId.value = event.sessionId
                 _chatMessages.value = emptyList()
                 _chatStatus.value = null
+                clearPending()
                 client?.send(attachRequest(event.sessionId))
             }
             is ServerEvent.History -> {
@@ -433,6 +454,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     // ── Remote session management ──
 
     fun createSession(cwd: String, mode: String, engine: String, title: String, resumeId: String? = null) {
+        lastCreateArgs = CreateArgs(cwd, mode, engine, title)
         client?.send(createRequest(cwd, mode, engine, title, resumeId))
     }
 
