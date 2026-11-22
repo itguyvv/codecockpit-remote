@@ -36,9 +36,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /** Chat prompt terminator: the desktop writes straight into the PTY, so this is the Enter key */
 private const val PROMPT_SUFFIX = "\r"
+
+/** Optimistic user bubble: rendered immediately on send, reconciled away when the engine echoes the prompt */
+data class PendingMsg(val localId: String, val text: String, val at: Long, val failed: Boolean = false)
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -182,6 +186,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     val chatBusy: StateFlow<Boolean> = _chatBusy
     private val _chatBg = MutableStateFlow(0)
     val chatBg: StateFlow<Int> = _chatBg
+    private val _pending = MutableStateFlow<PendingMsg?>(null)
+    val pending: StateFlow<PendingMsg?> = _pending
+    private var pendingTimeoutJob: Job? = null
 
     fun addServer(name: String, host: String, port: Int, secret: String, onDone: (ServerProfile) -> Unit) {
         viewModelScope.launch {
@@ -226,6 +233,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         _chatStatus.value = null
         _chatBusy.value = false
         _chatBg.value = 0
+        clearPending()
         client?.close()
         client = null
         active = null
@@ -293,10 +301,16 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         when (event) {
             is ServerEvent.Sessions -> _sessions.value = event.list
             is ServerEvent.ConvSnapshot -> if (event.sessionId == attachedId) {
-                _chatMessages.value = event.messages.sortedBy { it.ts }
+                val incoming = event.messages.sortedBy { it.ts }
+                val curMax = _chatMessages.value.maxOfOrNull { it.ts } ?: 0L
+                val inMax = incoming.maxOfOrNull { it.ts } ?: 0L
+                // A stale snapshot (reconnect replay racing live conv_append) must never roll the thread back
+                if (_chatMessages.value.isEmpty() || inMax >= curMax) _chatMessages.value = incoming
+                reconcilePending(incoming)
             }
             is ServerEvent.ConvAppend -> if (event.sessionId == attachedId) {
                 _chatMessages.value = upsert(_chatMessages.value, event.messages)
+                reconcilePending(event.messages)
             }
             is ServerEvent.Busy -> {
                 // Patch the list immediately so sidebar dots stay correct even if the
@@ -336,9 +350,34 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 _historyEngine.value = event.engine
                 _history.value = event.list
             }
-            is ServerEvent.Error -> _lastOpError.value = event.message
+            is ServerEvent.Error -> {
+                // An input failure must not leave the optimistic bubble spinning forever
+                _pending.value?.let { if (!it.failed) _pending.value = it.copy(failed = true) }
+                _lastOpError.value = event.message
+            }
             ServerEvent.Pong -> Unit
             else -> Unit
+        }
+    }
+
+    private fun clearPending() {
+        pendingTimeoutJob?.cancel()
+        pendingTimeoutJob = null
+        _pending.value = null
+    }
+
+    /** The engine echo may carry scaffolding around the raw prompt, so a prefix match suffices */
+    private fun reconcilePending(messages: List<RemoteMessage>) {
+        val p = _pending.value ?: return
+        val echoed = messages.any { it.role == "user" && it.text?.trim()?.startsWith(p.text) == true }
+        if (echoed) clearPending()
+    }
+
+    private fun armPendingTimeout() {
+        pendingTimeoutJob?.cancel()
+        pendingTimeoutJob = viewModelScope.launch {
+            delay(30_000)
+            _pending.value?.let { _pending.value = it.copy(failed = true) }
         }
     }
 
@@ -377,6 +416,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         _chatMessages.value = emptyList()
         _chatStatus.value = null
         _chatBusy.value = summary.busy
+        clearPending()
         client?.send(attachRequest(summary.id))
     }
 
@@ -387,6 +427,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         _selectedId.value = null
         _chatMessages.value = emptyList()
         _chatStatus.value = null
+        clearPending()
     }
 
     // ── Remote session management ──
@@ -416,6 +457,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendPrompt(text: String) {
         val id = attachedId ?: return
+        val trimmed = text.trim()
+        if (trimmed.isEmpty()) return
+        _pending.value = PendingMsg(
+            localId = UUID.randomUUID().toString(),
+            text = trimmed,
+            at = System.currentTimeMillis()
+        )
+        armPendingTimeout()
         client?.send(inputRequest(id, text + PROMPT_SUFFIX))
     }
 

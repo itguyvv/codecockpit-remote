@@ -35,7 +35,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -76,6 +78,7 @@ import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
 import io.github.itguyvv.codecockpitremote.ui.theme.TextHigh
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
+import io.github.itguyvv.codecockpitremote.vm.PendingMsg
 
 /**
  * Conversation pane for one attached session: streamed messages, tool cards with
@@ -90,6 +93,7 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
     val bg by vm.chatBg.collectAsStateWithLifecycle()
     val sessions by vm.sessions.collectAsStateWithLifecycle()
     val connState by vm.connState.collectAsStateWithLifecycle()
+    val pending by vm.pending.collectAsStateWithLifecycle()
     val summary = sessions.find { it.id == sessionId }
 
     // Usage-only assistant rows carry no text and would render as empty bubbles
@@ -111,8 +115,14 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
             }
         }
     }
-    LaunchedEffect(visible.size) {
-        if (visible.isNotEmpty() && autoFollow) listState.scrollToItem(visible.size - 1)
+    // Streaming grows the last message without changing its id or the list size, so the
+    // last text length is part of the key; the pending bubble appearing also follows
+    val lastMsg = visible.lastOrNull()
+    LaunchedEffect(lastMsg?.id, lastMsg?.text?.length, pending != null) {
+        if (autoFollow) {
+            val target = if (pending != null) visible.size else visible.size - 1
+            if (target >= 0) listState.scrollToItem(target)
+        }
     }
 
     var input by remember { mutableStateOf("") }
@@ -161,6 +171,11 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
             ) {
                 items(visible, key = { it.id }) { message ->
                     MessageBubble(message)
+                }
+                pending?.let { p ->
+                    item(key = "pending-${p.localId}") {
+                        PendingBubble(p)
+                    }
                 }
             }
             if (!autoFollow && visible.isNotEmpty()) {
@@ -240,6 +255,7 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
                 }
             } else {
                 IconButton(onClick = {
+                    autoFollow = true
                     vm.sendPrompt(input.trim())
                     input = ""
                 }, enabled = canSend) {
@@ -249,6 +265,42 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
                         tint = if (canSend) MaterialTheme.colorScheme.primary else TextMid
                     )
                 }
+            }
+        }
+    }
+}
+
+/** The optimistic user bubble: dimmed with a clock until the engine echoes it, red cross on failure */
+@Composable
+private fun PendingBubble(msg: PendingMsg) {
+    Box(Modifier.fillMaxWidth()) {
+        Surface(
+            color = Surface2,
+            contentColor = TextMid,
+            shape = RoundedCornerShape(
+                topStart = 14.dp, topEnd = 14.dp,
+                bottomStart = 14.dp, bottomEnd = 4.dp
+            ),
+            modifier = Modifier
+                .widthIn(max = 320.dp)
+                .align(Alignment.CenterEnd)
+                .alpha(if (msg.failed) 1f else 0.75f)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    msg.text,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.size(6.dp))
+                Icon(
+                    if (msg.failed) Icons.Default.Close else Icons.Default.Schedule,
+                    contentDescription = null,
+                    tint = if (msg.failed) Danger else TextMid,
+                    modifier = Modifier.size(14.dp)
+                )
             }
         }
     }
