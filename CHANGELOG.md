@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **Edit saved desktops** — every desktop card gains an edit action: rename it or change the address, port, or pairing secret. Changing the secret clears the stored pairing, so the next connection re-verifies the certificate and re-pairs; saving dials again right away (the button says *Save & connect*).
+
+### Fixed
+
+- **Sessions created or resumed from the phone appeared on neither end.** The phone now renders the new session immediately from the `session_created` summary (or synthesizes one from the create arguments on older desktops), and the desktop adopts it via `pty:created` (requires CodeCockpit v1.6.0+ on the desktop).
+- **The first prompt after creating or resuming a session vanished.** It is now shown as an optimistic pending bubble — dimmed with a clock while in flight, red cross on error or after a 30-second timeout — and reconciled once the engine echoes it.
+- **The chat did not follow new output.** Autoscroll now also tracks streaming growth of the last message (not just new messages), follows immediately on send, and a stale history snapshot can no longer roll the thread back during a reconnect.
+- **The history sheet collapsed back to half-screen when tapping a folder group.** It now opens fullscreen and stays expanded; switching engines keeps the cached list visible instead of flashing a spinner.
+
+### Changed
+
+- Polish pass: typography scale and shape system, haptic feedback on send/confirm/destructive actions, animated chat rows, redesigned empty states, success snackbars for create/rename/stop, a reconnect banner with attempt counter, a send/stop button morph, and the sidebar became a real gesture drawer with edge swipe and back-button support. Requires CodeCockpit v1.6.0+ for the two-ended session sync fixes.
+
 ## [0.3.0] - 2026-11-21
 
 ### Added
