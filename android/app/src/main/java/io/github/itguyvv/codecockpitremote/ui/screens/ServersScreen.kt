@@ -224,8 +224,14 @@ fun ServersScreen(vm: AppViewModel) {
             onSave = { name, host, port, secret ->
                 editing = null
                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                vm.updateServerProfile(server.copy(name = name, host = host, port = port, secret = secret)) {
+                val updated = server.copy(name = name, host = host, port = port, secret = secret)
+                // The button says "Save & connect": dial again unless this exact session is already live
+                val reconnect = updated.secret != server.secret || updated.host != server.host ||
+                    updated.port != server.port || connState !is ConnState.Ready ||
+                    activeServerId != server.id
+                vm.updateServerProfile(updated) {
                     scope.launch { snackbar.showSnackbar(updatedMsg) }
+                    if (reconnect) vm.connect(updated)
                 }
             }
         )
