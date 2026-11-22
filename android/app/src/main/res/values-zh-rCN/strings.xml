@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">暂无会话</string>
     <string name="sessions_empty_hint">在桌面端 CodeCockpit 里启动一个会话——它会实时出现在这里。</string>
     <string name="sessions_refresh">刷新</string>
-    <string name="sessions_disconnected">已断开——正在重连…</string>
+        <string name="sessions_reconnecting">正在重新连接 %1$s · 第 %2$d 次尝试</string>
     <string name="sessions_exited">已退出</string>
     <string name="sessions_running">运行中</string>
     <string name="sessions_busy">处理中</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">从历史记录中删除“%s”？电脑上的记录将被永久删除。</string>
     <string name="wb_toggle_group">展开或收起该文件夹</string>
     <string name="wb_op_failed">操作失败：%s</string>
+    <string name="wb_created">会话已创建</string>
+    <string name="wb_renamed">已重命名</string>
+    <string name="wb_killed">会话已关闭</string>
     <string name="chat_tool_output">输出</string>
     <string name="chat_stats_tools">%d 工具</string>
     <string name="chat_stats_time">%s</string>

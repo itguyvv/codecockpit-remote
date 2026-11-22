@@ -1,6 +1,7 @@
 package io.github.itguyvv.codecockpitremote.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -58,11 +59,13 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.view.HapticFeedbackConstants
 import kotlinx.coroutines.launch
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnState
@@ -128,6 +131,7 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
     var input by remember { mutableStateOf("") }
     val exited = summary?.status == "exited"
     val canSend = input.isNotBlank() && !exited && connState is ConnState.Ready
+    val view = LocalView.current
 
     Column(
         modifier = Modifier
@@ -170,11 +174,11 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(visible, key = { it.id }) { message ->
-                    MessageBubble(message)
+                    MessageBubble(message, Modifier.animateItem())
                 }
                 pending?.let { p ->
                     item(key = "pending-${p.localId}") {
-                        PendingBubble(p)
+                        PendingBubble(p, Modifier.animateItem())
                     }
                 }
             }
@@ -241,29 +245,35 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
                 maxLines = 4
             )
             Spacer(Modifier.size(8.dp))
-            if (busy) {
-                // The desktop interrupts with Esc; so does a stop tap here
-                IconButton(
-                    onClick = { vm.interrupt(sessionId) },
-                    enabled = connState is ConnState.Ready
-                ) {
-                    Icon(
-                        Icons.Default.Stop,
-                        contentDescription = stringResource(R.string.chat_stop),
-                        tint = Danger
-                    )
-                }
-            } else {
-                IconButton(onClick = {
-                    autoFollow = true
-                    vm.sendPrompt(input.trim())
-                    input = ""
-                }, enabled = canSend) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Send,
-                        contentDescription = stringResource(R.string.chat_send),
-                        tint = if (canSend) MaterialTheme.colorScheme.primary else TextMid
-                    )
+            Crossfade(targetState = busy, label = "send-mode") { isBusy ->
+                if (isBusy) {
+                    // The desktop interrupts with Esc; so does a stop tap here
+                    IconButton(
+                        onClick = {
+                            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                            vm.interrupt(sessionId)
+                        },
+                        enabled = connState is ConnState.Ready
+                    ) {
+                        Icon(
+                            Icons.Default.Stop,
+                            contentDescription = stringResource(R.string.chat_stop),
+                            tint = Danger
+                        )
+                    }
+                } else {
+                    IconButton(onClick = {
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        autoFollow = true
+                        vm.sendPrompt(input.trim())
+                        input = ""
+                    }, enabled = canSend) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.Send,
+                            contentDescription = stringResource(R.string.chat_send),
+                            tint = if (canSend) MaterialTheme.colorScheme.primary else TextMid
+                        )
+                    }
                 }
             }
         }
@@ -272,8 +282,8 @@ fun ChatScreen(vm: AppViewModel, sessionId: String) {
 
 /** The optimistic user bubble: dimmed with a clock until the engine echoes it, red cross on failure */
 @Composable
-private fun PendingBubble(msg: PendingMsg) {
-    Box(Modifier.fillMaxWidth()) {
+private fun PendingBubble(msg: PendingMsg, modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxWidth()) {
         Surface(
             color = Surface2,
             contentColor = TextMid,
@@ -435,13 +445,13 @@ private fun PulseDot() {
 }
 
 @Composable
-private fun MessageBubble(message: RemoteMessage) {
+private fun MessageBubble(message: RemoteMessage, modifier: Modifier = Modifier) {
     if (message.role == "tool") {
-        ToolCard(message)
+        ToolCard(message, modifier)
         return
     }
     val isUser = message.role == "user"
-    Box(Modifier.fillMaxWidth()) {
+    Box(modifier.fillMaxWidth()) {
         Surface(
             color = if (isUser) Surface2 else MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
@@ -468,14 +478,14 @@ private fun MessageBubble(message: RemoteMessage) {
 
 /** Expandable card: summary line of the command, full input, and the tool result when captured */
 @Composable
-private fun ToolCard(message: RemoteMessage) {
+private fun ToolCard(message: RemoteMessage, modifier: Modifier = Modifier) {
     var expanded by remember(message.id) { mutableStateOf(false) }
     val hasDetails = !message.toolInput.isNullOrBlank() || !message.toolOutput.isNullOrBlank()
     Surface(
         color = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(1.dp, Border, RoundedCornerShape(10.dp))
     ) {

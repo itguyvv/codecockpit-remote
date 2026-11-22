@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">Нет сессий</string>
     <string name="sessions_empty_hint">Запустите сессию в CodeCockpit на компьютере — она появится здесь в реальном времени.</string>
     <string name="sessions_refresh">Обновить</string>
-    <string name="sessions_disconnected">Отключено — переподключение…</string>
+        <string name="sessions_reconnecting">Переподключение к %1$s · попытка %2$d</string>
     <string name="sessions_exited">Завершена</string>
     <string name="sessions_running">Работает</string>
     <string name="sessions_busy">Работает</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">Удалить «%s» из истории? Запись будет удалена на десктопе навсегда.</string>
     <string name="wb_toggle_group">Показать или скрыть папку</string>
     <string name="wb_op_failed">Ошибка операции: %s</string>
+    <string name="wb_created">Сессия создана</string>
+    <string name="wb_renamed">Переименовано</string>
+    <string name="wb_killed">Сессия закрыта</string>
     <string name="chat_tool_output">Вывод</string>
     <string name="chat_stats_tools">%d инструментов</string>
     <string name="chat_stats_time">%s</string>

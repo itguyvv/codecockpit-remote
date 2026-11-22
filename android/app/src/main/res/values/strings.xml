@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">No sessions</string>
     <string name="sessions_empty_hint">Start a session in CodeCockpit on the desktop — it appears here live.</string>
     <string name="sessions_refresh">Refresh</string>
-    <string name="sessions_disconnected">Disconnected — reconnecting…</string>
+        <string name="sessions_reconnecting">Reconnecting to %1$s · attempt %2$d</string>
     <string name="sessions_exited">Exited</string>
     <string name="sessions_running">Running</string>
     <string name="sessions_busy">Working</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">Delete “%s” from history? The record is removed on the desktop permanently.</string>
     <string name="wb_toggle_group">Show or hide this folder</string>
     <string name="wb_op_failed">Operation failed: %s</string>
+    <string name="wb_created">Session created</string>
+    <string name="wb_renamed">Renamed</string>
+    <string name="wb_killed">Session closed</string>
     <string name="chat_tool_output">Output</string>
     <string name="chat_stats_tools">%d tools</string>
     <string name="chat_stats_time">%s</string>

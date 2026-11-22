@@ -41,5 +41,10 @@ private val DarkScheme = darkColorScheme(
 fun CodeCockpitRemoteTheme(content: @Composable () -> Unit) {
     // isSystemInDarkTheme() kept for the linter; the app is deliberately dark-only
     isSystemInDarkTheme()
-    MaterialTheme(colorScheme = DarkScheme, content = content)
+    MaterialTheme(
+        colorScheme = DarkScheme,
+        typography = AppTypography,
+        shapes = AppShapes,
+        content = content
+    )
 }

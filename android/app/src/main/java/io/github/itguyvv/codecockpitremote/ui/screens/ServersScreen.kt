@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Computer
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,13 +54,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.view.HapticFeedbackConstants
 import kotlinx.coroutines.launch
 import java.net.Inet6Address
 import java.net.NetworkInterface
@@ -98,6 +102,7 @@ fun ServersScreen(vm: AppViewModel) {
     var editing by remember { mutableStateOf<ServerProfile?>(null) }
     val snackbar = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val view = LocalView.current
     val updatedMsg = stringResource(R.string.srv_updated)
 
     Scaffold(
@@ -140,6 +145,13 @@ fun ServersScreen(vm: AppViewModel) {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Icon(
+                        Icons.Outlined.Computer,
+                        contentDescription = null,
+                        tint = TextMid,
+                        modifier = Modifier.size(44.dp)
+                    )
+                    Spacer(Modifier.height(12.dp))
                     Text(
                         stringResource(R.string.servers_empty_title),
                         style = MaterialTheme.typography.titleMedium
@@ -148,7 +160,8 @@ fun ServersScreen(vm: AppViewModel) {
                     Text(
                         stringResource(R.string.servers_empty_hint),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextMid
+                        color = TextMid,
+                        textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(16.dp))
                     TextButton(onClick = { showGuide = true }) {
@@ -210,6 +223,7 @@ fun ServersScreen(vm: AppViewModel) {
             exists = { h, p -> vm.servers.value.any { it.host == h && it.port == p && it.id != server.id } },
             onSave = { name, host, port, secret ->
                 editing = null
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                 vm.updateServerProfile(server.copy(name = name, host = host, port = port, secret = secret)) {
                     scope.launch { snackbar.showSnackbar(updatedMsg) }
                 }
@@ -224,6 +238,7 @@ fun ServersScreen(vm: AppViewModel) {
             text = { Text(stringResource(R.string.servers_remove_confirm, server.name)) },
             confirmButton = {
                 TextButton(onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     vm.removeServer(server.id)
                     confirmRemove = null
                 }) { Text(stringResource(R.string.servers_remove), color = Danger) }

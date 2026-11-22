@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">Keine Sitzungen</string>
     <string name="sessions_empty_hint">Starten Sie auf dem Desktop eine Sitzung in CodeCockpit — sie erscheint hier live.</string>
     <string name="sessions_refresh">Aktualisieren</string>
-    <string name="sessions_disconnected">Getrennt — verbinde erneut…</string>
+        <string name="sessions_reconnecting">Verbinde erneut mit %1$s · Versuch %2$d</string>
     <string name="sessions_exited">Beendet</string>
     <string name="sessions_running">Läuft</string>
     <string name="sessions_busy">Beschäftigt</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">„%s“ aus dem Verlauf löschen? Der Eintrag wird auf dem Desktop dauerhaft entfernt.</string>
     <string name="wb_toggle_group">Ordner ein- oder ausklappen</string>
     <string name="wb_op_failed">Vorgang fehlgeschlagen: %s</string>
+    <string name="wb_created">Sitzung erstellt</string>
+    <string name="wb_renamed">Umbenannt</string>
+    <string name="wb_killed">Sitzung geschlossen</string>
     <string name="chat_tool_output">Ausgabe</string>
     <string name="chat_stats_tools">%d Tools</string>
     <string name="chat_stats_time">%s</string>

@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">暫無工作階段</string>
     <string name="sessions_empty_hint">在桌面端 CodeCockpit 裡啟動一個工作階段——它會即時出現在這裡。</string>
     <string name="sessions_refresh">重新整理</string>
-    <string name="sessions_disconnected">已斷線——正在重新連線…</string>
+        <string name="sessions_reconnecting">正在重新連線 %1$s · 第 %2$d 次嘗試</string>
     <string name="sessions_exited">已結束</string>
     <string name="sessions_running">執行中</string>
     <string name="sessions_busy">處理中</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">從歷史記錄刪除「%s」？電腦上的記錄將被永久刪除。</string>
     <string name="wb_toggle_group">展開或收起此資料夾</string>
     <string name="wb_op_failed">操作失敗：%s</string>
+    <string name="wb_created">會話已建立</string>
+    <string name="wb_renamed">已重新命名</string>
+    <string name="wb_killed">會話已關閉</string>
     <string name="chat_tool_output">輸出</string>
     <string name="chat_stats_tools">%d 工具</string>
     <string name="chat_stats_time">%s</string>

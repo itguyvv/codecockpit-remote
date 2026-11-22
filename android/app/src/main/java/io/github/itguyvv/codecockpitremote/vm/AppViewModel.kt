@@ -142,7 +142,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private var client: RemoteClient? = null
     private var active: ServerProfile? = null
     private var reconnectJob: Job? = null
-    private var reconnectAttempt = 0
+    private var reconnectBackoff = 0
 
     /** Null = no connection attempt running */
     private val _connState = MutableStateFlow<ConnState?>(null)
@@ -155,6 +155,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     /** Last terminal error; UI maps it to a localized message */
     private val _connError = MutableStateFlow<ConnError?>(null)
     val connError: StateFlow<ConnError?> = _connError
+
+    /** Backoff attempt number the reconnect banner shows (0 = connected or not retrying) */
+    private val _reconnectAttempt = MutableStateFlow(0)
+    val reconnectAttempt: StateFlow<Int> = _reconnectAttempt
 
     /** Set while a TOFU decision is pending */
     private val _fingerprintPrompt = MutableStateFlow<String?>(null)
@@ -235,7 +239,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         disconnect()
         active = profile
         _activeServerId.value = profile.id
-        reconnectAttempt = 0
+        reconnectBackoff = 0
         openConnection(profile)
     }
 
@@ -282,6 +286,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             c.state.collect { st ->
                 _connState.value = st
                 if (st is ConnState.Ready) {
+                    _reconnectAttempt.value = 0
                     // Fresh (re)connection: refresh the list and re-attach an open chat
                     c.send(listRequest())
                     attachedId?.let { c.send(attachRequest(it)) }
@@ -306,8 +311,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         if (!retryable) return
         reconnectJob?.cancel()
         reconnectJob = viewModelScope.launch {
-            val delayMs = (3_000L * (1L shl reconnectAttempt.coerceAtMost(4))).coerceAtMost(30_000L)
-            reconnectAttempt++
+            val delayMs = (3_000L * (1L shl reconnectBackoff.coerceAtMost(4))).coerceAtMost(30_000L)
+            reconnectBackoff++
+            _reconnectAttempt.value = reconnectBackoff
             delay(delayMs)
             if (active?.id == profile.id) openConnection(profile)
         }

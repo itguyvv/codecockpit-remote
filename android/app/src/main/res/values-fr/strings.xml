@@ -51,7 +51,7 @@
     <string name="sessions_empty_title">Aucune session</string>
     <string name="sessions_empty_hint">Lancez une session dans CodeCockpit sur l’ordinateur — elle apparaît ici en direct.</string>
     <string name="sessions_refresh">Actualiser</string>
-    <string name="sessions_disconnected">Déconnecté — reconnexion…</string>
+        <string name="sessions_reconnecting">Reconnexion à %1$s · tentative %2$d</string>
     <string name="sessions_exited">Terminée</string>
     <string name="sessions_running">En cours</string>
     <string name="sessions_busy">En cours</string>
@@ -161,6 +161,9 @@
     <string name="wb_history_delete_confirm">Supprimer « %s » de l\'historique ? L\'entrée est définitivement supprimée sur le bureau.</string>
     <string name="wb_toggle_group">Afficher ou masquer ce dossier</string>
     <string name="wb_op_failed">Échec de l\'opération : %s</string>
+    <string name="wb_created">Session créée</string>
+    <string name="wb_renamed">Renommé</string>
+    <string name="wb_killed">Session fermée</string>
     <string name="chat_tool_output">Sortie</string>
     <string name="chat_stats_tools">%d outils</string>
     <string name="chat_stats_time">%s</string>

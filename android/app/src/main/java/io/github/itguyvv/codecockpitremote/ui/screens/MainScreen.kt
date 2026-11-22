@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,11 +62,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -73,6 +76,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.view.HapticFeedbackConstants
 import io.github.itguyvv.codecockpitremote.R
 import io.github.itguyvv.codecockpitremote.net.ConnState
 import io.github.itguyvv.codecockpitremote.protocol.NativeSessionInfo
@@ -83,8 +87,10 @@ import io.github.itguyvv.codecockpitremote.ui.theme.Busy
 import io.github.itguyvv.codecockpitremote.ui.theme.Danger
 import io.github.itguyvv.codecockpitremote.ui.theme.Idle
 import io.github.itguyvv.codecockpitremote.ui.theme.Ok
+import io.github.itguyvv.codecockpitremote.ui.theme.Surface2
 import io.github.itguyvv.codecockpitremote.ui.theme.TextMid
 import io.github.itguyvv.codecockpitremote.vm.AppViewModel
+import kotlinx.coroutines.launch
 
 private val ENGINES = listOf("claude", "codex", "opencode")
 private val MODES = listOf("default", "acceptEdits", "plan", "bypassPermissions")
@@ -98,8 +104,12 @@ fun MainScreen(vm: AppViewModel) {
     val connState by vm.connState.collectAsStateWithLifecycle()
     val opError by vm.lastOpError.collectAsStateWithLifecycle()
     val chatStatus by vm.chatStatus.collectAsStateWithLifecycle()
+    val servers by vm.servers.collectAsStateWithLifecycle()
+    val activeServerId by vm.activeServerId.collectAsStateWithLifecycle()
+    val reconnectAttempt by vm.reconnectAttempt.collectAsStateWithLifecycle()
 
     val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     var showNew by remember { mutableStateOf(false) }
     var newCwd by remember { mutableStateOf("") }
     var showHistory by remember { mutableStateOf(false) }
@@ -109,6 +119,10 @@ fun MainScreen(vm: AppViewModel) {
 
     val selected = sessions.find { it.id == selectedId }
     val ctx = LocalContext.current
+    val view = LocalView.current
+    val createdMsg = stringResource(R.string.wb_created)
+    val renamedMsg = stringResource(R.string.wb_renamed)
+    val killedMsg = stringResource(R.string.wb_killed)
 
     LaunchedEffect(opError) {
         opError?.let {
@@ -185,12 +199,8 @@ fun MainScreen(vm: AppViewModel) {
                     .fillMaxSize()
             ) {
                 if (connState !is ConnState.Ready) {
-                    Text(
-                        stringResource(R.string.sessions_disconnected),
-                        color = Busy,
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-                    )
+                    val host = servers.find { it.id == activeServerId }?.let { it.name.ifBlank { it.host } } ?: ""
+                    ReconnectBanner(host, reconnectAttempt)
                 }
                 if (selected == null) {
                     Column(
@@ -198,11 +208,24 @@ fun MainScreen(vm: AppViewModel) {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Icon(
+                            Icons.Outlined.Terminal,
+                            contentDescription = null,
+                            tint = TextMid,
+                            modifier = Modifier.size(44.dp)
+                        )
+                        Spacer(Modifier.height(12.dp))
                         Text(
                             stringResource(R.string.wb_select_hint),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextMid
+                            color = TextMid,
+                            textAlign = TextAlign.Center
                         )
+                        Spacer(Modifier.height(20.dp))
+                        Button(onClick = {
+                            newCwd = ""
+                            showNew = true
+                        }) { Text(stringResource(R.string.wb_new_session)) }
                     }
                 } else {
                     ChatScreen(vm, selected.id)
@@ -264,7 +287,11 @@ fun MainScreen(vm: AppViewModel) {
         NewSessionDialog(
             vm = vm,
             initialCwd = newCwd,
-            onDismiss = { showNew = false }
+            onDismiss = { showNew = false },
+            onCreated = {
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                scope.launch { snackbar.showSnackbar(createdMsg) }
+            }
         )
     }
 
@@ -279,7 +306,9 @@ fun MainScreen(vm: AppViewModel) {
             text = { Text(stringResource(R.string.wb_kill_confirm, s.title.ifBlank { s.cwd })) },
             confirmButton = {
                 TextButton(onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     vm.killSession(s.id)
+                    scope.launch { snackbar.showSnackbar(killedMsg) }
                     confirmKill = null
                 }) { Text(stringResource(R.string.wb_kill), color = Danger) }
             },
@@ -296,10 +325,42 @@ fun MainScreen(vm: AppViewModel) {
             initial = s.title,
             onDismiss = { renaming = null },
             onSave = {
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                 vm.renameSession(s.id, it)
+                scope.launch { snackbar.showSnackbar(renamedMsg) }
                 renaming = null
             }
         )
+    }
+}
+
+/** Shown on the workbench while the client backs off between reconnect attempts */
+@Composable
+private fun ReconnectBanner(host: String, attempt: Int) {
+    Surface(
+        color = Surface2,
+        contentColor = TextMid,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(14.dp),
+                strokeWidth = 1.5.dp
+            )
+            Spacer(Modifier.size(10.dp))
+            Text(
+                stringResource(R.string.sessions_reconnecting, host, attempt),
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -594,7 +655,8 @@ private fun RenameDialog(initial: String, onDismiss: () -> Unit, onSave: (String
 private fun NewSessionDialog(
     vm: AppViewModel,
     initialCwd: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onCreated: () -> Unit
 ) {
     var engine by remember { mutableStateOf("claude") }
     // Default to full permissions (desktop parity: new sessions work out of the box)
@@ -725,6 +787,7 @@ private fun NewSessionDialog(
             Button(
                 onClick = {
                     vm.createSession(cwd.trim(), mode, engine, title.trim())
+                    onCreated()
                     onDismiss()
                 },
                 enabled = cwd.isNotBlank()
@@ -745,6 +808,7 @@ private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val engine by vm.historyEngine.collectAsStateWithLifecycle()
     val history by vm.history.collectAsStateWithLifecycle()
+    val view = LocalView.current
     var confirmResume by remember { mutableStateOf<NativeSessionInfo?>(null) }
     var confirmDelete by remember { mutableStateOf<NativeSessionInfo?>(null) }
 
@@ -859,6 +923,7 @@ private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
                         title = "",
                         resumeId = info.sessionId
                     )
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                     confirmResume = null
                     onDismiss()
                 }) { Text(stringResource(R.string.wb_history_resume)) }
@@ -878,6 +943,7 @@ private fun HistorySheet(vm: AppViewModel, onDismiss: () -> Unit) {
             text = { Text(stringResource(R.string.wb_history_delete_confirm, info.title.ifBlank { folderName(info.cwd) })) },
             confirmButton = {
                 TextButton(onClick = {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     vm.deleteHistory(info.sessionId)
                     confirmDelete = null
                 }) { Text(stringResource(R.string.wb_history_delete), color = Danger) }
